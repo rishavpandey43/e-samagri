@@ -31,7 +31,6 @@ function normalizePort(val) {
 const app = express();
 
 // * Get port from environment and store in Express.
-
 const PORT = normalizePort(process.env.PORT || "5000");
 app.set("port", PORT);
 

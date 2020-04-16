@@ -1,8 +1,8 @@
 import React, {Component} from 'react';
-import {View, Text, ScrollView, Button} from 'react-native';
+import {View, Text, ScrollView} from 'react-native';
 import {Header, Icon} from 'react-native-elements';
 
-class DashBoardScreen extends Component {
+class OrderDetailScreen extends Component {
   constructor(props) {
     super(props);
     this.state = {};
@@ -17,11 +17,11 @@ class DashBoardScreen extends Component {
           rightComponent={{icon: 'home', color: '#fff'}}
         />
         <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
-          <Text>DashBoard Screen</Text>
+          <Text>Order Detail Screen</Text>
         </View>
       </ScrollView>
     );
   }
 }
 
-export default DashBoardScreen;
+export default OrderDetailScreen;

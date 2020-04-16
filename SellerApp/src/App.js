@@ -7,31 +7,10 @@
  */
 
 import React from 'react';
-import {
-  SafeAreaView,
-  StyleSheet,
-  ScrollView,
-  View,
-  Text,
-  StatusBar,
-} from 'react-native';
-
-import {
-  Header,
-  LearnMoreLinks,
-  Colors,
-  DebugInstructions,
-  ReloadInstructions,
-} from 'react-native/Libraries/NewAppScreen';
+import MainDrawerNavigation from './routes/MainDrawerNavigation';
 
 const App = () => {
-  return (
-    <>
-      <View>
-        <Text>Hello Universe</Text>
-      </View>
-    </>
-  );
+  return <MainDrawerNavigation />;
 };
 
 export default App;

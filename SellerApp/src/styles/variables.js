@@ -1,5 +1,5 @@
 const variable = {
-  mainThemeColor: '',
+  mainThemeColor: '#933dd4',
 };
 
 export default variable;

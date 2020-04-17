@@ -1,10 +1,11 @@
 import React, {Component} from 'react';
 import {ScrollView, StyleSheet, View, Text} from 'react-native';
-import {Header, Icon, Card, Avatar} from 'react-native-elements';
+import {Header, Card, Avatar} from 'react-native-elements';
+import Icon from 'react-native-vector-icons/FontAwesome';
 
 import mainStyles from '../styles/mainStyle';
 
-import variable from '../styles/variables';
+import variables from '../styles/variables';
 
 class ProfileScreen extends Component {
   constructor(props) {
@@ -18,7 +19,8 @@ class ProfileScreen extends Component {
         <Header
           leftComponent={
             <Icon
-              name="menu"
+              name="bars"
+              size={20}
               color="#FFF"
               onPress={() => {
                 this.props.navigation.toggleDrawer();
@@ -29,9 +31,9 @@ class ProfileScreen extends Component {
             text: 'YOUR PROFILE',
             style: {color: '#fff'},
           }}
-          rightComponent={<Icon name="account-box" color="#FFF" />}
+          rightComponent={<Icon name="user" color="#FFF" size={30} />}
           containerStyle={{
-            backgroundColor: variable.mainThemeColor,
+            backgroundColor: '#933dd4',
             justifyContent: 'space-around',
           }}
         />
@@ -49,124 +51,194 @@ class ProfileScreen extends Component {
               />
               <Text h1>John Doe Seller</Text>
             </View>
-            <View style={styles.personalInfo}>
-              <Card title="Personal Information">
-                <View style={styles.infoGroup}>
-                  <View style={styles.labelGroup}>
+            <View>
+              <Card title="Personal Detail">
+                <View style={mainStyles.infoGroup}>
+                  <View style={mainStyles.labelGroup}>
                     <Icon
-                      name="person-outline"
-                      color={variable.mainThemeColor}
+                      name="user"
+                      color={variables.mainThemeColor}
                       size={20}
                     />
-                    <Text style={styles.labelText}>Owner Name:</Text>
+                    <Text style={mainStyles.labelText}>Owner Name:</Text>
                   </View>
                   <View>
-                    <Text style={styles.value}>John Doe</Text>
+                    <Text style={mainStyles.value}>John Doe</Text>
                   </View>
                 </View>
 
-                <View style={styles.infoGroup}>
-                  <View style={styles.labelGroup}>
+                <View style={mainStyles.infoGroup}>
+                  <View style={mainStyles.labelGroup}>
                     <Icon
-                      name="mail-outline"
-                      color={variable.mainThemeColor}
+                      name="envelope"
+                      color={variables.mainThemeColor}
                       size={20}
+                      style={styles.marginRight}
                     />
-                    <Text style={styles.labelText}>Email:</Text>
+                    <Text style={mainStyles.labelText}>Email:</Text>
                   </View>
                   <View>
-                    <Text style={styles.value}>johndoe@gmail.com</Text>
+                    <Text style={mainStyles.value}>johndoe@gmail.com</Text>
                   </View>
                 </View>
 
-                <View style={styles.infoGroup}>
-                  <View style={styles.labelGroup}>
+                <View style={mainStyles.infoGroup}>
+                  <View style={mainStyles.labelGroup}>
                     <Icon
                       name="phone"
-                      color={variable.mainThemeColor}
+                      color={variables.mainThemeColor}
                       size={20}
+                      style={styles.marginRight}
                     />
-                    <Text style={styles.labelText}>Mobile number:</Text>
+                    <Text style={mainStyles.labelText}>Mobile number:</Text>
                   </View>
                   <View>
-                    <Text style={styles.value}>+91 9123456789</Text>
+                    <Text style={mainStyles.value}>+91 9123456789</Text>
                   </View>
                 </View>
 
-                <View style={styles.infoGroup}>
-                  <View style={styles.labelGroup}>
+                <View style={mainStyles.infoGroup}>
+                  <View style={mainStyles.labelGroup}>
                     <Icon
-                      name="map"
-                      color={variable.mainThemeColor}
+                      name="map-marker"
+                      color={variables.mainThemeColor}
                       size={20}
+                      style={styles.marginRight}
                     />
-                    <Text style={styles.labelText}>Address:</Text>
+                    <Text style={mainStyles.labelText}>Address:</Text>
                   </View>
                   <View>
-                    <Text style={styles.value}>
+                    <Text style={mainStyles.value}>
                       123 Main Street, Daltonganj, Palamu, 822101
                     </Text>
                   </View>
                 </View>
               </Card>
-              <Card
-                title="Store Information"
-                containerStyle={{marginBottom: 100}}>
-                <View style={styles.infoGroup}>
-                  <View style={styles.labelGroup}>
+
+              <Card title="Store Detail">
+                <View style={mainStyles.infoGroup}>
+                  <View style={mainStyles.labelGroup}>
                     <Icon
-                      name="store"
-                      color={variable.mainThemeColor}
+                      name="shopping-cart"
+                      color={variables.mainThemeColor}
                       size={20}
+                      style={styles.marginRight}
                     />
-                    <Text style={styles.labelText}>Store Name:</Text>
+                    <Text style={mainStyles.labelText}>Store Name:</Text>
                   </View>
                   <View>
-                    <Text style={styles.value}>Sangam General Store</Text>
+                    <Text style={mainStyles.value}>Sangam General Store</Text>
                   </View>
                 </View>
 
-                <View style={styles.infoGroup}>
-                  <View style={styles.labelGroup}>
+                <View style={mainStyles.infoGroup}>
+                  <View style={mainStyles.labelGroup}>
                     <Icon
-                      name="map"
-                      color={variable.mainThemeColor}
+                      name="map-marker"
+                      color={variables.mainThemeColor}
                       size={20}
+                      style={styles.marginRight}
                     />
-                    <Text style={styles.labelText}>Store Address:</Text>
+                    <Text style={mainStyles.labelText}>Store Address:</Text>
                   </View>
                   <View>
-                    <Text style={styles.value}>
+                    <Text style={mainStyles.value}>
                       123 Main Street, Daltonganj, Palamu, 822101
                     </Text>
                   </View>
                 </View>
 
-                <View style={styles.infoGroup}>
-                  <View style={styles.labelGroup}>
+                <View style={mainStyles.infoGroup}>
+                  <View style={mainStyles.labelGroup}>
                     <Icon
-                      name="bookmark"
-                      color={variable.mainThemeColor}
+                      name="file-o"
+                      color={variables.mainThemeColor}
                       size={20}
+                      style={styles.marginRight}
                     />
-                    <Text style={styles.labelText}>PAN Card number:</Text>
+                    <Text style={mainStyles.labelText}>PAN Card number:</Text>
                   </View>
                   <View>
                     <Text style={styles.value}>DNAPP3910J</Text>
                   </View>
                 </View>
 
-                <View style={styles.infoGroup}>
-                  <View style={styles.labelGroup}>
+                <View style={mainStyles.infoGroup}>
+                  <View style={mainStyles.labelGroup}>
                     <Icon
-                      name="bookmark"
-                      color={variable.mainThemeColor}
+                      name="file-o"
+                      color={variables.mainThemeColor}
                       size={20}
+                      style={styles.marginRight}
                     />
-                    <Text style={styles.labelText}>GST number:</Text>
+                    <Text style={mainStyles.labelText}>GST number:</Text>
                   </View>
                   <View>
-                    <Text style={styles.value}>36ARVPS3698F1ZF</Text>
+                    <Text style={mainStyles.value}>36ARVPS3698F1ZF</Text>
+                  </View>
+                </View>
+              </Card>
+
+              <Card
+                title="Bank Account Detail"
+                containerStyle={{marginBottom: 100}}>
+                <View style={mainStyles.infoGroup}>
+                  <View style={mainStyles.labelGroup}>
+                    <Icon
+                      name="bank"
+                      color={variables.mainThemeColor}
+                      size={20}
+                      style={styles.marginRight}
+                    />
+                    <Text style={mainStyles.labelText}>Bank Name:</Text>
+                  </View>
+                  <View>
+                    <Text style={mainStyles.value}>State Bank Of India</Text>
+                  </View>
+                </View>
+
+                <View style={mainStyles.infoGroup}>
+                  <View style={mainStyles.labelGroup}>
+                    <Icon
+                      name="credit-card"
+                      color={variables.mainThemeColor}
+                      size={20}
+                      style={styles.marginRight}
+                    />
+                    <Text style={mainStyles.labelText}>Account number:</Text>
+                  </View>
+                  <View>
+                    <Text style={mainStyles.value}>1234567890</Text>
+                  </View>
+                </View>
+
+                <View style={mainStyles.infoGroup}>
+                  <View style={mainStyles.labelGroup}>
+                    <Icon
+                      name="file-o"
+                      color={variables.mainThemeColor}
+                      size={20}
+                      style={styles.marginRight}
+                    />
+                    <Text style={mainStyles.labelText}>IFSC code:</Text>
+                  </View>
+                  <View>
+                    <Text style={mainStyles.value}>DNAPP3910J</Text>
+                  </View>
+                </View>
+
+                <View style={mainStyles.infoGroup}>
+                  <View style={mainStyles.labelGroup}>
+                    <Icon
+                      name="file-o"
+                      color={variables.mainThemeColor}
+                      size={20}
+                      style={styles.marginRight}
+                    />
+                    <Text style={mainStyles.labelText}>Branch Name:</Text>
+                  </View>
+                  <View>
+                    <Text style={mainStyles.value}>G. L. A College Branch</Text>
                   </View>
                 </View>
               </Card>
@@ -183,29 +255,8 @@ const styles = StyleSheet.create({
     margin: 10,
     alignItems: 'center',
   },
-  personalInfo: {
-    flex: 1,
-    width: '100%',
-  },
-  infoGroup: {
-    margin: 10,
-  },
-  labelGroup: {
-    flex: 1,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'flex-start',
-    fontSize: 20,
-  },
-  labelText: {
-    fontSize: 20,
-    color: '#797A9C',
-    fontStyle: 'italic',
-    paddingLeft: 10,
-  },
-  value: {
-    color: variable.mainThemeColor,
-    fontSize: 20,
+  marginRight: {
+    marginRight: 10,
   },
 });
 

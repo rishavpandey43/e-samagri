@@ -7,10 +7,18 @@
  */
 
 import React from 'react';
+import {Provider} from 'react-redux';
+
+import store from './store/store';
+
 import MainDrawerNavigation from './routes/MainDrawerNavigation';
 
 const App = () => {
-  return <MainDrawerNavigation />;
+  return (
+    <Provider store={store}>
+      <MainDrawerNavigation />
+    </Provider>
+  );
 };
 
 export default App;

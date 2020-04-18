@@ -5,10 +5,11 @@ import {
   View,
   Text,
   ScrollView,
-  Button,
   ActivityIndicator,
   StyleSheet,
   FlatList,
+  VirtualizedList,
+  SafeAreaView,
 } from 'react-native';
 import {Header, Card} from 'react-native-elements';
 import Icon from 'react-native-vector-icons/FontAwesome';
@@ -27,7 +28,7 @@ class ProductDetailScreen extends Component {
   }
 
   componentDidMount() {
-    if (this.props.route.params.productId) {
+    if (this.props.route.params.productId + 1) {
       this.setState({
         product: this.props.products.products.filter(
           product => product._id === this.props.route.params.productId,
@@ -38,7 +39,7 @@ class ProductDetailScreen extends Component {
 
   render() {
     return (
-      <View>
+      <SafeAreaView>
         <Header
           leftComponent={
             <Icon
@@ -123,44 +124,48 @@ class ProductDetailScreen extends Component {
                   <View style={mainStyles.labelGroup}>
                     <Text style={mainStyles.labelText}>Variants:</Text>
                   </View>
-                  <FlatList
-                    data={this.state.product.quantity}
-                    renderItem={item => {
-                      return (
-                        <View key={item.index} style={mainStyles.row}>
-                          <View style={mainStyles.col6}>
-                            <View style={mainStyles.infoGroup}>
-                              <View style={mainStyles.labelGroup}>
-                                <Text style={mainStyles.labelText}>
-                                  Quantity:
-                                </Text>
+                  <SafeAreaView>
+                    <FlatList
+                      data={this.state.product.quantity}
+                      renderItem={item => {
+                        return (
+                          <View key={item.index} style={mainStyles.row}>
+                            <View style={mainStyles.col6}>
+                              <View style={mainStyles.infoGroup}>
+                                <View style={mainStyles.labelGroup}>
+                                  <Text style={mainStyles.labelText}>
+                                    Quantity:
+                                  </Text>
+                                </View>
+                                <View>
+                                  <Text style={mainStyles.value}>
+                                    {item.item.value}
+                                  </Text>
+                                </View>
                               </View>
-                              <View>
-                                <Text style={mainStyles.value}>
-                                  {item.item.value}
-                                </Text>
+                            </View>
+                            <View style={mainStyles.col6}>
+                              <View style={mainStyles.infoGroup}>
+                                <View style={mainStyles.labelGroup}>
+                                  <Text style={mainStyles.labelText}>
+                                    Price:
+                                  </Text>
+                                </View>
+                                <View>
+                                  <Text style={mainStyles.value}>
+                                    {item.item.price}
+                                  </Text>
+                                </View>
                               </View>
                             </View>
                           </View>
-                          <View style={mainStyles.col6}>
-                            <View style={mainStyles.infoGroup}>
-                              <View style={mainStyles.labelGroup}>
-                                <Text style={mainStyles.labelText}>Price:</Text>
-                              </View>
-                              <View>
-                                <Text style={mainStyles.value}>
-                                  {item.item.price}
-                                </Text>
-                              </View>
-                            </View>
-                          </View>
-                        </View>
-                      );
-                    }}
-                    keyExtractor={(item, index) => {
-                      return index.toString();
-                    }}
-                  />
+                        );
+                      }}
+                      keyExtractor={(item, index) => {
+                        return index.toString();
+                      }}
+                    />
+                  </SafeAreaView>
                 </View>
               </Card>
             ) : (
@@ -168,7 +173,7 @@ class ProductDetailScreen extends Component {
             )}
           </View>
         </ScrollView>
-      </View>
+      </SafeAreaView>
     );
   }
 }

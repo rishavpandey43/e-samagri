@@ -5,11 +5,11 @@ import {
   ScrollView,
   StyleSheet,
   View,
-  Text,
   FlatList,
   ActivityIndicator,
+  SafeAreaView,
 } from 'react-native';
-import {Header, Card, ListItem} from 'react-native-elements';
+import {Header, Card, ListItem, Button, Text} from 'react-native-elements';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
 import * as actionCreators from '../store/actions/creators/GetProducts';
@@ -26,7 +26,7 @@ class ProductsScreen extends Component {
   }
 
   componentDidMount() {
-    this.props.getProductFetch();
+    this.props.getProductsFetch();
     if (this.props.products.products) {
       ('Product received');
     }
@@ -81,13 +81,32 @@ class ProductsScreen extends Component {
         <ScrollView>
           <View style={mainStyles.container}>
             {this.state.products.products ? (
-              <FlatList
-                data={this.state.products.products}
-                renderItem={this.renderProductList.bind(null)}
-                keyExtractor={item => item._id.toString()}
+              <SafeAreaView>
+                <FlatList
+                  data={this.state.products.products}
+                  renderItem={this.renderProductList.bind(null)}
+                  keyExtractor={item => item._id.toString()}
+                />
+              </SafeAreaView>
+            ) : this.state.products.isLoading ? (
+              <ActivityIndicator
+                animating={this.state.products.isLoading}
+                size={50}
+                color={variables.mainThemeColor}
               />
             ) : (
-              <ActivityIndicator size={50} color={variables.mainThemeColor} />
+              <Card title="Error Message">
+                <Text style={{marginBottom: 20}}>
+                  {this.state.products.errMessage}
+                </Text>
+                <Button
+                  type="outline"
+                  title="Retry"
+                  onPress={() => {
+                    this.props.getProductsFetch();
+                  }}
+                />
+              </Card>
             )}
           </View>
         </ScrollView>

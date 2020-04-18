@@ -3,42 +3,44 @@ import axios from 'axios';
 
 import * as helper from '../../../utils/helper';
 
-export const getProductRequest = () => {
+export const getProductsRequest = () => {
   return {
-    type: actionTypes.GET_PRODUCT_REQUEST,
+    type: actionTypes.GET_PRODUCTS_REQUEST,
   };
 };
 
-export const getProductSuccess = response => {
+export const getProductsSuccess = response => {
   return {
-    type: actionTypes.GET_PRODUCT_SUCCESS,
-    product: response.product,
+    type: actionTypes.GET_PRODUCTS_SUCCESS,
+    products: response.products,
     message: response.message,
   };
 };
 
-export const getProductFailure = response => {
+export const getProductsFailure = response => {
   return {
-    type: actionTypes.GET_PRODUCT_FAILURE,
+    type: actionTypes.GET_PRODUCTS_FAILURE,
     message: response.message,
   };
 };
 
-export const getProductFetch = () => dispatch => {
+export const getProductsFetch = () => dispatch => {
   const sellerId = 0;
-  dispatch(getProductRequest());
+  dispatch(getProductsRequest());
   axios
     .get('http://192.168.43.240:3000/product')
     .then(response => {
-      product = helper.filterBySeller(sellerId, response.data);
+      products = helper.filterProductBySeller(sellerId, response.data);
       setTimeout(() => {
-        dispatch(getProductSuccess({product}));
+        dispatch(getProductsSuccess({products}));
       }, 1000);
     })
     .catch(error => {
       dispatch(
-        getProductFailure({
-          message: error.response || 'No Internet Connection',
+        getProductsFailure({
+          message:
+            error.response ||
+            "Connection to server couldn't be established, please try again",
         }),
       );
     });

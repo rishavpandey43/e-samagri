@@ -2,30 +2,30 @@ import * as actionTypes from '../actions/types/actionTypes';
 
 const initialState = {
   isLoading: false,
-  products: null,
+  orders: null,
   successMessage: null,
   errMessage: null,
 };
 
-const products = (state = initialState, action) => {
+const orders = (state = initialState, action) => {
   switch (action.type) {
-    case actionTypes.GET_PRODUCTS_REQUEST:
+    case actionTypes.GET_ORDERS_REQUEST:
       return {
         ...state,
         isLoading: true,
       };
-    case actionTypes.GET_PRODUCTS_SUCCESS:
+    case actionTypes.GET_ORDERS_SUCCESS:
       return {
         ...state,
         isLoading: false,
-        products: action.products,
+        orders: action.orders,
         successMessage: action.message,
       };
-    case actionTypes.GET_PRODUCTS_FAILURE:
+    case actionTypes.GET_ORDERS_FAILURE:
       return {
         ...state,
         isLoading: false,
-        products: null,
+        orders: null,
         errMessage: action.message,
       };
     default:
@@ -35,4 +35,4 @@ const products = (state = initialState, action) => {
   }
 };
 
-export default products;
+export default orders;

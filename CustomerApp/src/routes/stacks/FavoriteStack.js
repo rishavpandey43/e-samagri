@@ -2,23 +2,23 @@ import React from 'react';
 import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
 
-import WishListScreen from '../../screens/primary/WishList';
+import FavoriteScreen from '../../screens/primary/Favorite';
 
 const Stack = createStackNavigator();
 
-const WishListStack = () => (
+const FavoriteStack = () => (
   <Stack.Navigator
     screenOptions={{
       headerShown: false,
     }}>
     <Stack.Screen
-      name="wishList"
-      component={WishListScreen}
+      name="favorite"
+      component={FavoriteScreen}
       options={{
-        title: 'My WishList',
+        title: 'My Favorite',
       }}
     />
   </Stack.Navigator>
 );
 
-export default WishListStack;
+export default FavoriteStack;

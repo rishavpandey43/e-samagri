@@ -1,11 +1,19 @@
 import React, {Component} from 'react';
-import {ScrollView, StyleSheet, View, Text, Button} from 'react-native';
+import {
+  ScrollView,
+  StyleSheet,
+  View,
+  Text,
+  Button,
+  FlatList,
+  SafeAreaView,
+} from 'react-native';
 import {Header, Card} from 'react-native-elements';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
 import mainStyles from '../../styles/mainStyle';
 
-class WishListScreen extends Component {
+class FavoriteScreen extends Component {
   constructor(props) {
     super(props);
     this.state = {};
@@ -26,7 +34,7 @@ class WishListScreen extends Component {
             />
           }
           centerComponent={{
-            text: 'My Wishlist',
+            text: 'My Favorite',
             style: {color: '#fff'},
           }}
           rightComponent={<Icon name="heart" color="#FFF" size={30} />}
@@ -37,7 +45,7 @@ class WishListScreen extends Component {
         />
         <ScrollView>
           <View style={[mainStyles.container, {marginBottom: 100}]}>
-            <Text>I'm WishList Screen</Text>
+            <FlatList />
           </View>
         </ScrollView>
       </View>
@@ -47,4 +55,4 @@ class WishListScreen extends Component {
 
 const styles = StyleSheet.create({});
 
-export default WishListScreen;
+export default FavoriteScreen;

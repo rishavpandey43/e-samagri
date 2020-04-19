@@ -20,7 +20,7 @@ const OrdersStack = () => (
       }}
     />
     <Stack.Screen
-      name="Order Detail"
+      name="order-detail"
       component={OrderDetailScreen}
       options={{
         title: 'Order Detail',

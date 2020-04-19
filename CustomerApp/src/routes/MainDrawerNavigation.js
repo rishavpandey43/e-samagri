@@ -6,7 +6,7 @@ import {createDrawerNavigator} from '@react-navigation/drawer';
 
 import HomeStack from './stacks/HomeStack';
 import AccountStack from './stacks/AccountStack';
-import WishListStack from './stacks/WishListStack';
+import FavoriteStack from './stacks/FavoriteStack';
 import OrdersStack from './stacks/OrdersStack';
 import HelpStack from './stacks/HelpStack';
 
@@ -38,10 +38,10 @@ const MainDrawerNavigation = () => (
         }}
       />
       <Drawer.Screen
-        name="wishlist"
-        component={WishListStack}
+        name="favorite"
+        component={FavoriteStack}
         options={{
-          drawerLabel: 'My Wishlists',
+          drawerLabel: 'My Favorites',
           drawerIcon: () => (
             <Icon name="heart" size={30} color={variable.mainThemeColor} />
           ),

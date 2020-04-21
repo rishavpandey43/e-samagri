@@ -1,16 +1,32 @@
 import React, {Component} from 'react';
-import {ScrollView, StyleSheet, View, Text} from 'react-native';
-import {Header, Card, Avatar} from 'react-native-elements';
+import {bindActionCreators} from 'redux';
+import {connect} from 'react-redux';
+import {
+  ScrollView,
+  StyleSheet,
+  View,
+  Text,
+  ActivityIndicator,
+} from 'react-native';
+import {Header, Card, Avatar, Image} from 'react-native-elements';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
 import mainStyles from '../styles/mainStyle';
-
 import variables from '../styles/variables';
+
+import * as actionCreators from '../store/actions/creators/GetProfile';
 
 class ProfileScreen extends Component {
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = {
+      profile: this.props.profile,
+    };
+  }
+
+  componentDidMount() {
+    this.props.getProfileFetch();
+    this.setState({profile: {...this.props.profile}});
   }
 
   render() {
@@ -40,14 +56,10 @@ class ProfileScreen extends Component {
         <ScrollView>
           <View style={mainStyles.container}>
             <View style={styles.profileImg}>
-              <Avatar
-                size="large"
-                title="Seller 1"
-                rounded
-                source={{
-                  uri:
-                    'https://s3.amazonaws.com/uifaces/faces/twitter/ladylexy/128.jpg',
-                }}
+              <Image
+                source={{uri: 'https://via.placeholder.com/100'}}
+                style={{width: 100, height: 100}}
+                PlaceholderContent={<ActivityIndicator />}
               />
               <Text h1>John Doe Seller</Text>
             </View>
@@ -260,4 +272,17 @@ const styles = StyleSheet.create({
   },
 });
 
-export default ProfileScreen;
+const mapStateToProps = state => {
+  return {
+    profile: state.profile,
+  };
+};
+
+const mapDispatchToProps = dispatch => {
+  return bindActionCreators(actionCreators, dispatch);
+};
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(ProfileScreen);

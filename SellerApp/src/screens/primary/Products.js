@@ -12,10 +12,10 @@ import {
 import {Header, Card, ListItem, Button, Text} from 'react-native-elements';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
-import * as actionCreators from '../store/actions/creators/GetProducts';
+import * as actionCreators from '../../store/actions/creators/GetProducts';
 
-import variables from '../styles/variables';
-import mainStyles from '../styles/mainStyle';
+import variables from '../../styles/variables';
+import mainStyles from '../../styles/mainStyle';
 
 class ProductsScreen extends Component {
   constructor(props) {

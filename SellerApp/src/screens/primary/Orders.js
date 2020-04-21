@@ -12,12 +12,12 @@ import {
 import {Header, Card, ListItem, Button, Text} from 'react-native-elements';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
-import * as actionCreators from '../store/actions/creators/GetOrders';
+import * as actionCreators from '../../store/actions/creators/GetOrders';
 
-import variables from '../styles/variables';
-import mainStyles from '../styles/mainStyle';
+import variables from '../../styles/variables';
+import mainStyles from '../../styles/mainStyle';
 
-import * as helper from '../utils/helper';
+import * as helper from '../../utils/helper';
 
 class OrdersScreen extends Component {
   constructor(props) {

@@ -5,9 +5,9 @@ import {ScrollView, StyleSheet, View, Text, Button} from 'react-native';
 import {Header, Card} from 'react-native-elements';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
-import mainStyles from '../styles/mainStyle';
+import mainStyles from '../../styles/mainStyle';
 
-import * as actionCreators from '../store/actions/creators/GetProfile';
+import * as actionCreators from '../../store/actions/creators/GetProfile';
 
 class DashBoardScreen extends Component {
   constructor(props) {

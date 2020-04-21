@@ -2,7 +2,7 @@ import React from 'react';
 import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
 
-import DashBoardScreen from '../../screens/DashBoard';
+import DashBoardScreen from '../../screens/primary/DashBoard';
 
 const Stack = createStackNavigator();
 

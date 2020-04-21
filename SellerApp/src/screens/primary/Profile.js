@@ -11,10 +11,10 @@ import {
 import {Header, Card, Avatar, Image} from 'react-native-elements';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
-import mainStyles from '../styles/mainStyle';
-import variables from '../styles/variables';
+import mainStyles from '../../styles/mainStyle';
+import variables from '../../styles/variables';
 
-import * as actionCreators from '../store/actions/creators/GetProfile';
+import * as actionCreators from '../../store/actions/creators/GetProfile';
 
 class ProfileScreen extends Component {
   constructor(props) {

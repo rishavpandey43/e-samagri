@@ -14,10 +14,10 @@ import {
 import {Header, Card} from 'react-native-elements';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
-import * as actionCreators from '../store/actions/creators/GetProducts';
+import * as actionCreators from '../../store/actions/creators/GetProducts';
 
-import variables from '../styles/variables';
-import mainStyles from '../styles/mainStyle';
+import variables from '../../styles/variables';
+import mainStyles from '../../styles/mainStyle';
 
 class ProductDetailScreen extends Component {
   constructor(props) {

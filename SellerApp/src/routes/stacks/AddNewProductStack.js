@@ -2,7 +2,7 @@ import React from 'react';
 import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
 
-import AddNewProductScreen from '../../screens/AddNewProduct';
+import AddNewProductScreen from '../../screens/primary/AddNewProduct';
 
 const Stack = createStackNavigator();
 

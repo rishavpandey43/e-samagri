@@ -7,7 +7,7 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 
 import mainStyles from '../../styles/mainStyle';
 
-import * as actionCreators from '../../store/actions/creators/GetProfile';
+import * as profileActions from '../../store/actions/creators/profileActions';
 
 class DashBoardScreen extends Component {
   constructor(props) {
@@ -15,10 +15,11 @@ class DashBoardScreen extends Component {
     this.state = {};
   }
 
-  componentDidMount() {}
+  componentDidMount() {
+    this.props.getProfileFetch();
+  }
 
   render() {
-    console.log(this.props.profile);
     return (
       <View>
         <Header
@@ -96,7 +97,7 @@ const mapStateToProps = state => {
 };
 
 const mapDispatchToProps = dispatch => {
-  return bindActionCreators(actionCreators, dispatch);
+  return bindActionCreators({...profileActions}, dispatch);
 };
 
 export default connect(

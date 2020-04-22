@@ -6,6 +6,7 @@ const sellerRouter = express.Router(); // initialize express router
 
 sellerRouter
   .post("/add-seller", sellerRouterController.addSellerController)
-  .get("/get-seller", sellerRouterController.getSellerController);
+  .get("/get-seller", sellerRouterController.getSellerController)
+  .put("/update-seller", sellerRouterController.updateSellerDetailController);
 
 module.exports = sellerRouter;

@@ -4,16 +4,17 @@ const Schema = mongoose.Schema;
 
 const sellerSchema = new Schema(
   {
-    firstName: { type: String, required: true },
-    lastName: { type: String, required: true },
-    email: { type: String, required: true },
-    phone: { type: String, required: true },
+    personalDetail: {
+      firstName: { type: String, required: true },
+      lastName: { type: String, required: true },
+      email: { type: String, required: true },
+      phone: { type: String, required: true },
+    },
     storeDetail: {
       name: { type: String, required: false },
-      category: [{ type: String, required: false }],
       address: {
-        name: { type: String, required: false },
         street: { type: String, required: false },
+        landmark: { type: String, required: false },
         city: { type: String, required: false },
         pinCode: { type: Number, required: false },
         // loc: {
@@ -21,15 +22,18 @@ const sellerSchema = new Schema(
         //   latitude: { type: String, required: false },
         // },
       },
+      panCard: { type: String, required: false },
+      gstNumber: { type: String, required: false },
       document: { type: Buffer, required: false },
       verified: { type: Boolean, required: false },
       rating: { type: Number, required: false },
     },
     bankDetail: {
       name: { type: String, required: false },
-      accountNum: { type: Number, required: false },
+      accountNumber: { type: Number, required: false },
       ifscCode: { type: String, required: false },
       branchName: { type: String, required: false },
+      verified: { type: Boolean, required: false },
     },
     orders: [
       {

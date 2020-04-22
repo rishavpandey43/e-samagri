@@ -16,3 +16,9 @@ export const obtainItemsInString = (items, i) => {
   );
   return orderName;
 };
+
+export const obtainAddressInString = addressObject => {
+  let address = ' ';
+  address += Object.keys(addressObject).map(key => addressObject[key] + ' ');
+  return address;
+};

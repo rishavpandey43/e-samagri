@@ -1,32 +1,22 @@
 import React, {Component} from 'react';
 import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
-import {
-  ScrollView,
-  StyleSheet,
-  View,
-  Text,
-  ActivityIndicator,
-} from 'react-native';
-import {Header, Card, Avatar, Image} from 'react-native-elements';
+import {ScrollView, StyleSheet, View, ActivityIndicator} from 'react-native';
+import {Header, Card, Image, Button, Text} from 'react-native-elements';
 import Icon from 'react-native-vector-icons/FontAwesome';
+
+import CardCustomTitle from '../../components/CardCustomTitle';
 
 import mainStyles from '../../styles/mainStyle';
 import variables from '../../styles/variables';
 
-import * as actionCreators from '../../store/actions/creators/GetProfile';
+import * as profileActions from '../../store/actions/creators/profileActions';
 
+import * as helper from '../../utils/helper';
 class ProfileScreen extends Component {
   constructor(props) {
     super(props);
-    this.state = {
-      profile: this.props.profile,
-    };
-  }
-
-  componentDidMount() {
-    this.props.getProfileFetch();
-    this.setState({profile: {...this.props.profile}});
+    this.state = {};
   }
 
   render() {
@@ -54,208 +44,344 @@ class ProfileScreen extends Component {
           }}
         />
         <ScrollView>
-          <View style={mainStyles.container}>
-            <View style={styles.profileImg}>
-              <Image
-                source={{uri: 'https://via.placeholder.com/100'}}
-                style={{width: 100, height: 100}}
-                PlaceholderContent={<ActivityIndicator />}
+          {this.props.profile.fetchingProfile ? (
+            <View
+              style={{
+                marginTop: 50,
+                justifyContent: 'center',
+                alignItems: 'center',
+              }}>
+              <ActivityIndicator size="large" />
+            </View>
+          ) : this.props.profile.errMessage ? (
+            <Card title="Error Message" containerStyle={{alignItems: 'center'}}>
+              <Text style={{marginBottom: 20, fontSize: 20, color: 'red'}}>
+                {this.props.profile.errMessage}
+              </Text>
+              <Button
+                title="Retry"
+                type="outline"
+                titleStyle={{color: variables.mainThemeColor}}
+                buttonStyle={mainStyles.outlineBtn}
+                onPress={() => {
+                  this.props.getProfileFetch();
+                }}
               />
-              <Text h1>John Doe Seller</Text>
+            </Card>
+          ) : this.props.profile.profile ? (
+            <View style={mainStyles.container}>
+              <View style={styles.profileImg}>
+                <Text h3>
+                  {this.props.profile.profile.personalDetail.firstName +
+                    ' ' +
+                    this.props.profile.profile.personalDetail.lastName}
+                </Text>
+              </View>
+              <View>
+                <Card
+                  title={
+                    <CardCustomTitle
+                      title="Personal Detail"
+                      detail={this.props.profile.profile.personalDetail}
+                      onPress={() => {
+                        this.props.navigation.navigate('edit-profile');
+                      }}
+                    />
+                  }>
+                  <View style={mainStyles.infoGroup}>
+                    <View style={mainStyles.labelGroup}>
+                      <Icon
+                        name="user"
+                        color={variables.mainThemeColor}
+                        size={20}
+                        style={styles.marginRight}
+                      />
+                      <Text style={mainStyles.labelText}>Owner Name:</Text>
+                    </View>
+                    <View>
+                      <Text style={mainStyles.value}>
+                        {this.props.profile.profile.personalDetail.firstName +
+                          ' ' +
+                          this.props.profile.profile.personalDetail.lastName}
+                      </Text>
+                    </View>
+                  </View>
+
+                  <View style={mainStyles.infoGroup}>
+                    <View style={mainStyles.labelGroup}>
+                      <Icon
+                        name="envelope"
+                        color={variables.mainThemeColor}
+                        size={20}
+                        style={styles.marginRight}
+                      />
+                      <Text style={mainStyles.labelText}>Email:</Text>
+                    </View>
+                    <View>
+                      <Text style={mainStyles.value}>
+                        {this.props.profile.profile.personalDetail.email}
+                      </Text>
+                    </View>
+                  </View>
+
+                  <View style={mainStyles.infoGroup}>
+                    <View style={mainStyles.labelGroup}>
+                      <Icon
+                        name="phone"
+                        color={variables.mainThemeColor}
+                        size={20}
+                        style={styles.marginRight}
+                      />
+                      <Text style={mainStyles.labelText}>Mobile number:</Text>
+                    </View>
+                    <View>
+                      <Text style={mainStyles.value}>
+                        {this.props.profile.profile.personalDetail.phone}
+                      </Text>
+                    </View>
+                  </View>
+                </Card>
+
+                <Card
+                  title={
+                    <CardCustomTitle
+                      title="Store Detail"
+                      detail={this.props.profile.profile.storeDetail}
+                      onPress={() => {
+                        this.props.navigation.navigate('edit-profile');
+                      }}
+                    />
+                  }>
+                  {!this.props.profile.profile.storeDetail ? (
+                    <View style={{alignItems: 'center'}}>
+                      <Text style={{margin: 10}}>No Store added</Text>
+                      <Button
+                        title="Add your store"
+                        type="outline"
+                        titleStyle={{color: variables.mainThemeColor}}
+                        buttonStyle={mainStyles.outlineBtn}
+                        onPress={() => {
+                          this.props.navigation.navigate('edit-profile');
+                        }}
+                      />
+                    </View>
+                  ) : (
+                    <View>
+                      <View style={mainStyles.infoGroup}>
+                        <View style={mainStyles.labelGroup}>
+                          <Icon
+                            name="shopping-cart"
+                            color={variables.mainThemeColor}
+                            size={20}
+                            style={styles.marginRight}
+                          />
+                          <Text style={mainStyles.labelText}>Store Name:</Text>
+                        </View>
+                        <View>
+                          <Text style={mainStyles.value}>
+                            {this.props.profile.profile.storeDetail.name}
+                          </Text>
+                        </View>
+                      </View>
+
+                      <View style={mainStyles.infoGroup}>
+                        <View style={mainStyles.labelGroup}>
+                          <Icon
+                            name="map-marker"
+                            color={variables.mainThemeColor}
+                            size={20}
+                            style={styles.marginRight}
+                          />
+                          <Text style={mainStyles.labelText}>
+                            Store Address:
+                          </Text>
+                        </View>
+                        <View>
+                          <Text style={mainStyles.value}>
+                            {helper.obtainAddressInString(
+                              this.props.profile.profile.storeDetail.address,
+                            )}
+                          </Text>
+                        </View>
+                      </View>
+
+                      <View style={mainStyles.infoGroup}>
+                        <View style={mainStyles.labelGroup}>
+                          <Icon
+                            name="file-o"
+                            color={variables.mainThemeColor}
+                            size={20}
+                            style={styles.marginRight}
+                          />
+                          <Text style={mainStyles.labelText}>
+                            PAN Card number:
+                          </Text>
+                        </View>
+                        <View>
+                          <Text style={mainStyles.value}>
+                            {this.props.profile.profile.storeDetail.panCard}
+                          </Text>
+                        </View>
+                      </View>
+
+                      <View style={mainStyles.infoGroup}>
+                        <View style={mainStyles.labelGroup}>
+                          <Icon
+                            name="file-o"
+                            color={variables.mainThemeColor}
+                            size={20}
+                            style={styles.marginRight}
+                          />
+                          <Text style={mainStyles.labelText}>GST number:</Text>
+                        </View>
+                        <View>
+                          <Text style={mainStyles.value}>
+                            {this.props.profile.profile.storeDetail.gstNumber}
+                          </Text>
+                        </View>
+                      </View>
+                      <View style={mainStyles.row}>
+                        <View style={{flex: 1}}>
+                          <Text h4>Status:</Text>
+                        </View>
+                        <View style={{flex: 1}}>
+                          {this.props.profile.profile.storeDetail.verified ? (
+                            <Text h4 style={{color: 'green', marginLeft: 10}}>
+                              Verified
+                            </Text>
+                          ) : (
+                            <Text h4 style={{color: 'red', marginLeft: 10}}>
+                              Not Verified
+                            </Text>
+                          )}
+                        </View>
+                      </View>
+                    </View>
+                  )}
+                </Card>
+
+                <Card
+                  title={
+                    <CardCustomTitle
+                      title="Bank Account Detail"
+                      detail={this.props.profile.profile.bankDetail}
+                      onPress={() => {
+                        this.props.navigation.navigate('edit-profile');
+                      }}
+                    />
+                  }
+                  containerStyle={{marginBottom: 100}}>
+                  {!this.props.profile.profile.bankDetail ? (
+                    <View style={{alignItems: 'center'}}>
+                      <Text style={{margin: 10}}>No Bank detail added</Text>
+                      <Button
+                        title="Add your bank detail"
+                        type="outline"
+                        titleStyle={{color: variables.mainThemeColor}}
+                        buttonStyle={mainStyles.outlineBtn}
+                        onPress={() => {
+                          this.props.navigation.navigate('edit-profile');
+                        }}
+                      />
+                    </View>
+                  ) : (
+                    <View>
+                      <View style={mainStyles.infoGroup}>
+                        <View style={mainStyles.labelGroup}>
+                          <Icon
+                            name="bank"
+                            color={variables.mainThemeColor}
+                            size={20}
+                            style={styles.marginRight}
+                          />
+                          <Text style={mainStyles.labelText}>Bank Name:</Text>
+                        </View>
+                        <View>
+                          <Text style={mainStyles.value}>
+                            {this.props.profile.profile.bankDetail.name}
+                          </Text>
+                        </View>
+                      </View>
+
+                      <View style={mainStyles.infoGroup}>
+                        <View style={mainStyles.labelGroup}>
+                          <Icon
+                            name="credit-card"
+                            color={variables.mainThemeColor}
+                            size={20}
+                            style={styles.marginRight}
+                          />
+                          <Text style={mainStyles.labelText}>
+                            Account number:
+                          </Text>
+                        </View>
+                        <View>
+                          <Text style={mainStyles.value}>
+                            {
+                              this.props.profile.profile.bankDetail
+                                .accountNumber
+                            }
+                          </Text>
+                        </View>
+                      </View>
+
+                      <View style={mainStyles.infoGroup}>
+                        <View style={mainStyles.labelGroup}>
+                          <Icon
+                            name="file-o"
+                            color={variables.mainThemeColor}
+                            size={20}
+                            style={styles.marginRight}
+                          />
+                          <Text style={mainStyles.labelText}>IFSC code:</Text>
+                        </View>
+                        <View>
+                          <Text style={mainStyles.value}>
+                            {this.props.profile.profile.bankDetail.ifscCode}
+                          </Text>
+                        </View>
+                      </View>
+
+                      <View style={mainStyles.infoGroup}>
+                        <View style={mainStyles.labelGroup}>
+                          <Icon
+                            name="file-o"
+                            color={variables.mainThemeColor}
+                            size={20}
+                            style={styles.marginRight}
+                          />
+                          <Text style={mainStyles.labelText}>Branch Name:</Text>
+                        </View>
+                        <View>
+                          <Text style={mainStyles.value}>
+                            {this.props.profile.profile.bankDetail.branchName}
+                          </Text>
+                        </View>
+                      </View>
+                      <View style={mainStyles.row}>
+                        <View style={{flex: 1}}>
+                          <Text h4>Status:</Text>
+                        </View>
+                        <View style={{flex: 1}}>
+                          {this.props.profile.profile.bankDetail.verified ? (
+                            <Text h4 style={{color: 'green', marginLeft: 10}}>
+                              Verified
+                            </Text>
+                          ) : (
+                            <Text h4 style={{color: 'red', marginLeft: 10}}>
+                              Not Verified
+                            </Text>
+                          )}
+                        </View>
+                      </View>
+                    </View>
+                  )}
+                </Card>
+              </View>
             </View>
-            <View>
-              <Card title="Personal Detail">
-                <View style={mainStyles.infoGroup}>
-                  <View style={mainStyles.labelGroup}>
-                    <Icon
-                      name="user"
-                      color={variables.mainThemeColor}
-                      size={20}
-                    />
-                    <Text style={mainStyles.labelText}>Owner Name:</Text>
-                  </View>
-                  <View>
-                    <Text style={mainStyles.value}>John Doe</Text>
-                  </View>
-                </View>
-
-                <View style={mainStyles.infoGroup}>
-                  <View style={mainStyles.labelGroup}>
-                    <Icon
-                      name="envelope"
-                      color={variables.mainThemeColor}
-                      size={20}
-                      style={styles.marginRight}
-                    />
-                    <Text style={mainStyles.labelText}>Email:</Text>
-                  </View>
-                  <View>
-                    <Text style={mainStyles.value}>johndoe@gmail.com</Text>
-                  </View>
-                </View>
-
-                <View style={mainStyles.infoGroup}>
-                  <View style={mainStyles.labelGroup}>
-                    <Icon
-                      name="phone"
-                      color={variables.mainThemeColor}
-                      size={20}
-                      style={styles.marginRight}
-                    />
-                    <Text style={mainStyles.labelText}>Mobile number:</Text>
-                  </View>
-                  <View>
-                    <Text style={mainStyles.value}>+91 9123456789</Text>
-                  </View>
-                </View>
-
-                <View style={mainStyles.infoGroup}>
-                  <View style={mainStyles.labelGroup}>
-                    <Icon
-                      name="map-marker"
-                      color={variables.mainThemeColor}
-                      size={20}
-                      style={styles.marginRight}
-                    />
-                    <Text style={mainStyles.labelText}>Address:</Text>
-                  </View>
-                  <View>
-                    <Text style={mainStyles.value}>
-                      123 Main Street, Daltonganj, Palamu, 822101
-                    </Text>
-                  </View>
-                </View>
-              </Card>
-
-              <Card title="Store Detail">
-                <View style={mainStyles.infoGroup}>
-                  <View style={mainStyles.labelGroup}>
-                    <Icon
-                      name="shopping-cart"
-                      color={variables.mainThemeColor}
-                      size={20}
-                      style={styles.marginRight}
-                    />
-                    <Text style={mainStyles.labelText}>Store Name:</Text>
-                  </View>
-                  <View>
-                    <Text style={mainStyles.value}>Sangam General Store</Text>
-                  </View>
-                </View>
-
-                <View style={mainStyles.infoGroup}>
-                  <View style={mainStyles.labelGroup}>
-                    <Icon
-                      name="map-marker"
-                      color={variables.mainThemeColor}
-                      size={20}
-                      style={styles.marginRight}
-                    />
-                    <Text style={mainStyles.labelText}>Store Address:</Text>
-                  </View>
-                  <View>
-                    <Text style={mainStyles.value}>
-                      123 Main Street, Daltonganj, Palamu, 822101
-                    </Text>
-                  </View>
-                </View>
-
-                <View style={mainStyles.infoGroup}>
-                  <View style={mainStyles.labelGroup}>
-                    <Icon
-                      name="file-o"
-                      color={variables.mainThemeColor}
-                      size={20}
-                      style={styles.marginRight}
-                    />
-                    <Text style={mainStyles.labelText}>PAN Card number:</Text>
-                  </View>
-                  <View>
-                    <Text style={styles.value}>DNAPP3910J</Text>
-                  </View>
-                </View>
-
-                <View style={mainStyles.infoGroup}>
-                  <View style={mainStyles.labelGroup}>
-                    <Icon
-                      name="file-o"
-                      color={variables.mainThemeColor}
-                      size={20}
-                      style={styles.marginRight}
-                    />
-                    <Text style={mainStyles.labelText}>GST number:</Text>
-                  </View>
-                  <View>
-                    <Text style={mainStyles.value}>36ARVPS3698F1ZF</Text>
-                  </View>
-                </View>
-              </Card>
-
-              <Card
-                title="Bank Account Detail"
-                containerStyle={{marginBottom: 100}}>
-                <View style={mainStyles.infoGroup}>
-                  <View style={mainStyles.labelGroup}>
-                    <Icon
-                      name="bank"
-                      color={variables.mainThemeColor}
-                      size={20}
-                      style={styles.marginRight}
-                    />
-                    <Text style={mainStyles.labelText}>Bank Name:</Text>
-                  </View>
-                  <View>
-                    <Text style={mainStyles.value}>State Bank Of India</Text>
-                  </View>
-                </View>
-
-                <View style={mainStyles.infoGroup}>
-                  <View style={mainStyles.labelGroup}>
-                    <Icon
-                      name="credit-card"
-                      color={variables.mainThemeColor}
-                      size={20}
-                      style={styles.marginRight}
-                    />
-                    <Text style={mainStyles.labelText}>Account number:</Text>
-                  </View>
-                  <View>
-                    <Text style={mainStyles.value}>1234567890</Text>
-                  </View>
-                </View>
-
-                <View style={mainStyles.infoGroup}>
-                  <View style={mainStyles.labelGroup}>
-                    <Icon
-                      name="file-o"
-                      color={variables.mainThemeColor}
-                      size={20}
-                      style={styles.marginRight}
-                    />
-                    <Text style={mainStyles.labelText}>IFSC code:</Text>
-                  </View>
-                  <View>
-                    <Text style={mainStyles.value}>DNAPP3910J</Text>
-                  </View>
-                </View>
-
-                <View style={mainStyles.infoGroup}>
-                  <View style={mainStyles.labelGroup}>
-                    <Icon
-                      name="file-o"
-                      color={variables.mainThemeColor}
-                      size={20}
-                      style={styles.marginRight}
-                    />
-                    <Text style={mainStyles.labelText}>Branch Name:</Text>
-                  </View>
-                  <View>
-                    <Text style={mainStyles.value}>G. L. A College Branch</Text>
-                  </View>
-                </View>
-              </Card>
-            </View>
-          </View>
+          ) : (
+            <Text>""</Text>
+          )}
         </ScrollView>
       </View>
     );
@@ -279,7 +405,7 @@ const mapStateToProps = state => {
 };
 
 const mapDispatchToProps = dispatch => {
-  return bindActionCreators(actionCreators, dispatch);
+  return bindActionCreators({...profileActions}, dispatch);
 };
 
 export default connect(

@@ -53,10 +53,10 @@ class ProfileScreen extends Component {
               }}>
               <ActivityIndicator size="large" />
             </View>
-          ) : this.props.profile.errMessage ? (
+          ) : this.props.profile.errMessage || !this.props.profile.profile ? (
             <Card title="Error Message" containerStyle={{alignItems: 'center'}}>
               <Text style={{marginBottom: 20, fontSize: 20, color: 'red'}}>
-                {this.props.profile.errMessage}
+                {this.props.profile.errMessage || 'Internal Server Error'}
               </Text>
               <Button
                 title="Retry"
@@ -68,8 +68,8 @@ class ProfileScreen extends Component {
                 }}
               />
             </Card>
-          ) : this.props.profile.profile ? (
-            <View style={mainStyles.container}>
+          ) : (
+            <View style={[mainStyles.container, {marginBottom: 100}]}>
               <View style={styles.profileImg}>
                 <Text h3>
                   {this.props.profile.profile.personalDetail.firstName +
@@ -269,8 +269,7 @@ class ProfileScreen extends Component {
                         this.props.navigation.navigate('edit-profile');
                       }}
                     />
-                  }
-                  containerStyle={{marginBottom: 100}}>
+                  }>
                   {!this.props.profile.profile.bankDetail ? (
                     <View style={{alignItems: 'center'}}>
                       <Text style={{margin: 10}}>No Bank detail added</Text>
@@ -379,8 +378,6 @@ class ProfileScreen extends Component {
                 </Card>
               </View>
             </View>
-          ) : (
-            <Text>""</Text>
           )}
         </ScrollView>
       </View>

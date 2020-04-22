@@ -120,7 +120,7 @@ class UpdateProfileScreen extends Component {
 
   render() {
     return (
-      <SafeAreaView>
+      <View>
         <Header
           leftComponent={
             <Icon
@@ -167,7 +167,7 @@ class UpdateProfileScreen extends Component {
               />
             </Card>
           ) : (
-            <View style={{marginBottom: 100}}>
+            <View style={[mainStyles.container, {marginBottom: 100}]}>
               <Card
                 title={
                   <CardCustomTitle
@@ -274,7 +274,10 @@ class UpdateProfileScreen extends Component {
                         titleStyle={{color: variables.mainThemeColor}}
                         type="outline"
                         buttonStyle={mainStyles.outlineBtn}
-                        onPress={this.updatePersonalDetail.bind(null)}
+                        onPress={() => {
+                          this.updateDetail('personalDetail');
+                        }}
+                        loading={this.props.profile.profileUpdating}
                       />
                     </View>
                   </View>
@@ -586,7 +589,7 @@ class UpdateProfileScreen extends Component {
             </View>
           )}
         </ScrollView>
-      </SafeAreaView>
+      </View>
     );
   }
 }

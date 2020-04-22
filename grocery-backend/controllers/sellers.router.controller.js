@@ -1,4 +1,5 @@
 const Seller = require("../models/seller.model");
+const Product = require("../models/product.model");
 
 const addSellerController = (req, res, next) => {
   Seller.findOne({ personalDetail: { email: req.body.personalDetail.email } })
@@ -27,12 +28,19 @@ const addSellerController = (req, res, next) => {
 const getSellerController = (req, res, next) => {
   Seller.findOne({ _id: req.query.id || req.params.id })
     .then((seller) => {
-      res.statusCode = 200;
-      res.statusText = "OK";
-      res.setHeader("Content-Type", "application/json");
-      res.json({
-        seller,
-      });
+      if (seller) {
+        res.statusCode = 200;
+        res.statusMessage = "OK";
+        res.setHeader("Content-Type", "application/json");
+        res.json({
+          seller,
+        });
+      } else {
+        let err = new Error(`Internal Server Error`);
+        err.status = 500;
+        err.statusText = "Internal Server Error";
+        next(err);
+      }
     })
     .catch((err) => next(err));
 };
@@ -44,29 +52,107 @@ const updateSellerDetailController = (req, res, next) => {
     { new: true }
   )
     .then((seller) => {
-      res.statusCode = 201;
-      res.statusMessage = "Created";
-      res.setHeader("Content-Type", "application/json");
-      res.json({
-        seller,
-      });
+      if (seller) {
+        res.statusCode = 200;
+        res.statusMessage = "OK";
+        res.setHeader("Content-Type", "application/json");
+        res.json({
+          seller,
+        });
+      } else {
+        let err = new Error(`Unable to update, please try again.`);
+        err.status = 500;
+        err.statusText = "Internal Server Error";
+        next(err);
+      }
     })
     .catch((err) => next(err));
 };
 
-const updateSellerBankController = (req, res, next) => {
-  Seller.findOneAndUpdate(
-    { _id: req.query.id || req.params.id },
-    { $set: { bankDetail: req.body } },
-    { new: true }
-  )
-    .then((seller) => {
-      res.statusCode = 201;
-      res.statusMessage = "Created";
-      res.setHeader("Content-Type", "application/json");
-      res.json({
-        seller,
-      });
+const addNewProductController = (req, res, next) => {
+  Product.findOne({ name: req.body.general.name })
+    .then((product) => {
+      if (product) {
+        // * If product exist in DB, then only add it to particular seller
+        Seller.findOne({
+          $and: [
+            { _id: req.query.id || req.params.id },
+            { products: { $elemMatch: { _id: product._id } } },
+          ],
+        })
+          .then((seller) => {
+            if (seller) {
+              let err = new Error(`Product already added to your store`);
+              err.status = 409;
+              err.statusText = "Conflict";
+              next(err);
+            } else {
+              // * If seller with duplicate product is not found, find that seller again and update products to it's DB
+              Seller.findOne({ _id: req.query.id || req.params.id })
+                .then((seller) => {
+                  seller.products.push({
+                    ...req.body.sellerSpecific,
+                    _id: product._id,
+                  });
+                  seller
+                    .save()
+                    .then((seller) => {
+                      res.statusCode = 200;
+                      res.statusMessage = "OK";
+                      res.setHeader("Content-Type", "application/json");
+                      res.json({
+                        seller,
+                      });
+                    })
+                    .catch((err) => next(err));
+                })
+                .catch((err) => next(err));
+            }
+          })
+          .catch((err) => next(err));
+      } else {
+        // * If product doesn't exist, create a new one, and add to respective seller
+        Product.create({ ...req.body.general })
+          .then((product) => {
+            Seller.findOne({
+              $and: [
+                { _id: req.query.id || req.params.id },
+                { products: { $elemMatch: { _id: product._id } } },
+              ],
+            })
+              .then((seller) => {
+                if (seller) {
+                  let err = new Error(`Product already added to your store`);
+                  err.status = 409;
+                  err.statusText = "Conflict";
+                  next(err);
+                } else {
+                  // * If seller with duplicate product is not found, find that seller again and update products to it's DB
+                  Seller.findOne({ _id: req.query.id || req.params.id })
+                    .then((seller) => {
+                      seller.products.push({
+                        ...req.body.sellerSpecific,
+                        _id: product._id,
+                      });
+                      seller
+                        .save()
+                        .then((seller) => {
+                          res.statusCode = 200;
+                          res.statusMessage = "OK";
+                          res.setHeader("Content-Type", "application/json");
+                          res.json({
+                            seller,
+                          });
+                        })
+                        .catch((err) => next(err));
+                    })
+                    .catch((err) => next(err));
+                }
+              })
+              .catch((err) => next(err));
+          })
+          .catch((err) => next(err));
+      }
     })
     .catch((err) => next(err));
 };
@@ -74,4 +160,4 @@ const updateSellerBankController = (req, res, next) => {
 exports.addSellerController = addSellerController;
 exports.getSellerController = getSellerController;
 exports.updateSellerDetailController = updateSellerDetailController;
-exports.updateSellerBankController = updateSellerBankController;
+exports.addNewProductController = addNewProductController;

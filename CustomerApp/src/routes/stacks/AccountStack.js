@@ -12,7 +12,7 @@ const AccountStack = () => (
       headerShown: false,
     }}>
     <Stack.Screen
-      name="account"
+      name="account-screen"
       component={AccountScreen}
       options={{
         title: 'My Account',

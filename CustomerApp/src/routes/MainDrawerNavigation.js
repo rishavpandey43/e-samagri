@@ -18,7 +18,7 @@ const MainDrawerNavigation = () => (
   <NavigationContainer>
     <Drawer.Navigator>
       <Drawer.Screen
-        name="home"
+        name="home-stack"
         component={HomeStack}
         options={{
           drawerLabel: 'Home',
@@ -28,7 +28,7 @@ const MainDrawerNavigation = () => (
         }}
       />
       <Drawer.Screen
-        name="profile"
+        name="profile-stack"
         component={AccountStack}
         options={{
           drawerLabel: 'My Account',
@@ -38,7 +38,7 @@ const MainDrawerNavigation = () => (
         }}
       />
       <Drawer.Screen
-        name="favorite"
+        name="favorite-stack"
         component={FavoriteStack}
         options={{
           drawerLabel: 'My Favorites',
@@ -48,7 +48,7 @@ const MainDrawerNavigation = () => (
         }}
       />
       <Drawer.Screen
-        name="orders"
+        name="orders-stack"
         component={OrdersStack}
         options={{
           drawerLabel: 'Orders History',
@@ -58,7 +58,7 @@ const MainDrawerNavigation = () => (
         }}
       />
       <Drawer.Screen
-        name="help"
+        name="help-stack"
         component={HelpStack}
         options={{
           drawerLabel: 'Help',

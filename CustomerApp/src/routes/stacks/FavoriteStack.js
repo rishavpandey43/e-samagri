@@ -12,7 +12,7 @@ const FavoriteStack = () => (
       headerShown: false,
     }}>
     <Stack.Screen
-      name="favorite"
+      name="favorite-screen"
       component={FavoriteScreen}
       options={{
         title: 'My Favorite',

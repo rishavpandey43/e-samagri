@@ -90,114 +90,120 @@ class ProductDetailScreen extends Component {
               No product selected, please select valid product to see the detail
             </Text>
           ) : (
-            <Card title="Product Detail">
-              <View style={mainStyles.infoGroup}>
-                <View style={mainStyles.labelGroup}>
-                  <Text style={mainStyles.labelText}>Name:</Text>
+            <View style={[mainStyles.container, {marginBottom: 100}]}>
+              <Card title="Product Detail">
+                <View style={mainStyles.infoGroup}>
+                  <View style={mainStyles.labelGroup}>
+                    <Text style={mainStyles.labelText}>Name:</Text>
+                  </View>
+                  <View>
+                    <Text style={mainStyles.value}>
+                      {this.state.product.root.name}
+                    </Text>
+                  </View>
                 </View>
-                <View>
-                  <Text style={mainStyles.value}>
-                    {this.state.product.root.name}
-                  </Text>
-                </View>
-              </View>
 
-              <View style={mainStyles.infoGroup}>
-                <View style={mainStyles.labelGroup}>
-                  <Text style={mainStyles.labelText}>Brand:</Text>
+                <View style={mainStyles.infoGroup}>
+                  <View style={mainStyles.labelGroup}>
+                    <Text style={mainStyles.labelText}>Brand:</Text>
+                  </View>
+                  <View>
+                    <Text style={mainStyles.value}>
+                      {this.state.product.root.brand}
+                    </Text>
+                  </View>
                 </View>
-                <View>
-                  <Text style={mainStyles.value}>
-                    {this.state.product.root.brand}
-                  </Text>
-                </View>
-              </View>
 
-              <View style={mainStyles.infoGroup}>
-                <View style={mainStyles.labelGroup}>
-                  <Text style={mainStyles.labelText}>Description:</Text>
+                <View style={mainStyles.infoGroup}>
+                  <View style={mainStyles.labelGroup}>
+                    <Text style={mainStyles.labelText}>Description:</Text>
+                  </View>
+                  <View>
+                    <Text style={mainStyles.value}>
+                      {this.state.product.root.desc}
+                    </Text>
+                  </View>
                 </View>
-                <View>
-                  <Text style={mainStyles.value}>
-                    {this.state.product.root.desc}
-                  </Text>
-                </View>
-              </View>
 
-              <View style={mainStyles.infoGroup}>
-                <View style={mainStyles.labelGroup}>
-                  <Text style={mainStyles.labelText}>Category:</Text>
+                <View style={mainStyles.infoGroup}>
+                  <View style={mainStyles.labelGroup}>
+                    <Text style={mainStyles.labelText}>Category:</Text>
+                  </View>
+                  <View>
+                    <Text style={mainStyles.value}>
+                      {getCategoryName(this.state.product.root.category)}
+                    </Text>
+                  </View>
                 </View>
-                <View>
-                  <Text style={mainStyles.value}>
-                    {getCategoryName(this.state.product.root.category)}
-                  </Text>
-                </View>
-              </View>
 
-              <View style={mainStyles.infoGroup}>
-                <View style={mainStyles.labelGroup}>
-                  <Text style={mainStyles.labelText}>Type:</Text>
+                <View style={mainStyles.infoGroup}>
+                  <View style={mainStyles.labelGroup}>
+                    <Text style={mainStyles.labelText}>Type:</Text>
+                  </View>
+                  <View>
+                    <Text style={mainStyles.value}>
+                      {this.state.product.root.type}
+                    </Text>
+                  </View>
                 </View>
-                <View>
-                  <Text style={mainStyles.value}>
-                    {this.state.product.root.type}
-                  </Text>
-                </View>
-              </View>
 
-              <View style={mainStyles.infoGroup}>
-                <View style={mainStyles.labelGroup}>
-                  <Text style={mainStyles.labelText}>Variants:</Text>
-                </View>
-                <FlatList
-                  data={this.state.product.variants}
-                  renderItem={({item, index}) => {
-                    return (
-                      <View key={item._id} style={mainStyles.row}>
-                        <View style={mainStyles.col4}>
-                          <View style={mainStyles.infoGroup}>
-                            <View style={mainStyles.labelGroup}>
-                              <Text style={mainStyles.labelText}>
-                                Quantity:
-                              </Text>
+                <View style={mainStyles.infoGroup}>
+                  <View style={mainStyles.labelGroup}>
+                    <Text style={mainStyles.labelText}>Variants:</Text>
+                  </View>
+                  <FlatList
+                    data={this.state.product.variants}
+                    renderItem={({item, index}) => {
+                      return (
+                        <View key={item._id} style={mainStyles.row}>
+                          <View style={mainStyles.col4}>
+                            <View style={mainStyles.infoGroup}>
+                              <View style={mainStyles.labelGroup}>
+                                <Text style={mainStyles.labelText}>
+                                  Quantity:
+                                </Text>
+                              </View>
+                              <View>
+                                <Text style={mainStyles.value}>
+                                  {item.value}
+                                </Text>
+                              </View>
                             </View>
-                            <View>
-                              <Text style={mainStyles.value}>{item.value}</Text>
+                          </View>
+                          <View style={mainStyles.col4}>
+                            <View style={mainStyles.infoGroup}>
+                              <View style={mainStyles.labelGroup}>
+                                <Text style={mainStyles.labelText}>Price:</Text>
+                              </View>
+                              <View>
+                                <Text style={mainStyles.value}>
+                                  ₹ {item.price}
+                                </Text>
+                              </View>
+                            </View>
+                          </View>
+                          <View style={mainStyles.col4}>
+                            <View style={mainStyles.infoGroup}>
+                              <View style={mainStyles.labelGroup}>
+                                <Text style={mainStyles.labelText}>Stock:</Text>
+                              </View>
+                              <View>
+                                <Text style={mainStyles.value}>
+                                  {item.stock}
+                                </Text>
+                              </View>
                             </View>
                           </View>
                         </View>
-                        <View style={mainStyles.col4}>
-                          <View style={mainStyles.infoGroup}>
-                            <View style={mainStyles.labelGroup}>
-                              <Text style={mainStyles.labelText}>Price:</Text>
-                            </View>
-                            <View>
-                              <Text style={mainStyles.value}>
-                                ₹ {item.price}
-                              </Text>
-                            </View>
-                          </View>
-                        </View>
-                        <View style={mainStyles.col4}>
-                          <View style={mainStyles.infoGroup}>
-                            <View style={mainStyles.labelGroup}>
-                              <Text style={mainStyles.labelText}>Stock:</Text>
-                            </View>
-                            <View>
-                              <Text style={mainStyles.value}>{item.stock}</Text>
-                            </View>
-                          </View>
-                        </View>
-                      </View>
-                    );
-                  }}
-                  keyExtractor={(item, index) => {
-                    return item._id.toString();
-                  }}
-                />
-              </View>
-            </Card>
+                      );
+                    }}
+                    keyExtractor={(item, index) => {
+                      return item._id.toString();
+                    }}
+                  />
+                </View>
+              </Card>
+            </View>
           )}
         </ScrollView>
       </View>

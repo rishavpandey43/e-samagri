@@ -13,14 +13,14 @@ const ProfileStack = () => (
       headerShown: false,
     }}>
     <Stack.Screen
-      name="Profile"
+      name="profile-screen"
       component={ProfileScreen}
       options={{
         title: 'Profile',
       }}
     />
     <Stack.Screen
-      name="edit-profile"
+      name="edit-profile-screen"
       component={UpdateProfileScreen}
       options={{
         title: 'Profile',

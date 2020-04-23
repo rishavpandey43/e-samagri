@@ -27,7 +27,7 @@ import CardCustomTitle from '../../components/CardCustomTitle';
 import mainStyles from '../../styles/mainStyle';
 import variables from '../../styles/variables';
 
-import * as AddNewProductActions from '../../store/actions/creators/AddNewProductActions';
+import * as ProfileActions from '../../store/actions/creators/ProfileActions';
 
 import * as helper from '../../utils/helper';
 import {baseUrl, categoryList} from '../../utils/constant';
@@ -42,7 +42,7 @@ class AddNewProductScreen extends Component {
     this.state = {
       product: {
         name: '',
-        category: '',
+        category: 'ks',
         type: 'packet',
         brand: '',
         variants: [
@@ -95,7 +95,7 @@ class AddNewProductScreen extends Component {
       axios
         .post(baseUrl + '/seller/add-new-product', data, {
           params: {
-            id: sellerId2,
+            id: sellerId1,
           },
         })
         .then(res => {
@@ -494,22 +494,10 @@ const mapStateToProps = state => {
 };
 
 const mapDispatchToProps = dispatch => {
-  return bindActionCreators({...AddNewProductActions}, dispatch);
+  return bindActionCreators({...ProfileActions}, dispatch);
 };
 
 export default connect(
   mapStateToProps,
   mapDispatchToProps,
 )(AddNewProductScreen);
-
-{
-  /* <View style={mainStyles.col6}>
-
-</View>; */
-}
-
-{
-  /* <View style={[mainStyles.col2, {justifyContent: 'center3'}]}>
-
-</View>; */
-}

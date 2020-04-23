@@ -12,7 +12,7 @@ const DashBoardStack = () => (
       headerShown: false,
     }}>
     <Stack.Screen
-      name="DashBoard"
+      name="dashBoard-screen"
       component={DashBoardScreen}
       options={{
         title: 'DashBoard',

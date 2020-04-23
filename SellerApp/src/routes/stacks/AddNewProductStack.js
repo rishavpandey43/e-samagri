@@ -12,7 +12,7 @@ const AddNewProductStack = () => (
       headerShown: false,
     }}>
     <Stack.Screen
-      name="AddNewProduct"
+      name="add-new-product-screen"
       component={AddNewProductScreen}
       options={{
         title: 'AddNewProduct',

@@ -15,7 +15,7 @@ import DocumentPicker from 'react-native-document-picker';
 
 import CardCustomTitle from '../../components/CardCustomTitle';
 
-import * as profileActions from '../../store/actions/creators/profileActions';
+import * as ProfileActions from '../../store/actions/creators/ProfileActions';
 
 import variables from '../../styles/variables';
 import mainStyles from '../../styles/mainStyle';
@@ -603,7 +603,7 @@ const mapStateToProps = state => {
 };
 
 const mapDispatchToProps = dispatch => {
-  return bindActionCreators({...profileActions}, dispatch);
+  return bindActionCreators({...ProfileActions}, dispatch);
 };
 
 export default connect(

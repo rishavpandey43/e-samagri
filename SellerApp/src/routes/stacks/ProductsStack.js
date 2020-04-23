@@ -13,14 +13,14 @@ const ProductsStack = () => (
       headerShown: false,
     }}>
     <Stack.Screen
-      name="Products"
+      name="products-screen"
       component={ProductsScreen}
       options={{
         title: 'Products',
       }}
     />
     <Stack.Screen
-      name="Product Detail"
+      name="product-detail-screen"
       component={ProductDetailScreen}
       options={{
         title: 'Product Detail',

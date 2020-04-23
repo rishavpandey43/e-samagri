@@ -10,7 +10,7 @@ import CardCustomTitle from '../../components/CardCustomTitle';
 import mainStyles from '../../styles/mainStyle';
 import variables from '../../styles/variables';
 
-import * as profileActions from '../../store/actions/creators/profileActions';
+import * as ProfileActions from '../../store/actions/creators/ProfileActions';
 
 import * as helper from '../../utils/helper';
 class ProfileScreen extends Component {
@@ -84,7 +84,7 @@ class ProfileScreen extends Component {
                       title="Personal Detail"
                       detail={this.props.profile.profile.personalDetail}
                       onPress={() => {
-                        this.props.navigation.navigate('edit-profile');
+                        this.props.navigation.navigate('edit-profile-screen');
                       }}
                     />
                   }>
@@ -148,7 +148,7 @@ class ProfileScreen extends Component {
                       title="Store Detail"
                       detail={this.props.profile.profile.storeDetail}
                       onPress={() => {
-                        this.props.navigation.navigate('edit-profile');
+                        this.props.navigation.navigate('edit-profile-screen');
                       }}
                     />
                   }>
@@ -161,7 +161,7 @@ class ProfileScreen extends Component {
                         titleStyle={{color: variables.mainThemeColor}}
                         buttonStyle={mainStyles.outlineBtn}
                         onPress={() => {
-                          this.props.navigation.navigate('edit-profile');
+                          this.props.navigation.navigate('edit-profile-screen');
                         }}
                       />
                     </View>
@@ -266,7 +266,7 @@ class ProfileScreen extends Component {
                       title="Bank Account Detail"
                       detail={this.props.profile.profile.bankDetail}
                       onPress={() => {
-                        this.props.navigation.navigate('edit-profile');
+                        this.props.navigation.navigate('edit-profile-screen');
                       }}
                     />
                   }>
@@ -279,7 +279,7 @@ class ProfileScreen extends Component {
                         titleStyle={{color: variables.mainThemeColor}}
                         buttonStyle={mainStyles.outlineBtn}
                         onPress={() => {
-                          this.props.navigation.navigate('edit-profile');
+                          this.props.navigation.navigate('edit-profile-screen');
                         }}
                       />
                     </View>
@@ -402,7 +402,7 @@ const mapStateToProps = state => {
 };
 
 const mapDispatchToProps = dispatch => {
-  return bindActionCreators({...profileActions}, dispatch);
+  return bindActionCreators({...ProfileActions}, dispatch);
 };
 
 export default connect(

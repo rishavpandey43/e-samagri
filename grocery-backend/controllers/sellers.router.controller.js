@@ -77,7 +77,7 @@ const addNewProductController = (req, res, next) => {
         Seller.findOne({
           $and: [
             { _id: req.query.id || req.params.id },
-            { products: { $elemMatch: { _id: product._id } } },
+            { products: { $elemMatch: { root: product._id } } },
           ],
         })
           .then((seller) => {
@@ -92,7 +92,7 @@ const addNewProductController = (req, res, next) => {
                 .then((seller) => {
                   seller.products.push({
                     ...req.body.sellerSpecific,
-                    _id: product._id,
+                    root: product._id,
                   });
                   seller
                     .save()
@@ -117,7 +117,7 @@ const addNewProductController = (req, res, next) => {
             Seller.findOne({
               $and: [
                 { _id: req.query.id || req.params.id },
-                { products: { $elemMatch: { _id: product._id } } },
+                { products: { $elemMatch: { root: product._id } } },
               ],
             })
               .then((seller) => {
@@ -132,7 +132,7 @@ const addNewProductController = (req, res, next) => {
                     .then((seller) => {
                       seller.products.push({
                         ...req.body.sellerSpecific,
-                        _id: product._id,
+                        root: product._id,
                       });
                       seller
                         .save()
@@ -158,7 +158,28 @@ const addNewProductController = (req, res, next) => {
     .catch((err) => next(err));
 };
 
+const getAllProductsController = (req, res, next) => {
+  Seller.findOne({ _id: req.query.id || req.params.id })
+    .populate([{ path: "products.root", model: Product }])
+    .then((seller) => {
+      if (!seller) {
+        let err = new Error(`Seller not found with this ID`);
+        err.status = 404;
+        err.statusText = "Not Found";
+        next(err);
+      }
+      res.statusCode = 200;
+      res.statusMessage = "OK";
+      res.setHeader("Content-Type", "application/json");
+      res.json({
+        products: seller.products,
+      });
+    })
+    .catch((err) => next(err));
+};
+
 exports.addSellerController = addSellerController;
 exports.getSellerController = getSellerController;
 exports.updateSellerDetailController = updateSellerDetailController;
 exports.addNewProductController = addNewProductController;
+exports.getAllProductsController = getAllProductsController;

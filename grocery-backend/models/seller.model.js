@@ -43,14 +43,14 @@ const sellerSchema = new Schema(
     ],
     products: [
       {
-        _id: {
+        root: {
           type: mongoose.Schema.Types.ObjectId,
           ref: "Product",
         },
         variants: [
           {
             value: { type: String, required: false },
-            price: { type: String, required: false },
+            price: { type: Number, required: false },
             stock: { type: Number, required: false },
           },
         ],

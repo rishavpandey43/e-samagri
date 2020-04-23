@@ -51,9 +51,9 @@ const sellerSchema = new Schema(
           {
             value: { type: String, required: false },
             price: { type: String, required: false },
+            stock: { type: Number, required: false },
           },
         ],
-        stock: { type: Number, required: false },
       },
     ],
   },

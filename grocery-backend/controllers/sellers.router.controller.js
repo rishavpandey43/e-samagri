@@ -82,7 +82,7 @@ const addNewProductController = (req, res, next) => {
         })
           .then((seller) => {
             if (seller) {
-              let err = new Error(`Product already added to your store`);
+              let err = new Error(`Product already exist to your store`);
               err.status = 409;
               err.statusText = "Conflict";
               next(err);
@@ -101,7 +101,7 @@ const addNewProductController = (req, res, next) => {
                       res.statusMessage = "OK";
                       res.setHeader("Content-Type", "application/json");
                       res.json({
-                        seller,
+                        successMessage: "Product has been added successfull",
                       });
                     })
                     .catch((err) => next(err));
@@ -141,7 +141,8 @@ const addNewProductController = (req, res, next) => {
                           res.statusMessage = "OK";
                           res.setHeader("Content-Type", "application/json");
                           res.json({
-                            seller,
+                            successMessage:
+                              "Product has been added successfull",
                           });
                         })
                         .catch((err) => next(err));

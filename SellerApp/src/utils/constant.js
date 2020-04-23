@@ -6,8 +6,20 @@ export const categoryList = [
     value: 'ks',
   },
   {
-    name: 'Beverages & Snacks',
+    name: 'Coffee, Tea & Beverages',
     value: 'bs',
+  },
+  {
+    name: 'Dried Fruits, Nuts & Seeds',
+    value: 'dfns',
+  },
+  {
+    name: 'Packed Foods',
+    value: 'pc',
+  },
+  {
+    name: 'Snacks & Cookies',
+    value: 'sc',
   },
   {
     name: 'Dairy Products',
@@ -20,5 +32,9 @@ export const categoryList = [
   {
     name: 'Personal & Homecare',
     value: 'ph',
+  },
+  {
+    name: 'Health & Wellness',
+    value: 'hw',
   },
 ];

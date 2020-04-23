@@ -2,22 +2,22 @@ import React, {Component} from 'react';
 import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
 import {
-  View,
-  Text,
   ScrollView,
-  ActivityIndicator,
   StyleSheet,
+  View,
   FlatList,
-  VirtualizedList,
+  ActivityIndicator,
   SafeAreaView,
 } from 'react-native';
-import {Header, Card} from 'react-native-elements';
+import {Header, Card, ListItem, Button, Text} from 'react-native-elements';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
-import * as actionCreators from '../../store/actions/creators/GetProducts';
+import * as ProductsActions from '../../store/actions/creators/ProductsActions';
 
 import variables from '../../styles/variables';
 import mainStyles from '../../styles/mainStyle';
+
+import {getCategoryName} from '../../utils/helper';
 
 class ProductDetailScreen extends Component {
   constructor(props) {
@@ -28,7 +28,7 @@ class ProductDetailScreen extends Component {
   }
 
   componentDidMount() {
-    if (this.props.route.params.productId + 1) {
+    if (this.props.route.params.productId) {
       this.setState({
         product: this.props.products.products.filter(
           product => product._id === this.props.route.params.productId,
@@ -39,7 +39,7 @@ class ProductDetailScreen extends Component {
 
   render() {
     return (
-      <SafeAreaView>
+      <View>
         <Header
           leftComponent={
             <Icon
@@ -52,128 +52,155 @@ class ProductDetailScreen extends Component {
             />
           }
           centerComponent={{
-            text: 'YOUR PRODUCTS',
+            text: 'Your Product',
             style: {color: '#fff'},
           }}
-          rightComponent={<Icon name="product-hunt" color="#FFF" size={30} />}
           containerStyle={{
             backgroundColor: '#933dd4',
             justifyContent: 'space-around',
           }}
         />
         <ScrollView>
-          <View>
-            {this.state.product ? (
-              <Card title="Product Detail">
-                <View style={mainStyles.infoGroup}>
-                  <View style={mainStyles.labelGroup}>
-                    <Text style={mainStyles.labelText}>Name:</Text>
-                  </View>
-                  <View>
-                    <Text style={mainStyles.value}>
-                      {this.state.product.name}
-                    </Text>
-                  </View>
+          {this.props.products.fetchingProduct ? (
+            <View
+              style={{
+                marginTop: 50,
+                justifyContent: 'center',
+                alignItems: 'center',
+              }}>
+              <ActivityIndicator size="large" />
+            </View>
+          ) : this.props.products.errMessage ? (
+            <Card title="Error Message" containerStyle={{alignItems: 'center'}}>
+              <Text style={{marginBottom: 20, fontSize: 20, color: 'red'}}>
+                {this.props.products.errMessage || 'Internal Server Error'}
+              </Text>
+              <Button
+                title="Retry"
+                type="outline"
+                titleStyle={{color: variables.mainThemeColor}}
+                buttonStyle={mainStyles.outlineBtn}
+                onPress={() => {
+                  this.props.getProductsFetch();
+                }}
+              />
+            </Card>
+          ) : !this.state.product ? (
+            <Text>
+              No product selected, please select valid product to see the detail
+            </Text>
+          ) : (
+            <Card title="Product Detail">
+              <View style={mainStyles.infoGroup}>
+                <View style={mainStyles.labelGroup}>
+                  <Text style={mainStyles.labelText}>Name:</Text>
                 </View>
-
-                <View style={mainStyles.infoGroup}>
-                  <View style={mainStyles.labelGroup}>
-                    <Text style={mainStyles.labelText}>Brand:</Text>
-                  </View>
-                  <View>
-                    <Text style={mainStyles.value}>
-                      {this.state.product.brand}
-                    </Text>
-                  </View>
+                <View>
+                  <Text style={mainStyles.value}>
+                    {this.state.product.root.name}
+                  </Text>
                 </View>
+              </View>
 
-                <View style={mainStyles.infoGroup}>
-                  <View style={mainStyles.labelGroup}>
-                    <Text style={mainStyles.labelText}>Description:</Text>
-                  </View>
-                  <View>
-                    <Text style={mainStyles.value}>
-                      {this.state.product.desc}
-                    </Text>
-                  </View>
+              <View style={mainStyles.infoGroup}>
+                <View style={mainStyles.labelGroup}>
+                  <Text style={mainStyles.labelText}>Brand:</Text>
                 </View>
-
-                <View style={mainStyles.infoGroup}>
-                  <View style={mainStyles.labelGroup}>
-                    <Text style={mainStyles.labelText}>Category:</Text>
-                  </View>
-                  <View>
-                    <Text style={mainStyles.value}>
-                      {this.state.product.category}
-                    </Text>
-                  </View>
+                <View>
+                  <Text style={mainStyles.value}>
+                    {this.state.product.root.brand}
+                  </Text>
                 </View>
+              </View>
 
-                <View style={mainStyles.infoGroup}>
-                  <View style={mainStyles.labelGroup}>
-                    <Text style={mainStyles.labelText}>Type:</Text>
-                  </View>
-                  <View>
-                    <Text style={mainStyles.value}>
-                      {this.state.product.type}
-                    </Text>
-                  </View>
+              <View style={mainStyles.infoGroup}>
+                <View style={mainStyles.labelGroup}>
+                  <Text style={mainStyles.labelText}>Description:</Text>
                 </View>
+                <View>
+                  <Text style={mainStyles.value}>
+                    {this.state.product.root.desc}
+                  </Text>
+                </View>
+              </View>
 
-                <View style={mainStyles.infoGroup}>
-                  <View style={mainStyles.labelGroup}>
-                    <Text style={mainStyles.labelText}>Variants:</Text>
-                  </View>
-                  <SafeAreaView>
-                    <FlatList
-                      data={this.state.product.quantity}
-                      renderItem={item => {
-                        return (
-                          <View key={item.index} style={mainStyles.row}>
-                            <View style={mainStyles.col6}>
-                              <View style={mainStyles.infoGroup}>
-                                <View style={mainStyles.labelGroup}>
-                                  <Text style={mainStyles.labelText}>
-                                    Quantity:
-                                  </Text>
-                                </View>
-                                <View>
-                                  <Text style={mainStyles.value}>
-                                    {item.item.value}
-                                  </Text>
-                                </View>
-                              </View>
+              <View style={mainStyles.infoGroup}>
+                <View style={mainStyles.labelGroup}>
+                  <Text style={mainStyles.labelText}>Category:</Text>
+                </View>
+                <View>
+                  <Text style={mainStyles.value}>
+                    {getCategoryName(this.state.product.root.category)}
+                  </Text>
+                </View>
+              </View>
+
+              <View style={mainStyles.infoGroup}>
+                <View style={mainStyles.labelGroup}>
+                  <Text style={mainStyles.labelText}>Type:</Text>
+                </View>
+                <View>
+                  <Text style={mainStyles.value}>
+                    {this.state.product.root.type}
+                  </Text>
+                </View>
+              </View>
+
+              <View style={mainStyles.infoGroup}>
+                <View style={mainStyles.labelGroup}>
+                  <Text style={mainStyles.labelText}>Variants:</Text>
+                </View>
+                <FlatList
+                  data={this.state.product.variants}
+                  renderItem={({item, index}) => {
+                    return (
+                      <View key={item._id} style={mainStyles.row}>
+                        <View style={mainStyles.col4}>
+                          <View style={mainStyles.infoGroup}>
+                            <View style={mainStyles.labelGroup}>
+                              <Text style={mainStyles.labelText}>
+                                Quantity:
+                              </Text>
                             </View>
-                            <View style={mainStyles.col6}>
-                              <View style={mainStyles.infoGroup}>
-                                <View style={mainStyles.labelGroup}>
-                                  <Text style={mainStyles.labelText}>
-                                    Price:
-                                  </Text>
-                                </View>
-                                <View>
-                                  <Text style={mainStyles.value}>
-                                    {item.item.price}
-                                  </Text>
-                                </View>
-                              </View>
+                            <View>
+                              <Text style={mainStyles.value}>{item.value}</Text>
                             </View>
                           </View>
-                        );
-                      }}
-                      keyExtractor={(item, index) => {
-                        return index.toString();
-                      }}
-                    />
-                  </SafeAreaView>
-                </View>
-              </Card>
-            ) : (
-              <ActivityIndicator size={50} color={mainStyles.mainThemeColor} />
-            )}
-          </View>
+                        </View>
+                        <View style={mainStyles.col4}>
+                          <View style={mainStyles.infoGroup}>
+                            <View style={mainStyles.labelGroup}>
+                              <Text style={mainStyles.labelText}>Price:</Text>
+                            </View>
+                            <View>
+                              <Text style={mainStyles.value}>
+                                ₹ {item.price}
+                              </Text>
+                            </View>
+                          </View>
+                        </View>
+                        <View style={mainStyles.col4}>
+                          <View style={mainStyles.infoGroup}>
+                            <View style={mainStyles.labelGroup}>
+                              <Text style={mainStyles.labelText}>Stock:</Text>
+                            </View>
+                            <View>
+                              <Text style={mainStyles.value}>{item.stock}</Text>
+                            </View>
+                          </View>
+                        </View>
+                      </View>
+                    );
+                  }}
+                  keyExtractor={(item, index) => {
+                    return item._id.toString();
+                  }}
+                />
+              </View>
+            </Card>
+          )}
         </ScrollView>
-      </SafeAreaView>
+      </View>
     );
   }
 }
@@ -187,7 +214,7 @@ const mapStateToProps = state => {
 };
 
 const mapDispatchToProps = dispatch => {
-  return bindActionCreators(actionCreators, dispatch);
+  return bindActionCreators(ProductsActions, dispatch);
 };
 
 export default connect(

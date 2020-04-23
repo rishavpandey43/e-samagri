@@ -28,6 +28,7 @@ import mainStyles from '../../styles/mainStyle';
 import variables from '../../styles/variables';
 
 import * as ProfileActions from '../../store/actions/creators/ProfileActions';
+import * as ProductsActions from '../../store/actions/creators/ProductsActions';
 
 import * as helper from '../../utils/helper';
 import {baseUrl, categoryList} from '../../utils/constant';
@@ -42,7 +43,7 @@ class AddNewProductScreen extends Component {
     this.state = {
       product: {
         name: '',
-        category: 'ks',
+        category: '',
         type: 'packet',
         brand: '',
         variants: [
@@ -114,6 +115,7 @@ class AddNewProductScreen extends Component {
               ],
             },
           });
+          this.props.getProductsFetch();
           ToastAndroid.show(
             res.data.successMessage || 'Product has been added successfull',
             ToastAndroid.LONG,
@@ -494,7 +496,7 @@ const mapStateToProps = state => {
 };
 
 const mapDispatchToProps = dispatch => {
-  return bindActionCreators({...ProfileActions}, dispatch);
+  return bindActionCreators({...ProfileActions, ...ProductsActions}, dispatch);
 };
 
 export default connect(

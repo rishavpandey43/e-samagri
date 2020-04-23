@@ -12,49 +12,18 @@ import {
 import {Header, Card, ListItem, Button, Text} from 'react-native-elements';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
-import * as actionCreators from '../../store/actions/creators/GetProducts';
+import * as ProductsActions from '../../store/actions/creators/ProductsActions';
 
 import variables from '../../styles/variables';
 import mainStyles from '../../styles/mainStyle';
 
 class ProductsScreen extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      products: this.props.products,
-    };
-  }
-
   componentDidMount() {
     this.props.getProductsFetch();
-    if (this.props.products.products) {
-      ('Product received');
-    }
   }
-
-  componentWillReceiveProps(nextProps) {
-    this.setState({products: {...nextProps.products}});
-  }
-
-  renderProductList = ({item, index}) => {
-    return (
-      <View>
-        <ListItem
-          key={index}
-          title={item.name}
-          subtitle={item.brand}
-          chevron
-          onPress={() =>
-            this.props.navigation.navigate('Product Detail', {
-              productId: item._id,
-            })
-          }
-        />
-      </View>
-    );
-  };
 
   render() {
+    console.log(this.props.products);
     return (
       <View>
         <Header
@@ -79,36 +48,70 @@ class ProductsScreen extends Component {
           }}
         />
         <ScrollView>
-          <View style={mainStyles.container}>
-            {this.state.products.products ? (
-              <SafeAreaView>
-                <FlatList
-                  data={this.state.products.products}
-                  renderItem={this.renderProductList.bind(null)}
-                  keyExtractor={item => item._id.toString()}
-                />
-              </SafeAreaView>
-            ) : this.state.products.isLoading ? (
-              <ActivityIndicator
-                animating={this.state.products.isLoading}
-                size={50}
-                color={variables.mainThemeColor}
+          {this.props.products.fetchingProduct ? (
+            <View
+              style={{
+                marginTop: 50,
+                justifyContent: 'center',
+                alignItems: 'center',
+              }}>
+              <ActivityIndicator size="large" />
+            </View>
+          ) : this.props.products.errMessage ? (
+            <Card title="Error Message" containerStyle={{alignItems: 'center'}}>
+              <Text style={{marginBottom: 20, fontSize: 20, color: 'red'}}>
+                {this.props.products.errMessage || 'Internal Server Error'}
+              </Text>
+              <Button
+                title="Retry"
+                type="outline"
+                titleStyle={{color: variables.mainThemeColor}}
+                buttonStyle={mainStyles.outlineBtn}
+                onPress={() => {
+                  this.props.getProductsFetch();
+                }}
               />
-            ) : (
-              <Card title="Error Message">
-                <Text style={{marginBottom: 20}}>
-                  {this.state.products.errMessage}
+            </Card>
+          ) : this.props.products.products.length == 0 ? (
+            <View
+              style={{
+                flex: 1,
+                justifyContent: 'center',
+              }}>
+              <Card containerStyle={{alignItems: 'center'}}>
+                <Text style={{marginBottom: 20, fontSize: 20, color: 'green'}}>
+                  No Product in your store.
                 </Text>
                 <Button
+                  title="Add your first product now"
                   type="outline"
-                  title="Retry"
+                  titleStyle={{color: variables.mainThemeColor}}
+                  buttonStyle={mainStyles.outlineBtn}
                   onPress={() => {
-                    this.props.getProductsFetch();
+                    this.props.navigation.navigate('add-new-product-stack');
                   }}
                 />
               </Card>
-            )}
-          </View>
+            </View>
+          ) : (
+            <FlatList
+              data={this.props.products.products}
+              renderItem={({item, index}) => (
+                <ListItem
+                  key={index}
+                  title={item.root.name}
+                  subtitle={`${item.variants.length} Variants`}
+                  chevron
+                  onPress={() =>
+                    this.props.navigation.navigate('product-detail-screen', {
+                      productId: item._id,
+                    })
+                  }
+                />
+              )}
+              keyExtractor={item => item._id.toString()}
+            />
+          )}
         </ScrollView>
       </View>
     );
@@ -124,7 +127,7 @@ const mapStateToProps = state => {
 };
 
 const mapDispatchToProps = dispatch => {
-  return bindActionCreators(actionCreators, dispatch);
+  return bindActionCreators(ProductsActions, dispatch);
 };
 
 export default connect(

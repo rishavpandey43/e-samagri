@@ -1,7 +1,7 @@
 import * as actionTypes from '../actions/types/actionTypes';
 
 const initialState = {
-  isLoading: false,
+  fetchingProfile: false,
   profile: null,
   successMessage: null,
   errMessage: null,
@@ -9,22 +9,22 @@ const initialState = {
 
 const profile = (state = initialState, action) => {
   switch (action.type) {
-    case actionTypes.GET_PROFILE_DETAIL_REQUEST:
+    case actionTypes.GET_CUSTOMER_PROFILE_REQUEST:
       return {
         ...state,
-        isLoading: true,
+        fetchingProfile: true,
       };
-    case actionTypes.GET_PROFILE_DETAIL_SUCCESS:
+    case actionTypes.GET_CUSTOMER_PROFILE_SUCCESS:
       return {
         ...state,
-        isLoading: false,
+        fetchingProfile: false,
         profile: action.profile,
         successMessage: action.message,
       };
-    case actionTypes.GET_PROFILE_DETAIL_FAILURE:
+    case actionTypes.GET_CUSTOMER_PROFILE_FAILURE:
       return {
         ...state,
-        isLoading: false,
+        fetchingProfile: false,
         profile: null,
         errMessage: action.message,
       };

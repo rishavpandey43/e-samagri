@@ -2,7 +2,8 @@ import React from 'react';
 import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
 
-import AccountScreen from '../../screens/primary/Account';
+import ProfileScreen from '../../screens/primary/Profile';
+import UpdateProfileScreen from '../../screens/secondary/UpdateProfile';
 
 const Stack = createStackNavigator();
 
@@ -12,10 +13,17 @@ const AccountStack = () => (
       headerShown: false,
     }}>
     <Stack.Screen
-      name="account-screen"
-      component={AccountScreen}
+      name="profile-screen"
+      component={ProfileScreen}
       options={{
-        title: 'My Account',
+        title: 'My Profile',
+      }}
+    />
+    <Stack.Screen
+      name="edit-profile-screen"
+      component={UpdateProfileScreen}
+      options={{
+        title: 'Edit Profile',
       }}
     />
   </Stack.Navigator>

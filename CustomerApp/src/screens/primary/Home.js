@@ -1,4 +1,7 @@
+// * Import required modules/dependencies
 import React, {Component} from 'react';
+import {bindActionCreators} from 'redux';
+import {connect} from 'react-redux';
 import {
   ScrollView,
   StyleSheet,
@@ -16,6 +19,13 @@ import {
 } from 'react-native-elements';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
+// * Import all store related stuffs
+import * as ProfileActions from '../../store/actions/creators/ProfileActions';
+
+// * Import all screens/components
+import Store from '../../components/Store';
+
+// * Import all styling stuffs
 import mainStyles from '../../styles/mainStyle';
 import variables from '../../styles/variables';
 
@@ -27,32 +37,11 @@ class HomeScreen extends Component {
     };
   }
 
-  render() {
-    const Store = () => {
-      return (
-        <TouchableOpacity
-          onPress={() => {
-            this.props.navigation.navigate('store-screen');
-          }}>
-          <View style={[mainStyles.row, {marginTop: 10, marginBottom: 10}]}>
-            <View style={mainStyles.col4}>
-              <Image
-                source={{uri: 'https://via.placeholder.com/100'}}
-                style={{width: 100, height: 100}}
-                PlaceholderContent={<ActivityIndicator />}
-              />
-            </View>
-            <View style={mainStyles.col8}>
-              <Text style={{fontSize: 18}}>Sellet Store 1</Text>
-              <Text style={{color: '#555'}}>
-                Dummy Address, ksbc,1234, dto, In, 822112
-              </Text>
-            </View>
-          </View>
-        </TouchableOpacity>
-      );
-    };
+  componentDidMount() {
+    this.props.getProfileFetch();
+  }
 
+  render() {
     return (
       <View>
         <Header
@@ -67,7 +56,13 @@ class HomeScreen extends Component {
             />
           }
           centerComponent={{
-            text: 'Hello Rishav Pandey',
+            text: `Hello ${
+              this.props.profile.profile
+                ? this.props.profile.profile.firstName +
+                  ' ' +
+                  this.props.profile.profile.lastName
+                : ''
+            }`,
             style: {color: '#fff'},
           }}
           rightComponent={
@@ -86,34 +81,54 @@ class HomeScreen extends Component {
           }}
         />
         <ScrollView>
-          <View style={[mainStyles.container, {marginBottom: 100}]}>
-            <SearchBar
-              placeholder="Search for stores or item..."
-              onChangeText={search => {
-                this.setState({
-                  search,
-                });
-              }}
-              value={this.state.search}
-              lightTheme
-              round
-              showLoading={false}
-              containerStyle={{backgroundColor: 'transparent'}}
-              inputContainerStyle={{backgroundColor: 'transparent'}}
-            />
-            <View>
-              <Text h4>All Stores</Text>
+          {this.props.profile.fetchingProfile ? (
+            <View
+              style={{
+                marginTop: 50,
+                justifyContent: 'center',
+                alignItems: 'center',
+              }}>
+              <ActivityIndicator size="large" />
             </View>
-            <Store />
-            <Store />
-            <Store />
-            <Store />
-            <Store />
-            <Store />
-            <Store />
-            <Store />
-            <Store />
-          </View>
+          ) : this.props.profile.errMessage || !this.props.profile.profile ? (
+            <Card title="Error Message" containerStyle={{alignItems: 'center'}}>
+              <Text style={{marginBottom: 20, fontSize: 20, color: 'red'}}>
+                {this.props.profile.errMessage || 'Internal Server Error'}
+              </Text>
+              <Button
+                title="Retry"
+                type="outline"
+                titleStyle={{color: variables.mainThemeColor}}
+                buttonStyle={mainStyles.outlineBtn}
+                onPress={() => {
+                  this.props.getProfileFetch();
+                }}
+              />
+            </Card>
+          ) : (
+            <View style={[mainStyles.container, {marginBottom: 100}]}>
+              <View>
+                <SearchBar
+                  placeholder="Search for stores or item..."
+                  onChangeText={search => {
+                    this.setState({
+                      search,
+                    });
+                  }}
+                  value={this.state.search}
+                  lightTheme
+                  round
+                  showLoading={false}
+                  containerStyle={{backgroundColor: 'transparent'}}
+                  inputContainerStyle={{backgroundColor: 'transparent'}}
+                />
+              </View>
+              <View style={{margin: 10}}>
+                <Text h4>All stores near you</Text>
+                <Store navigation={this.props.navigation} />
+              </View>
+            </View>
+          )}
         </ScrollView>
       </View>
     );
@@ -122,4 +137,17 @@ class HomeScreen extends Component {
 
 const styles = StyleSheet.create({});
 
-export default HomeScreen;
+const mapStateToProps = state => {
+  return {
+    profile: state.profile,
+  };
+};
+
+const mapDispatchToProps = dispatch => {
+  return bindActionCreators({...ProfileActions}, dispatch);
+};
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(HomeScreen);

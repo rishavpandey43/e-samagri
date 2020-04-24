@@ -14,7 +14,6 @@ const mainStyles = StyleSheet.create({
     alignItems: 'center',
   },
   row: {
-    flex: 1,
     flexDirection: 'row',
     flexWrap: 'wrap',
   },
@@ -78,6 +77,10 @@ const mainStyles = StyleSheet.create({
     paddingLeft: 5,
     paddingRight: 5,
   },
+  formGroup: {
+    marginTop: 10,
+    marginBottom: 10,
+  },
   infoGroup: {
     marginTop: 10,
     marginBottom: 10,
@@ -97,6 +100,10 @@ const mainStyles = StyleSheet.create({
   value: {
     color: variables.mainThemeColor,
     fontSize: 20,
+  },
+  outlineBtn: {
+    borderColor: variables.mainThemeColor,
+    borderWidth: 2,
   },
 });
 

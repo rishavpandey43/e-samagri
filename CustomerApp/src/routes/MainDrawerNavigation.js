@@ -5,7 +5,7 @@ import {NavigationContainer} from '@react-navigation/native';
 import {createDrawerNavigator} from '@react-navigation/drawer';
 
 import HomeStack from './stacks/HomeStack';
-import AccountStack from './stacks/AccountStack';
+import ProfileStack from './stacks/ProfileStack';
 import FavoriteStack from './stacks/FavoriteStack';
 import OrdersStack from './stacks/OrdersStack';
 import HelpStack from './stacks/HelpStack';
@@ -29,9 +29,9 @@ const MainDrawerNavigation = () => (
       />
       <Drawer.Screen
         name="profile-stack"
-        component={AccountStack}
+        component={ProfileStack}
         options={{
-          drawerLabel: 'My Account',
+          drawerLabel: 'My Profile',
           drawerIcon: () => (
             <Icon name="user" size={30} color={variable.mainThemeColor} />
           ),

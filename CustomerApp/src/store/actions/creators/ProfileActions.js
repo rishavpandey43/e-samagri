@@ -15,13 +15,13 @@ const customerId3 = '5ea249e75c80eb0b619658f9';
 
 export const getProfileRequest = () => {
   return {
-    type: actionTypes.GET_CUSTOMER_PROFILE_REQUEST,
+    type: actionTypes.GET_PROFILE_REQUEST,
   };
 };
 
 export const getProfileSuccess = response => {
   return {
-    type: actionTypes.GET_CUSTOMER_PROFILE_SUCCESS,
+    type: actionTypes.GET_PROFILE_SUCCESS,
     profile: response.profile,
     message: response.message,
   };
@@ -29,7 +29,7 @@ export const getProfileSuccess = response => {
 
 export const getProfileFailure = response => {
   return {
-    type: actionTypes.GET_CUSTOMER_PROFILE_FAILURE,
+    type: actionTypes.GET_PROFILE_FAILURE,
     message: response.message,
   };
 };
@@ -39,7 +39,7 @@ export const getProfileFetch = () => dispatch => {
   axios
     .get(baseUrl + '/customer/get-customer', {
       params: {
-        id: customerId1,
+        id: customerId2,
       },
     })
     .then(res => {
@@ -48,6 +48,56 @@ export const getProfileFetch = () => dispatch => {
     .catch(err => {
       dispatch(
         getProfileFailure({
+          message: err.response
+            ? err.response.data.errMessage || 'Internal Server Error'
+            : 'Internal Server Error',
+        }),
+      );
+    });
+};
+
+export const updateProfileRequest = () => {
+  return {
+    type: actionTypes.UPDATE_PROFILE_REQUEST,
+  };
+};
+
+export const updateProfileSuccess = response => {
+  return {
+    type: actionTypes.UPDATE_PROFILE_SUCCESS,
+    profile: response.profile,
+  };
+};
+
+export const updateProfileFailure = response => {
+  return {
+    type: actionTypes.UPDATE_PROFILE_FAILURE,
+    message: response.message,
+  };
+};
+
+export const updateProfileFetch = (data, dataType) => dispatch => {
+  let newData = {
+    data,
+    dataType,
+  };
+  dispatch(updateProfileRequest());
+  axios
+    .put(baseUrl + '/customer/update-customer', newData, {
+      params: {
+        id: customerId2,
+      },
+    })
+    .then(res => {
+      dispatch(updateProfileSuccess({profile: {...res.data.customer}}));
+      ToastAndroid.show(
+        'Your profile detail has been updated succesfully, please back to your profile',
+        ToastAndroid.LONG,
+      );
+    })
+    .catch(err => {
+      dispatch(
+        updateProfileFailure({
           message: err.response
             ? err.response.data.errMessage || 'Internal Server Error'
             : 'Internal Server Error',

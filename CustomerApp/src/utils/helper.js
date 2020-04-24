@@ -27,8 +27,18 @@ export const getCategoryName = categoryValue => {
 };
 
 export const getAddress = type => {
-  let icon = addressType.filter(address => address.value === type)[0];
-  return icon;
+  let address = addressType.filter(address => address.value === type)[0];
+  return address;
+};
+
+export const addressInString = address => {
+  let addressString = '';
+  for (const key in address) {
+    if (key != 'type') {
+      addressString += address[key] + ', ';
+    }
+  }
+  return addressString;
 };
 
 // TODO: complete this function

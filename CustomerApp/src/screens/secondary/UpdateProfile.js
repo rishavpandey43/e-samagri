@@ -8,6 +8,7 @@ import {
   View,
   TouchableOpacity,
   ActivityIndicator,
+  Alert,
 } from 'react-native';
 import {
   Header,
@@ -19,6 +20,7 @@ import {
   Avatar,
   Icon,
   Input,
+  CheckBox,
 } from 'react-native-elements';
 
 // * Import all store related stuffs
@@ -37,19 +39,37 @@ class UpdateProfileScreen extends Component {
     super(props);
     this.state = {
       personalDetailCardDisplay: false,
-      addressDetailCardDisplay: false,
+      addressCardDisplay: false,
       personalDetail: {},
-      addressDetail: {
+      address: {
         street: '',
         landmark: '',
         city: '',
         pincode: '',
+        type: 'home',
       },
     };
   }
 
   toggleEditCardDisplay = target => {
     this.setState({[target]: !this.state[target]});
+  };
+
+  updateDetail = detailType => {
+    let tempData = this.state[detailType];
+    let isEmpty = false;
+    for (const item in tempData) {
+      if (tempData[item] == '') {
+        isEmpty = true;
+      }
+    }
+    if (isEmpty) {
+      Alert.alert('Input Invalid', 'Please fill all the details to continue.');
+      return;
+    } else {
+      let data = {...tempData};
+      this.props.updateProfileFetch(data, detailType);
+    }
   };
 
   render() {
@@ -133,7 +153,7 @@ class UpdateProfileScreen extends Component {
                         </View>
                         <View
                           style={[
-                            mainStyles.col4,
+                            mainStyles.col6,
                             {justifyContent: 'flex-end'},
                           ]}>
                           <Button
@@ -158,7 +178,7 @@ class UpdateProfileScreen extends Component {
                         </View>
                         <View
                           style={[
-                            mainStyles.col4,
+                            mainStyles.col6,
                             {justifyContent: 'flex-end'},
                           ]}>
                           <Button
@@ -207,30 +227,187 @@ class UpdateProfileScreen extends Component {
               <Card
                 title={
                   <CardCustomTitle
-                    title="Update your addresses"
+                    title="Update your address"
                     detail={this.props.profile.profile.personalDetail}
                     onPress={() => {
-                      this.toggleEditCardDisplay('addressDetailCardDisplay');
+                      this.toggleEditCardDisplay('addressCardDisplay');
                     }}
                   />
                 }>
                 <View
                   style={{
                     display: `${
-                      this.state.addressDetailCardDisplay ? 'flex' : 'none'
+                      this.state.addressCardDisplay ? 'flex' : 'none'
                     }`,
                   }}>
                   <View>
-                    <Address
-                      type="home"
-                      value="204, 205, Ground floor, E-block, Gandhi Vihar, Gopalpur Village, Delhi, 110009, India"
-                      edit
-                    />
-                    <Address
-                      type="work"
-                      value="204, 205, Ground floor, E-block, Gandhi Vihar, Gopalpur Village, Delhi, 110009, India"
-                      edit
-                    />
+                    <View style={mainStyles.formGroup}>
+                      <Input
+                        label="Street"
+                        placeholder="Panki Road"
+                        value={this.state.address.street}
+                        onChangeText={street => {
+                          this.setState({
+                            address: {
+                              ...this.state.address,
+                              street,
+                            },
+                          });
+                        }}
+                      />
+                    </View>
+
+                    <View style={mainStyles.formGroup}>
+                      <Input
+                        label="Landmark"
+                        placeholder="near NCC office"
+                        value={this.state.address.landmark}
+                        onChangeText={landmark => {
+                          this.setState({
+                            address: {
+                              ...this.state.address,
+                              landmark,
+                            },
+                          });
+                        }}
+                      />
+                    </View>
+
+                    <View style={mainStyles.formGroup}>
+                      <Input
+                        label="City"
+                        placeholder="Daltonganj"
+                        value={this.state.address.city}
+                        onChangeText={city => {
+                          this.setState({
+                            address: {
+                              ...this.state.address,
+                              city,
+                            },
+                          });
+                        }}
+                      />
+                    </View>
+
+                    <View style={mainStyles.formGroup}>
+                      <Input
+                        label="Pincode"
+                        placeholder="822134"
+                        keyboardType="numeric"
+                        value={this.state.address.pincode}
+                        onChangeText={pincode => {
+                          this.setState({
+                            address: {
+                              ...this.state.address,
+                              pincode,
+                              address: {
+                                ...this.state.address,
+                              },
+                            },
+                          });
+                        }}
+                      />
+                    </View>
+
+                    <View style={mainStyles.formGroup}>
+                      <Text style={mainStyles.formLabel}>Address Type</Text>
+                      <View style={mainStyles.row}>
+                        <View style={mainStyles.col6}>
+                          <CheckBox
+                            containerStyle={{
+                              backgroundColor: 'transparent',
+                              borderColor: 'transparent',
+                            }}
+                            center
+                            title="Home"
+                            checkedIcon="dot-circle-o"
+                            uncheckedIcon="circle-o"
+                            checkedColor={variables.mainThemeColor}
+                            checked={this.state.address.type === 'home'}
+                            onPress={() => {
+                              this.setState({
+                                address: {
+                                  ...this.state.address,
+                                  type: 'home',
+                                },
+                              });
+                            }}
+                          />
+                        </View>
+                        <View style={mainStyles.col6}>
+                          <CheckBox
+                            containerStyle={{
+                              backgroundColor: 'transparent',
+                              borderColor: 'transparent',
+                            }}
+                            center
+                            title="Work"
+                            checkedIcon="dot-circle-o"
+                            uncheckedIcon="circle-o"
+                            checkedColor={variables.mainThemeColor}
+                            checked={this.state.address.type === 'work'}
+                            onPress={() => {
+                              this.setState({
+                                address: {
+                                  ...this.state.address,
+                                  type: 'work',
+                                },
+                              });
+                            }}
+                          />
+                        </View>
+                        <View style={mainStyles.col6}>
+                          <CheckBox
+                            containerStyle={{
+                              backgroundColor: 'transparent',
+                              borderColor: 'transparent',
+                            }}
+                            center
+                            title="Other"
+                            checkedIcon="dot-circle-o"
+                            uncheckedIcon="circle-o"
+                            checkedColor={variables.mainThemeColor}
+                            checked={this.state.address.type === 'other'}
+                            onPress={() => {
+                              this.setState({
+                                address: {
+                                  ...this.state.address,
+                                  type: 'other',
+                                },
+                              });
+                            }}
+                          />
+                        </View>
+                      </View>
+                    </View>
+
+                    <View style={[mainStyles.row, {marginBottom: 20}]}>
+                      <View style={mainStyles.col6}>
+                        <Button
+                          title="Cancel"
+                          titleStyle={{color: variables.mainThemeColor}}
+                          type="outline"
+                          buttonStyle={mainStyles.outlineBtn}
+                          onPress={() => {
+                            this.setState({
+                              personalDetailCardDisplay: false,
+                            });
+                          }}
+                        />
+                      </View>
+                      <View style={mainStyles.col6}>
+                        <Button
+                          title="Submit"
+                          titleStyle={{color: variables.mainThemeColor}}
+                          type="outline"
+                          buttonStyle={mainStyles.outlineBtn}
+                          onPress={() => {
+                            this.updateDetail('address');
+                          }}
+                          loading={this.props.profile.profileUpdating}
+                        />
+                      </View>
+                    </View>
                   </View>
                 </View>
               </Card>

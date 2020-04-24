@@ -81,6 +81,12 @@ const mainStyles = StyleSheet.create({
     marginTop: 10,
     marginBottom: 10,
   },
+  formLabel: {
+    marginLeft: 10,
+    fontSize: 16,
+    fontWeight: 'bold',
+    color: '#86939e',
+  },
   infoGroup: {
     marginTop: 10,
     marginBottom: 10,

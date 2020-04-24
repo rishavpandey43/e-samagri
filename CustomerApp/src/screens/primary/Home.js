@@ -58,9 +58,9 @@ class HomeScreen extends Component {
           centerComponent={{
             text: `Hello ${
               this.props.profile.profile
-                ? this.props.profile.profile.firstName +
+                ? this.props.profile.profile.personalDetail.firstName +
                   ' ' +
-                  this.props.profile.profile.lastName
+                  this.props.profile.profile.personalDetail.lastName
                 : ''
             }`,
             style: {color: '#fff'},

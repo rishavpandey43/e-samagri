@@ -27,6 +27,9 @@ import * as ProfileActions from '../../store/actions/creators/ProfileActions';
 import Address from '../../components/Address';
 import CardCustomTitle from '../../components/CardCustomTitle';
 
+// * Import utilites
+import {addressInString} from '../../utils/helper';
+
 // * Import all styling stuffs
 import mainStyles from '../../styles/mainStyle';
 import variables from '../../styles/variables';
@@ -38,7 +41,7 @@ class ProfileScreen extends Component {
   }
 
   render() {
-    console.log(this.props.profile);
+    console.log(this.props.profile.profile.address);
     return (
       <View>
         <Header
@@ -130,7 +133,7 @@ class ProfileScreen extends Component {
                 containerStyle={{borderRadius: 10, alignItems: 'center'}}
                 title={
                   <CardCustomTitle
-                    title="Saved addresses"
+                    title="Your address"
                     type="edit"
                     detail={this.props.profile.profile.personalDetail}
                     onPress={() => {
@@ -138,7 +141,7 @@ class ProfileScreen extends Component {
                     }}
                   />
                 }>
-                {false ? (
+                {!this.props.profile.profile.address ? (
                   <View>
                     <Text
                       style={{
@@ -146,10 +149,10 @@ class ProfileScreen extends Component {
                         fontSize: 20,
                         color: 'red',
                       }}>
-                      No Address added in your profile
+                      No address added in your profile
                     </Text>
                     <Button
-                      title="Add your first address now"
+                      title="Add your address now"
                       type="outline"
                       titleStyle={{color: variables.mainThemeColor}}
                       buttonStyle={mainStyles.outlineBtn}
@@ -161,19 +164,10 @@ class ProfileScreen extends Component {
                 ) : (
                   <View>
                     <Address
-                      type="home"
-                      value="204, 205, Ground floor, E-block, Gandhi Vihar, Gopalpur Village, Delhi, 110009, India"
-                      isDefault={true}
-                    />
-                    <Address
-                      type="work"
-                      value="204, 205, Ground floor, E-block, Gandhi Vihar, Gopalpur Village, Delhi, 110009, India"
-                      isDefault={false}
-                    />
-                    <Address
-                      type="other"
-                      value="204, 205, Ground floor, E-block, Gandhi Vihar, Gopalpur Village, Delhi, 110009, India"
-                      isDefault={false}
+                      type={this.props.profile.profile.address.type}
+                      value={addressInString(
+                        this.props.profile.profile.address,
+                      )}
                     />
                   </View>
                 )}

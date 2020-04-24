@@ -2,7 +2,7 @@ const Seller = require("../models/seller.model");
 const Product = require("../models/product.model");
 
 const addSellerController = (req, res, next) => {
-  Seller.findOne({ personalDetail: { email: req.body.personalDetail.email } })
+  Seller.findOne({ personalDetail: { email: req.body.email } })
     .then((seller) => {
       if (seller) {
         let err = new Error(`You're already registered.`);
@@ -10,7 +10,7 @@ const addSellerController = (req, res, next) => {
         err.statusText = "Conflict";
         next(err);
       } else {
-        Seller.create(req.body)
+        Seller.create({ personalDetail: req.body })
           .then((seller) => {
             res.statusCode = 201;
             res.statusText = "Created";

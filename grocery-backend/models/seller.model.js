@@ -16,7 +16,7 @@ const sellerSchema = new Schema(
         street: { type: String, required: false },
         landmark: { type: String, required: false },
         city: { type: String, required: false },
-        pinCode: { type: Number, required: false },
+        pincode: { type: Number, required: false },
         // loc: {
         //   longitude: { type: String, required: false },
         //   latitude: { type: String, required: false },

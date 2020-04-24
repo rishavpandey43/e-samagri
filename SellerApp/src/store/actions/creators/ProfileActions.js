@@ -11,13 +11,13 @@ const sellerId3 = '5e9fb2a3df5cf41033ca39e1';
 
 export const getProfileRequest = () => {
   return {
-    type: actionTypes.GET_SELLER_PROFILE_REQUEST,
+    type: actionTypes.GET_PROFILE_REQUEST,
   };
 };
 
 export const getProfileSuccess = response => {
   return {
-    type: actionTypes.GET_SELLER_PROFILE_SUCCESS,
+    type: actionTypes.GET_PROFILE_SUCCESS,
     profile: response.profile,
     message: response.message,
   };
@@ -25,7 +25,7 @@ export const getProfileSuccess = response => {
 
 export const getProfileFailure = response => {
   return {
-    type: actionTypes.GET_SELLER_PROFILE_FAILURE,
+    type: actionTypes.GET_PROFILE_FAILURE,
     message: response.message,
   };
 };

@@ -171,7 +171,7 @@ class UpdateProfileScreen extends Component {
               <Card
                 title={
                   <CardCustomTitle
-                    title="Edit Your Personal Detail"
+                    title="Update Your Personal Detail"
                     detail={this.props.profile.profile.personalDetail}
                     onPress={() => {
                       this.toggleEditCardDisplay('personalDetailCardDisplay');
@@ -287,7 +287,7 @@ class UpdateProfileScreen extends Component {
               <Card
                 title={
                   <CardCustomTitle
-                    title="Edit Your Store Detail"
+                    title="Update Your Store Detail"
                     detail={this.props.profile.profile.personalDetail}
                     onPress={() => {
                       this.toggleEditCardDisplay('storeDetailCardDisplay');
@@ -470,7 +470,7 @@ class UpdateProfileScreen extends Component {
               <Card
                 title={
                   <CardCustomTitle
-                    title="Edit Your Bank Detail"
+                    title="Update Your Bank Detail"
                     detail={this.props.profile.profile.personalDetail}
                     onPress={() => {
                       this.toggleEditCardDisplay('bankDetailCardDisplay');

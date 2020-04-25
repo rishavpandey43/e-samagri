@@ -37,8 +37,12 @@ class StoreDetailScreen extends Component {
     this.state = {
       selectedCategory: {name: 'All', value: 'all'},
       filteredProduct: this.props.store.store.products,
+      productVariantForPicker: this.props.store.store.products.map(product => ({
+        productId: product._id,
+        variantId: product.variants[0]._id,
+        value: product.variants[0].value,
+      })),
       search: '',
-      language: 'hello',
     };
   }
 
@@ -66,6 +70,8 @@ class StoreDetailScreen extends Component {
       ),
     });
   };
+
+  addToCart = () => {};
 
   render() {
     // console.log(this.props.store.store.products);
@@ -104,9 +110,29 @@ class StoreDetailScreen extends Component {
               </View>
             </TouchableOpacity>
             <Picker
-              selectedValue={this.state.language}
+              selectedValue={
+                this.state.productVariantForPicker.filter(
+                  variant => variant.productId === product._id,
+                )[0].value
+              }
               style={{height: 40, width: 'auto', marginTop: 10}}
-              onValueChange={(itemValue, itemIndex) => {}}>
+              onValueChange={(itemValue, itemIndex) => {
+                // * AWESOME LOGIC :)
+                let productIndex = null;
+                this.state.productVariantForPicker.forEach((variant, i) => {
+                  if (product._id === variant.productId) {
+                    productIndex = i;
+                  }
+                });
+                let tempProductVariantForPicker = this.state
+                  .productVariantForPicker;
+                tempProductVariantForPicker[productIndex].value = itemValue;
+                tempProductVariantForPicker[productIndex].variantId =
+                  product.variants[itemIndex]._id;
+                this.setState({
+                  productVariantForPicker: tempProductVariantForPicker,
+                });
+              }}>
               {product.variants.map((variant, index) => (
                 <Picker.Item
                   key={index}
@@ -116,7 +142,7 @@ class StoreDetailScreen extends Component {
               ))}
             </Picker>
           </View>
-          <View style={mainStyles.col4}>
+          <View style={[mainStyles.col4, {justifyContent: 'center'}]}>
             <View style={{alignItems: 'center'}}>
               <Button
                 type="outline"
@@ -128,7 +154,7 @@ class StoreDetailScreen extends Component {
                 titleStyle={{color: variables.mainThemeColor}}
               />
             </View>
-            <View style={[mainStyles.row, {marginTop: 15}]}>
+            <View style={[mainStyles.row, {marginTop: 15, display: 'none'}]}>
               <View style={{flex: 1}}>
                 <Button
                   type="outline"

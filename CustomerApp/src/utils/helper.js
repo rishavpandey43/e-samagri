@@ -1,4 +1,4 @@
-import {addressType} from './constant';
+import {addressType, categoryList} from './constant';
 
 export const filterProductBySeller = (sellerId, products) => {
   products = products.filter(product => product.seller === sellerId);
@@ -20,10 +20,10 @@ export const obtainItemsInString = (items, i) => {
 };
 
 export const getCategoryName = categoryValue => {
-  let categoryName = categoryList.filter(
+  let category = categoryList.filter(
     category => category.value === categoryValue,
-  )[0].name;
-  return categoryName;
+  )[0];
+  return category;
 };
 
 export const getAddress = type => {
@@ -39,6 +39,17 @@ export const addressInString = address => {
     }
   }
   return addressString;
+};
+
+export const getStoreCategory = products => {
+  let categoryList = ['all']; // add all by default
+  products.map(product => {
+    if (categoryList.indexOf(product.root.category) === -1) {
+      categoryList.push(product.root.category);
+    }
+  });
+
+  return categoryList.map(category => getCategoryName(category));
 };
 
 // TODO: complete this function

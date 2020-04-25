@@ -11,7 +11,9 @@ const CardCustomTitle = ({title, detail, type, onPress}) => {
   return (
     <View style={mainStyles.row}>
       <View style={mainStyles.col6}>
-        <Text style={{fontSize: 18, fontWeight: 'bold'}}>{title}</Text>
+        <Text style={{fontSize: 18, fontWeight: 'bold', paddingTop: 10}}>
+          {title}
+        </Text>
       </View>
       <View
         style={[

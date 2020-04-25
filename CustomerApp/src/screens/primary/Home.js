@@ -20,7 +20,9 @@ import {
 import Icon from 'react-native-vector-icons/FontAwesome';
 
 // * Import all store related stuffs
+import * as HomeActions from '../../store/actions/creators/HomeActions';
 import * as ProfileActions from '../../store/actions/creators/ProfileActions';
+import * as StoreActions from '../../store/actions/creators/StoreActions';
 
 // * Import all screens/components
 import Store from '../../components/Store';
@@ -33,13 +35,35 @@ class HomeScreen extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      storeList: this.props.sellers.sellers,
       search: '',
     };
   }
 
   componentDidMount() {
     this.props.getProfileFetch();
+    this.props.getSellersFetch();
   }
+
+  componentDidUpdate(prevProps) {
+    // * checks previous sellerlist with new received ASYNC seller list
+    if (prevProps.sellers.sellers.length != this.props.sellers.sellers.length) {
+      this.setState({storeList: this.props.sellers.sellers});
+    }
+  }
+
+  searchStore = search => {
+    if (this.state.storeList) {
+      this.setState({
+        storeList: this.props.sellers.sellers.filter(
+          seller =>
+            seller.storeDetail.name
+              .toLowerCase()
+              .indexOf(search.toLowerCase()) !== -1,
+        ),
+      });
+    }
+  };
 
   render() {
     return (
@@ -81,7 +105,7 @@ class HomeScreen extends Component {
           }}
         />
         <ScrollView>
-          {this.props.profile.fetchingProfile ? (
+          {this.props.sellers.fetchingSellers ? (
             <View
               style={{
                 marginTop: 50,
@@ -90,10 +114,10 @@ class HomeScreen extends Component {
               }}>
               <ActivityIndicator size="large" />
             </View>
-          ) : this.props.profile.errMessage || !this.props.profile.profile ? (
+          ) : this.props.sellers.errMessage || !this.props.sellers.sellers ? (
             <Card title="Error Message" containerStyle={{alignItems: 'center'}}>
               <Text style={{marginBottom: 20, fontSize: 20, color: 'red'}}>
-                {this.props.profile.errMessage || 'Internal Server Error'}
+                {this.props.sellers.errMessage || 'Internal Server Error'}
               </Text>
               <Button
                 title="Retry"
@@ -102,6 +126,7 @@ class HomeScreen extends Component {
                 buttonStyle={mainStyles.outlineBtn}
                 onPress={() => {
                   this.props.getProfileFetch();
+                  this.props.getSellersFetch();
                 }}
               />
             </Card>
@@ -109,11 +134,12 @@ class HomeScreen extends Component {
             <View style={[mainStyles.container, {marginBottom: 100}]}>
               <View>
                 <SearchBar
-                  placeholder="Search for stores or item..."
+                  placeholder="Search for stores..."
                   onChangeText={search => {
                     this.setState({
                       search,
                     });
+                    this.searchStore(search);
                   }}
                   value={this.state.search}
                   lightTheme
@@ -125,7 +151,13 @@ class HomeScreen extends Component {
               </View>
               <View style={{margin: 10}}>
                 <Text h4>All stores near you</Text>
-                <Store navigation={this.props.navigation} />
+                {this.state.storeList.map(seller => (
+                  <Store
+                    key={seller._id}
+                    currentStore={seller}
+                    navigation={this.props.navigation}
+                  />
+                ))}
               </View>
             </View>
           )}
@@ -140,11 +172,15 @@ const styles = StyleSheet.create({});
 const mapStateToProps = state => {
   return {
     profile: state.profile,
+    sellers: state.sellers,
   };
 };
 
 const mapDispatchToProps = dispatch => {
-  return bindActionCreators({...ProfileActions}, dispatch);
+  return bindActionCreators(
+    {...HomeActions, ...ProfileActions, ...StoreActions},
+    dispatch,
+  );
 };
 
 export default connect(

@@ -41,7 +41,6 @@ class ProfileScreen extends Component {
   }
 
   render() {
-    console.log(this.props.profile.profile.address);
     return (
       <View>
         <Header

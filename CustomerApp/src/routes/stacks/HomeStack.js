@@ -3,9 +3,9 @@ import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
 
 import HomeScreen from '../../screens/primary/Home';
-import StoreScreen from '../../screens/secondary/Store';
+import StoreDetailScreen from '../../screens/secondary/StoreDetail';
 import CartScreen from '../../screens/secondary/Cart';
-import ItemScreen from '../../screens/secondary/Item';
+import ProductDetailScreen from '../../screens/secondary/ProductDetail';
 
 const Stack = createStackNavigator();
 
@@ -22,8 +22,8 @@ const HomeStack = () => (
       }}
     />
     <Stack.Screen
-      name="store-screen"
-      component={StoreScreen}
+      name="store-detail-screen"
+      component={StoreDetailScreen}
       options={{
         title: 'Store Detail',
       }}
@@ -36,10 +36,10 @@ const HomeStack = () => (
       }}
     />
     <Stack.Screen
-      name="items-screen"
-      component={ItemScreen}
+      name="product-detail-screen"
+      component={ProductDetailScreen}
       options={{
-        title: 'Item Detail',
+        title: 'Product Detail',
       }}
     />
   </Stack.Navigator>

@@ -1,4 +1,7 @@
+// * Import required modules/dependencies
 import React from 'react';
+import {bindActionCreators} from 'redux';
+import {connect} from 'react-redux';
 import {
   ScrollView,
   StyleSheet,
@@ -16,13 +19,23 @@ import {
 } from 'react-native-elements';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
+// * Import all store related stuffs
+import * as StoreActions from '../store/actions/creators/StoreActions';
+
+import {addressInString} from '../utils/helper';
+
 import mainStyles from '../styles/mainStyle';
 
-const Store = ({navigation}) => {
+const Store = ({selectStore, sellers, currentStore, navigation}) => {
   return (
     <TouchableOpacity
       onPress={() => {
-        navigation.navigate('store-screen');
+        selectStore({
+          ...sellers.sellers.filter(
+            seller => seller._id === currentStore._id,
+          )[0],
+        });
+        navigation.navigate('store-detail-screen');
       }}>
       <View style={[mainStyles.row, {marginTop: 10, marginBottom: 10}]}>
         <View style={mainStyles.col4}>
@@ -33,9 +46,9 @@ const Store = ({navigation}) => {
           />
         </View>
         <View style={mainStyles.col8}>
-          <Text style={{fontSize: 18}}>Sellet Store 1</Text>
+          <Text style={{fontSize: 18}}>{currentStore.storeDetail.name}</Text>
           <Text style={{color: '#555'}}>
-            Dummy Address, ksbc,1234, dto, In, 822112
+            {addressInString(currentStore.storeDetail.address)}
           </Text>
         </View>
       </View>
@@ -43,4 +56,17 @@ const Store = ({navigation}) => {
   );
 };
 
-export default Store;
+const mapStateToProps = state => {
+  return {
+    sellers: state.sellers,
+  };
+};
+
+const mapDispatchToProps = dispatch => {
+  return bindActionCreators({...StoreActions}, dispatch);
+};
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(Store);

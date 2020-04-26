@@ -2,23 +2,8 @@
 import React, {Component} from 'react';
 import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
-import {
-  ScrollView,
-  StyleSheet,
-  View,
-  TouchableOpacity,
-  ActivityIndicator,
-} from 'react-native';
-import {
-  Header,
-  Card,
-  Text,
-  Button,
-  Image,
-  SearchBar,
-  Avatar,
-  Icon,
-} from 'react-native-elements';
+import {ScrollView, StyleSheet, View, ActivityIndicator} from 'react-native';
+import {Header, Card, Text, Button, Avatar, Icon} from 'react-native-elements';
 
 // * Import all store related stuffs
 import * as ProfileActions from '../../store/actions/creators/ProfileActions';
@@ -46,8 +31,8 @@ class ProfileScreen extends Component {
         <Header
           leftComponent={
             <Icon
-              name="bars"
               type="font-awesome"
+              name="bars"
               size={20}
               color="#FFF"
               onPress={() => {
@@ -59,7 +44,9 @@ class ProfileScreen extends Component {
             text: 'My Profile',
             style: {color: '#fff'},
           }}
-          rightComponent={<Icon name="home" color="#FFF" size={30} />}
+          rightComponent={
+            <Icon type="font-awesome" name="home" color="#FFF" size={30} />
+          }
           containerStyle={{
             backgroundColor: '#933dd4',
             justifyContent: 'space-around',
@@ -95,8 +82,8 @@ class ProfileScreen extends Component {
               <Card containerStyle={{borderRadius: 10}}>
                 <View style={{alignItems: 'flex-end'}}>
                   <Icon
-                    name="pencil"
                     type="font-awesome"
+                    name="pencil"
                     size={25}
                     color={variables.mainThemeColor}
                     containerStyle={{padding: 10}}

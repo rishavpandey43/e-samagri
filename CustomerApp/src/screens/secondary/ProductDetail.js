@@ -2,32 +2,16 @@
 import React, {Component} from 'react';
 import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
-import {
-  ScrollView,
-  StyleSheet,
-  View,
-  TouchableOpacity,
-  ActivityIndicator,
-} from 'react-native';
-import {
-  Header,
-  Card,
-  Text,
-  Button,
-  Image,
-  Icon,
-  SearchBar,
-} from 'react-native-elements';
+import {ScrollView, StyleSheet, View, ActivityIndicator} from 'react-native';
+import {Header, Card, Text, Button, Image, Icon} from 'react-native-elements';
 import {Picker} from '@react-native-community/picker';
 
 // * Import all store related stuffs
 import * as HomeActions from '../../store/actions/creators/HomeActions';
 
 // * Import all screens/components
-import Store from '../../components/Store';
 
 // * Import utilites
-import {addressInString, getStoreCategory} from '../../utils/helper';
 
 // * Import all styling stuffs
 import mainStyles from '../../styles/mainStyle';
@@ -57,8 +41,8 @@ class ProductDetailScreen extends Component {
         <Header
           leftComponent={
             <Icon
-              name="arrow-left"
               type="font-awesome"
+              name="arrow-left"
               size={20}
               color="#FFF"
               onPress={() => {

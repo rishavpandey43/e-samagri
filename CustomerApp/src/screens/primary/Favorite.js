@@ -5,12 +5,9 @@ import {
   StyleSheet,
   View,
   Text,
-  FlatList,
-  SafeAreaView,
   ActivityIndicator,
 } from 'react-native';
-import {Header, Image, Button} from 'react-native-elements';
-import Icon from 'react-native-vector-icons/FontAwesome';
+import {Header, Image, Button, Icon} from 'react-native-elements';
 
 // * Import all store related stuffs
 
@@ -61,6 +58,7 @@ class FavoriteScreen extends Component {
             ]}>
             <Icon
               name={`${this.state.favorite ? 'heart' : 'heart-o'}`}
+              type="font-awesome"
               size={25}
               onPress={() => {}}
               color={variables.mainThemeColor}
@@ -76,6 +74,7 @@ class FavoriteScreen extends Component {
           leftComponent={
             <Icon
               name="bars"
+              type="font-awesome"
               size={20}
               color="#FFF"
               onPress={() => {
@@ -87,7 +86,9 @@ class FavoriteScreen extends Component {
             text: 'My Favorite Stores',
             style: {color: '#fff'},
           }}
-          rightComponent={<Icon name="heart" color="#FFF" size={30} />}
+          rightComponent={
+            <Icon name="heart" type="font-awesome" color="#FFF" size={30} />
+          }
           containerStyle={{
             backgroundColor: '#933dd4',
             justifyContent: 'space-around',

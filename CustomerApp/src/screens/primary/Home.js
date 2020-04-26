@@ -2,22 +2,15 @@
 import React, {Component} from 'react';
 import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
-import {
-  ScrollView,
-  StyleSheet,
-  View,
-  TouchableOpacity,
-  ActivityIndicator,
-} from 'react-native';
+import {ScrollView, StyleSheet, View, ActivityIndicator} from 'react-native';
 import {
   Header,
   Card,
   Text,
   Button,
-  Image,
   SearchBar,
+  Icon,
 } from 'react-native-elements';
-import Icon from 'react-native-vector-icons/FontAwesome';
 
 // * Import all store related stuffs
 import * as HomeActions from '../../store/actions/creators/HomeActions';
@@ -73,6 +66,7 @@ class HomeScreen extends Component {
         <Header
           leftComponent={
             <Icon
+              type="font-awesome"
               name="bars"
               size={20}
               color="#FFF"
@@ -93,6 +87,7 @@ class HomeScreen extends Component {
           }}
           rightComponent={
             <Icon
+              type="font-awesome"
               name="shopping-basket"
               color="#FFF"
               size={25}

@@ -6,7 +6,6 @@ import {
   ScrollView,
   StyleSheet,
   View,
-  TouchableOpacity,
   ActivityIndicator,
   Alert,
 } from 'react-native';
@@ -15,9 +14,6 @@ import {
   Card,
   Text,
   Button,
-  Image,
-  SearchBar,
-  Avatar,
   Icon,
   Input,
   CheckBox,
@@ -27,7 +23,6 @@ import {
 import * as ProfileActions from '../../store/actions/creators/ProfileActions';
 
 // * Import all screens/components
-import Address from '../../components/Address';
 import CardCustomTitle from '../../components/CardCustomTitle';
 
 // * Import utilites
@@ -80,8 +75,8 @@ class UpdateProfileScreen extends Component {
         <Header
           leftComponent={
             <Icon
-              name="arrow-left"
               type="font-awesome"
+              name="arrow-left"
               size={20}
               color="#FFF"
               onPress={() => {

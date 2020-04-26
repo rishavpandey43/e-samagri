@@ -10,8 +10,8 @@ import {
   CheckBox,
   Input,
   Button,
+  Icon,
 } from 'react-native-elements';
-import Icon from 'react-native-vector-icons/FontAwesome';
 
 // * Import all store related stuffs
 
@@ -43,6 +43,7 @@ class HelpScreen extends Component {
         <Header
           leftComponent={
             <Icon
+              type="font-awesome"
               name="bars"
               size={20}
               color="#FFF"
@@ -55,7 +56,9 @@ class HelpScreen extends Component {
             text: 'Help Center',
             style: {color: '#fff'},
           }}
-          rightComponent={<Icon name="question" color="#FFF" size={30} />}
+          rightComponent={
+            <Icon type="font-awesome" name="question" color="#FFF" size={30} />
+          }
           containerStyle={{
             backgroundColor: '#933dd4',
             justifyContent: 'space-around',
@@ -67,7 +70,12 @@ class HelpScreen extends Component {
               <ListItem
                 title="Email Us"
                 leftAvatar={
-                  <Icon name="at" color={variables.mainThemeColor} size={30} />
+                  <Icon
+                    type="font-awesome"
+                    name="at"
+                    color={variables.mainThemeColor}
+                    size={30}
+                  />
                 }
                 chevron
                 bottomDivider
@@ -79,6 +87,7 @@ class HelpScreen extends Component {
                 title="About Us"
                 leftAvatar={
                   <Icon
+                    type="font-awesome"
                     name="info"
                     color={variables.mainThemeColor}
                     size={30}
@@ -94,6 +103,7 @@ class HelpScreen extends Component {
                 title="Send Feedback"
                 leftAvatar={
                   <Icon
+                    type="font-awesome"
                     name="comment"
                     color={variables.mainThemeColor}
                     size={30}
@@ -121,6 +131,7 @@ class HelpScreen extends Component {
               <View style={mainStyles.col4}>
                 <View style={{alignItems: 'flex-end'}}>
                   <Icon
+                    type="font-awesome"
                     name="times"
                     color="#ababab"
                     size={20}
@@ -156,6 +167,7 @@ class HelpScreen extends Component {
               <View style={mainStyles.col4}>
                 <View style={{alignItems: 'flex-end'}}>
                   <Icon
+                    type="font-awesome"
                     name="times"
                     color="#ababab"
                     size={20}

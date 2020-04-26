@@ -117,8 +117,8 @@ class StoreDetailScreen extends Component {
                 </View>
                 <View style={[mainStyles.col2, {justifyContent: 'center'}]}>
                   <Icon
-                    name="chevron-right"
                     type="font-awesome"
+                    name="chevron-right"
                     size={20}
                     color="#a5a5a5"
                   />
@@ -218,8 +218,8 @@ class StoreDetailScreen extends Component {
         <Header
           leftComponent={
             <Icon
-              name="arrow-left"
               type="font-awesome"
+              name="arrow-left"
               size={20}
               color="#FFF"
               onPress={() => {
@@ -236,8 +236,8 @@ class StoreDetailScreen extends Component {
           }}
           rightComponent={
             <Icon
-              name="shopping-basket"
               type="font-awesome"
+              name="shopping-basket"
               size={20}
               color="#FFF"
               onPress={() => {

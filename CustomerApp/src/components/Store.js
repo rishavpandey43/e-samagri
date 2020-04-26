@@ -2,22 +2,8 @@
 import React from 'react';
 import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
-import {
-  ScrollView,
-  StyleSheet,
-  View,
-  TouchableOpacity,
-  ActivityIndicator,
-} from 'react-native';
-import {
-  Header,
-  Card,
-  Text,
-  Button,
-  Image,
-  SearchBar,
-} from 'react-native-elements';
-import Icon from 'react-native-vector-icons/FontAwesome';
+import {View, TouchableOpacity, ActivityIndicator} from 'react-native';
+import {Text, Image} from 'react-native-elements';
 
 // * Import all store related stuffs
 import * as StoreActions from '../store/actions/creators/StoreActions';

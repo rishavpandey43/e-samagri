@@ -1,8 +1,7 @@
 // * Import required modules/dependencies
 import React, {Component} from 'react';
-import {ScrollView, StyleSheet, View, Text, Button} from 'react-native';
-import {Header, Card} from 'react-native-elements';
-import Icon from 'react-native-vector-icons/FontAwesome';
+import {ScrollView, StyleSheet, View} from 'react-native';
+import {Header, Icon} from 'react-native-elements';
 
 // * Import all store related stuffs
 
@@ -26,6 +25,7 @@ class OrdersScreen extends Component {
         <Header
           leftComponent={
             <Icon
+              type="font-awesome"
               name="bars"
               size={20}
               color="#FFF"
@@ -38,7 +38,9 @@ class OrdersScreen extends Component {
             text: 'Your Orders History',
             style: {color: '#fff'},
           }}
-          rightComponent={<Icon name="history" color="#FFF" size={30} />}
+          rightComponent={
+            <Icon type="font-awesome" name="history" color="#FFF" size={30} />
+          }
           containerStyle={{
             backgroundColor: '#933dd4',
             justifyContent: 'space-around',

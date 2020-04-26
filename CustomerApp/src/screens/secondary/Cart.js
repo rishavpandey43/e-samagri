@@ -1,13 +1,11 @@
 // * Import required modules/dependencies
 import React, {Component} from 'react';
 import {ScrollView, StyleSheet, View, ActivityIndicator} from 'react-native';
-import {Header, Card, Text, Button, Image} from 'react-native-elements';
-import Icon from 'react-native-vector-icons/FontAwesome';
+import {Header, Card, Text, Button, Image, Icon} from 'react-native-elements';
 
 // * Import all store related stuffs
 
 // * Import all screens/components
-import Item from '../../components/OrderItem';
 
 // * Import utilites
 
@@ -75,6 +73,7 @@ class CartScreen extends Component {
         <Header
           leftComponent={
             <Icon
+              type="font-awesome"
               name="arrow-left"
               size={20}
               color="#FFF"

@@ -11,7 +11,6 @@ import {Text} from 'react-native-elements';
 
 // * Import all styling stuffs
 import mainStyles from '../styles/mainStyle';
-import variables from '../styles/variables';
 
 const Item = ({name, variant, quantity, price}) => {
   return (

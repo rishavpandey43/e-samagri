@@ -24,6 +24,8 @@ import {Picker} from '@react-native-community/picker';
 import * as HomeActions from '../../store/actions/creators/HomeActions';
 import * as StoreActions from '../../store/actions/creators/StoreActions';
 
+// * Import all screens/components
+
 // * Import utilites
 import {addressInString, getStoreCategory} from '../../utils/helper';
 
@@ -71,7 +73,21 @@ class StoreDetailScreen extends Component {
     });
   };
 
-  addToCart = () => {};
+  addToCart = productId => {
+    let cart = {
+      storeId: this.props.store.store._id,
+      products: [
+        {
+          id: productId,
+          variantId: this.state.productVariantForPicker.filter(
+            product => product.productId === productId,
+          )[0].variantId,
+          quantity: 1,
+        },
+      ],
+    };
+    console.log(cart);
+  };
 
   render() {
     // console.log(this.props.store.store.products);
@@ -148,9 +164,7 @@ class StoreDetailScreen extends Component {
                 type="outline"
                 buttonStyle={styles.btn}
                 title="Add to cart"
-                onPress={() => {
-                  console.log('button click');
-                }}
+                onPress={this.addToCart.bind(null, product._id)}
                 titleStyle={{color: variables.mainThemeColor}}
               />
             </View>

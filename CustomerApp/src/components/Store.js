@@ -22,8 +22,12 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 // * Import all store related stuffs
 import * as StoreActions from '../store/actions/creators/StoreActions';
 
+// * Import all screens/components
+
+// * Import utilites
 import {addressInString} from '../utils/helper';
 
+// * Import all styling stuffs
 import mainStyles from '../styles/mainStyle';
 
 const Store = ({selectStore, sellers, currentStore, navigation}) => {

@@ -1,8 +1,16 @@
+// * Import required modules/dependencies
 import React from 'react';
 import {ScrollView, StyleSheet, View} from 'react-native';
 import {Text, Button, Card} from 'react-native-elements';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
+// * Import all store related stuffs
+
+// * Import all screens/components
+
+// * Import utilites
+
+// * Import all styling stuffs
 import mainStyles from '../styles/mainStyle';
 import variables from '../styles/variables';
 

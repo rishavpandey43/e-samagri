@@ -27,6 +27,8 @@ import * as StoreActions from '../../store/actions/creators/StoreActions';
 // * Import all screens/components
 import Store from '../../components/Store';
 
+// * Import utilites
+
 // * Import all styling stuffs
 import mainStyles from '../../styles/mainStyle';
 import variables from '../../styles/variables';

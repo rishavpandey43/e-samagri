@@ -30,6 +30,8 @@ import * as ProfileActions from '../../store/actions/creators/ProfileActions';
 import Address from '../../components/Address';
 import CardCustomTitle from '../../components/CardCustomTitle';
 
+// * Import utilites
+
 // * Import all styling stuffs
 import mainStyles from '../../styles/mainStyle';
 import variables from '../../styles/variables';

@@ -8,6 +8,7 @@ import {Picker} from '@react-native-community/picker';
 
 // * Import all store related stuffs
 import * as HomeActions from '../../store/actions/creators/HomeActions';
+import * as CartActions from '../../store/actions/creators/CartActions';
 
 // * Import all screens/components
 
@@ -22,15 +23,22 @@ class ProductDetailScreen extends Component {
     super(props);
     this.state = {
       product: null,
+      selectedVariant: null,
     };
   }
 
   componentDidMount() {
     if (this.props.route.params.productId) {
+      let tempProduct = this.props.store.store.products.filter(
+        product => product._id === this.props.route.params.productId,
+      )[0];
       this.setState({
-        product: this.props.store.store.products.filter(
-          product => product._id === this.props.route.params.productId,
-        )[0],
+        product: tempProduct,
+        selectedVariant: {
+          productId: tempProduct._id,
+          variantId: tempProduct.variants[0]._id,
+          value: tempProduct.variants[0].value,
+        },
       });
     }
   }
@@ -66,7 +74,7 @@ class ProductDetailScreen extends Component {
                 title="Error Message"
                 containerStyle={{alignItems: 'center'}}>
                 <Text style={{marginBottom: 20, fontSize: 20, color: 'red'}}>
-                  Some error occured, retry
+                  Some error occured, go back
                 </Text>
                 <Button
                   title="Go back"
@@ -97,14 +105,25 @@ class ProductDetailScreen extends Component {
                     <View style={mainStyles.row}>
                       <View style={mainStyles.col7}>
                         <Picker
-                          selectedValue={this.state.language}
+                          selectedValue={this.state.selectedVariant.value}
                           style={{height: 40, width: 'auto', marginTop: 10}}
-                          onValueChange={(itemValue, itemIndex) => {}}>
+                          onValueChange={(itemValue, itemIndex) => {
+                            this.setState({
+                              selectedVariant: {
+                                ...this.state.selectedVariant,
+                                value: itemValue,
+                                variantId: this.state.product.variants[
+                                  itemIndex
+                                ]._id,
+                              },
+                            });
+                            console.log(itemValue);
+                          }}>
                           {this.state.product.variants.map((variant, index) => (
                             <Picker.Item
                               key={index}
                               label={`${variant.value}/₹ ${variant.price}`}
-                              value="java"
+                              value={variant.value}
                             />
                           ))}
                         </Picker>
@@ -193,11 +212,12 @@ const styles = StyleSheet.create({
 const mapStateToProps = state => {
   return {
     store: state.store,
+    cart: state.cart,
   };
 };
 
 const mapDispatchToProps = dispatch => {
-  return bindActionCreators({...HomeActions}, dispatch);
+  return bindActionCreators({...HomeActions, ...CartActions}, dispatch);
 };
 
 export default connect(

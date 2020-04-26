@@ -43,6 +43,8 @@ class HomeScreen extends Component {
   componentDidUpdate(prevProps) {
     // * checks previous sellerlist with new received ASYNC seller list
     if (prevProps.sellers.sellers.length != this.props.sellers.sellers.length) {
+      this.props.getProfileFetch();
+      this.props.getSellersFetch();
       this.setState({storeList: this.props.sellers.sellers});
     }
   }

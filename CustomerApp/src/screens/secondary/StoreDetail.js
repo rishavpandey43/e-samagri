@@ -8,6 +8,7 @@ import {
   View,
   TouchableOpacity,
   ActivityIndicator,
+  Alert,
 } from 'react-native';
 import {
   Header,
@@ -23,6 +24,7 @@ import {Picker} from '@react-native-community/picker';
 // * Import all store related stuffs
 import * as HomeActions from '../../store/actions/creators/HomeActions';
 import * as StoreActions from '../../store/actions/creators/StoreActions';
+import * as CartActions from '../../store/actions/creators/CartActions';
 
 // * Import all screens/components
 
@@ -38,12 +40,16 @@ class StoreDetailScreen extends Component {
     super(props);
     this.state = {
       selectedCategory: {name: 'All', value: 'all'},
-      filteredProduct: this.props.store.store.products,
-      productVariantForPicker: this.props.store.store.products.map(product => ({
-        productId: product._id,
-        variantId: product.variants[0]._id,
-        value: product.variants[0].value,
-      })),
+      filteredProduct: this.props.store.store
+        ? this.props.store.store.products
+        : [],
+      productVariantForPicker: this.props.store.store
+        ? this.props.store.store.products.map(product => ({
+            productId: product._id,
+            variantId: product.variants[0]._id,
+            value: product.variants[0].value,
+          }))
+        : [],
       search: '',
     };
   }
@@ -86,11 +92,125 @@ class StoreDetailScreen extends Component {
         },
       ],
     };
-    console.log(cart);
+    // * Check if the cart is empty to add first product
+    if (!this.props.cart.cart) {
+      this.props.addNewProductToCart(cart);
+    }
+    // * Confirm to user, if he tries to add product from another store to cart
+    else if (this.props.cart.cart.storeId !== this.props.store.store._id) {
+      Alert.alert(
+        'Store change',
+        "You're about to change the store. You can't select products from multiple store in single order.",
+        [
+          {
+            text: 'Cancel',
+            onPress: () => {
+              return;
+            },
+            style: 'cancel',
+          },
+          {
+            text: 'OK',
+            onPress: () => this.props.addNewProductToCart(cart),
+          },
+        ],
+      );
+    }
+    // * Here, when user add product from same store to cart
+    else if (this.props.cart.cart.storeId === this.props.store.store._id) {
+      let productInCart = this.props.cart.cart.products.filter(
+        product => product.id === cart.products[0].id,
+      )[0];
+
+      if (productInCart) {
+        let productIndexInCart = null;
+        this.props.cart.cart.products.forEach((product, index) => {
+          if (
+            product.id === cart.products[0].id &&
+            product.variantId === cart.products[0].variantId
+          ) {
+            productIndexInCart = index;
+            return;
+          }
+        });
+
+        // * If the product and variant are both same, then increment it's quantity
+        if (productIndexInCart !== null) {
+          let tempCart = {
+            ...this.props.cart.cart,
+          };
+          tempCart.products[productIndexInCart].quantity++;
+          this.props.incrementSameProductToCart(tempCart);
+        }
+        // * If the product is same with different variant, then add it as new product in cart
+        else {
+          let tempCart = {
+            ...this.props.cart.cart,
+          };
+          tempCart.products.push(cart.products[0]);
+          this.props.addNewProductToCart(tempCart);
+          return;
+        }
+      }
+      // * If there is new product to be added, add to cart
+      else if (!productInCart) {
+        let tempCart = {
+          ...this.props.cart.cart,
+        };
+        tempCart.products.push(cart.products[0]);
+        this.props.addNewProductToCart(tempCart);
+        return;
+      }
+    }
+  };
+
+  changeProductQuantityinCart = (type, variant) => {
+    let tempCart = {
+      ...this.props.cart.cart,
+    };
+    let productIndexInCart = null;
+    this.props.cart.cart.products.forEach((product, index) => {
+      if (
+        product.id === variant.productId &&
+        product.variantId === variant.variantId
+      ) {
+        productIndexInCart = index;
+        return;
+      }
+    });
+    if (type === 'increment') {
+      tempCart.products[productIndexInCart].quantity++;
+      if (tempCart.products[productIndexInCart].quantity > 5) {
+        Alert.alert(
+          'Product quantity exceeding the limit',
+          'You cannot add more than 5 same products for now!',
+          [
+            {
+              text: 'OK',
+              onPress: () => {
+                tempCart.products[productIndexInCart].quantity--;
+                this.props.changeProductQuantityinCart(tempCart);
+                return;
+              },
+            },
+          ],
+        );
+        return;
+      } else {
+        this.props.changeProductQuantityinCart(tempCart);
+      }
+    } else if (type === 'decrement') {
+      tempCart.products[productIndexInCart].quantity--;
+      if (tempCart.products[productIndexInCart].quantity === 0) {
+        tempCart.products.splice(productIndexInCart, 1);
+        this.props.changeProductQuantityinCart(tempCart);
+      } else {
+        this.props.changeProductQuantityinCart(tempCart);
+      }
+    } else return;
   };
 
   render() {
-    // console.log(this.props.store.store.products);
     const Product = ({product}) => {
       return (
         <View
@@ -133,7 +253,7 @@ class StoreDetailScreen extends Component {
               }
               style={{height: 40, width: 'auto', marginTop: 10}}
               onValueChange={(itemValue, itemIndex) => {
-                // * AWESOME LOGIC :)
+                // * AWESOME LOGIC TO CHANGE THE VARIANT PICKER ;)
                 let productIndex = null;
                 this.state.productVariantForPicker.forEach((variant, i) => {
                   if (product._id === variant.productId) {
@@ -159,55 +279,96 @@ class StoreDetailScreen extends Component {
             </Picker>
           </View>
           <View style={[mainStyles.col4, {justifyContent: 'center'}]}>
-            <View style={{alignItems: 'center'}}>
-              <Button
-                type="outline"
-                buttonStyle={styles.btn}
-                title="Add to cart"
-                onPress={this.addToCart.bind(null, product._id)}
-                titleStyle={{color: variables.mainThemeColor}}
-              />
-            </View>
-            <View style={[mainStyles.row, {marginTop: 15, display: 'none'}]}>
-              <View style={{flex: 1}}>
+            {this.props.cart.cart ? (
+              // * AWESOME LOGIC OF DISPLAYING BUTTONS BASED ON VARIANTS ADDED IN CART
+              !this.props.cart.cart.products.filter(
+                cartProduct =>
+                  cartProduct.variantId ===
+                  this.state.productVariantForPicker.filter(
+                    variant => variant.productId === product._id,
+                  )[0].variantId,
+              )[0] ? (
+                <View style={{alignItems: 'center'}}>
+                  <Button
+                    type="outline"
+                    buttonStyle={styles.btn}
+                    title="Add to cart"
+                    onPress={this.addToCart.bind(null, product._id)}
+                    titleStyle={{color: variables.mainThemeColor}}
+                  />
+                </View>
+              ) : (
+                <View style={[mainStyles.row, {marginTop: 15}]}>
+                  <View style={{flex: 1}}>
+                    <Button
+                      type="outline"
+                      buttonStyle={[styles.btn, {padding: 2}]}
+                      title="-"
+                      onPress={this.changeProductQuantityinCart.bind(
+                        null,
+                        'decrement',
+                        this.state.productVariantForPicker.filter(
+                          variant => variant.productId === product._id,
+                        )[0],
+                      )}
+                      titleStyle={{
+                        fontSize: 20,
+                        fontWeight: 'bold',
+                        color: variables.mainThemeColor,
+                      }}
+                    />
+                  </View>
+                  <View
+                    style={{
+                      flex: 1,
+                      justifyContent: 'center',
+                      alignItems: 'center',
+                    }}>
+                    <Text style={{fontSize: 18}}>
+                      {
+                        this.props.cart.cart.products.filter(
+                          cartProduct =>
+                            cartProduct.variantId ===
+                            this.state.productVariantForPicker.filter(
+                              variant => variant.productId === product._id,
+                            )[0].variantId,
+                        )[0].quantity
+                      }
+                    </Text>
+                  </View>
+                  <View style={{flex: 1}}>
+                    <Button
+                      type="outline"
+                      buttonStyle={[styles.btn, {padding: 2}]}
+                      title="+"
+                      onPress={this.changeProductQuantityinCart.bind(
+                        null,
+                        'increment',
+                        this.state.productVariantForPicker.filter(
+                          variant => variant.productId === product._id,
+                        )[0],
+                      )}
+                      titleStyle={{
+                        fontSize: 20,
+                        fontWeight: 'bold',
+                        color: variables.mainThemeColor,
+                      }}
+                    />
+                  </View>
+                </View>
+              )
+            ) : (
+              // * Display this at initial, if cart is empty
+              <View style={{alignItems: 'center'}}>
                 <Button
                   type="outline"
-                  buttonStyle={[styles.btn, {padding: 2}]}
-                  title="-"
-                  onPress={() => {
-                    console.log('button click');
-                  }}
-                  titleStyle={{
-                    fontSize: 20,
-                    fontWeight: 'bold',
-                    color: variables.mainThemeColor,
-                  }}
+                  buttonStyle={styles.btn}
+                  title="Add to cart"
+                  onPress={this.addToCart.bind(null, product._id)}
+                  titleStyle={{color: variables.mainThemeColor}}
                 />
               </View>
-              <View
-                style={{
-                  flex: 1,
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                }}>
-                <Text style={{fontSize: 18}}>1</Text>
-              </View>
-              <View style={{flex: 1}}>
-                <Button
-                  type="outline"
-                  buttonStyle={[styles.btn, {padding: 2}]}
-                  title="+"
-                  onPress={() => {
-                    console.log('button click');
-                  }}
-                  titleStyle={{
-                    fontSize: 20,
-                    fontWeight: 'bold',
-                    color: variables.mainThemeColor,
-                  }}
-                />
-              </View>
-            </View>
+            )}
           </View>
         </View>
       );
@@ -229,7 +390,7 @@ class StoreDetailScreen extends Component {
             />
           }
           centerComponent={{
-            text: this.props.store
+            text: this.props.store.store
               ? this.props.store.store.storeDetail.name
               : '',
             style: {color: '#fff'},
@@ -359,7 +520,7 @@ class StoreDetailScreen extends Component {
                       {this.state.selectedCategory.name}:
                     </Text>
                   </View>
-                  {this.state.filteredProduct.length == 0 ? (
+                  {this.state.filteredProduct.length === 0 ? (
                     <Text
                       style={{
                         fontSize: 20,
@@ -417,11 +578,15 @@ const mapStateToProps = state => {
   return {
     sellers: state.sellers,
     store: state.store,
+    cart: state.cart,
   };
 };
 
 const mapDispatchToProps = dispatch => {
-  return bindActionCreators({...HomeActions, ...StoreActions}, dispatch);
+  return bindActionCreators(
+    {...HomeActions, ...StoreActions, ...CartActions},
+    dispatch,
+  );
 };
 
 export default connect(

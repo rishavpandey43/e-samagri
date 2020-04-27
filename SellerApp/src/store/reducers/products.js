@@ -1,8 +1,8 @@
 import * as actionTypes from '../actions/types/actionTypes';
 
 const initialState = {
-  isLoading: false,
-  products: null,
+  fetchingProduct: false,
+  products: [],
   successMessage: null,
   errMessage: null,
 };
@@ -12,19 +12,19 @@ const products = (state = initialState, action) => {
     case actionTypes.GET_PRODUCTS_REQUEST:
       return {
         ...state,
-        isLoading: true,
+        fetchingProduct: true,
       };
     case actionTypes.GET_PRODUCTS_SUCCESS:
       return {
         ...state,
-        isLoading: false,
+        fetchingProduct: false,
         products: action.products,
-        successMessage: action.message,
+        errMessage: '',
       };
     case actionTypes.GET_PRODUCTS_FAILURE:
       return {
         ...state,
-        isLoading: false,
+        fetchingProduct: false,
         products: null,
         errMessage: action.message,
       };

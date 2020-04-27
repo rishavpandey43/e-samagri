@@ -1,7 +1,8 @@
 import * as actionTypes from '../actions/types/actionTypes';
 
 const initialState = {
-  isLoading: false,
+  fetchingProfile: false,
+  profileUpdating: false,
   profile: null,
   successMessage: null,
   errMessage: null,
@@ -9,23 +10,41 @@ const initialState = {
 
 const profile = (state = initialState, action) => {
   switch (action.type) {
-    case actionTypes.GET_PROFILE_DETAIL_REQUEST:
+    case actionTypes.GET_PROFILE_REQUEST:
       return {
         ...state,
-        isLoading: true,
+        fetchingProfile: true,
       };
-    case actionTypes.GET_PROFILE_DETAIL_SUCCESS:
+    case actionTypes.GET_PROFILE_SUCCESS:
       return {
         ...state,
-        isLoading: false,
+        fetchingProfile: false,
         profile: action.profile,
-        successMessage: action.message,
+
+        errMessage: '',
       };
-    case actionTypes.GET_PROFILE_DETAIL_FAILURE:
+    case actionTypes.GET_PROFILE_FAILURE:
       return {
         ...state,
-        isLoading: false,
-        profile: null,
+        fetchingProfile: false,
+        errMessage: action.message,
+      };
+    case actionTypes.UPDATE_PROFILE_REQUEST:
+      return {
+        ...state,
+        profileUpdating: true,
+      };
+    case actionTypes.UPDATE_PROFILE_SUCCESS:
+      return {
+        ...state,
+        profileUpdating: false,
+        profile: action.profile,
+        errMessage: '',
+      };
+    case actionTypes.UPDATE_PROFILE_FAILURE:
+      return {
+        ...state,
+        profileUpdating: false,
         errMessage: action.message,
       };
     default:

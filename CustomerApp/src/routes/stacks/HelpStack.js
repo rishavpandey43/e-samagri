@@ -12,7 +12,7 @@ const HelpStack = () => (
       headerShown: false,
     }}>
     <Stack.Screen
-      name="help"
+      name="help-screen"
       component={HelpScreen}
       options={{
         title: 'Help',

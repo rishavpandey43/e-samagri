@@ -18,7 +18,7 @@ const MainDrawerNavigation = () => (
   <NavigationContainer>
     <Drawer.Navigator>
       <Drawer.Screen
-        name="DashBoard"
+        name="dashBoard-stack"
         component={DashBoardStack}
         options={{
           drawerLabel: 'Dashboard',
@@ -28,7 +28,7 @@ const MainDrawerNavigation = () => (
         }}
       />
       <Drawer.Screen
-        name="Profile"
+        name="profile-stack"
         component={ProfileStack}
         options={{
           drawerLabel: 'Profile',
@@ -38,7 +38,7 @@ const MainDrawerNavigation = () => (
         }}
       />
       <Drawer.Screen
-        name="Products"
+        name="products-stack"
         component={ProductsStack}
         options={{
           drawerLabel: 'Products',
@@ -52,7 +52,7 @@ const MainDrawerNavigation = () => (
         }}
       />
       <Drawer.Screen
-        name="AddNewProduct"
+        name="add-new-product-stack"
         component={AddNewProductStack}
         options={{
           drawerLabel: 'Add New Product',
@@ -62,7 +62,7 @@ const MainDrawerNavigation = () => (
         }}
       />
       <Drawer.Screen
-        name="Orders"
+        name="orders-stack"
         component={OrdersStack}
         options={{
           drawerLabel: 'Orders',

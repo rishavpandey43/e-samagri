@@ -13,10 +13,10 @@ import {
 import {Header, Card, Text} from 'react-native-elements';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
-import * as actionCreators from '../store/actions/creators/GetOrders';
+import * as actionCreators from '../../store/actions/creators/GetOrders';
 
-import variables from '../styles/variables';
-import mainStyles from '../styles/mainStyle';
+import variables from '../../styles/variables';
+import mainStyles from '../../styles/mainStyle';
 
 class OrderDetailScreen extends Component {
   constructor(props) {

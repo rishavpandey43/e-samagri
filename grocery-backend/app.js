@@ -4,8 +4,10 @@ const express = require("express");
 const cookieParser = require("cookie-parser");
 const logger = require("morgan");
 const dotenv = require("dotenv");
+const mongoose = require("mongoose");
 
-const usersRouter = require("./routes/users");
+const sellerRouter = require("./routes/seller.router");
+const customerRouter = require("./routes/customer.router");
 
 // * configure dotenv to access environment variables
 dotenv.config();
@@ -37,15 +39,32 @@ app.set("port", PORT);
 // * Create HTTP server.
 const server = http.createServer(app);
 
+// * connect server to mongoDB Atlas
+const URI = process.env.ATLAS_DB_URI;
+mongoose.connect(URI, {
+  useCreateIndex: true,
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+  useFindAndModify: false,
+});
+
+const connection = mongoose.connection;
+connection.once("open", () => {
+  console.log("Mongoose database connection established successfully");
+});
+
+connection.on("error", function (err) {
+  console.log("Mongoose default connection error: " + err);
+});
+
 app.use(logger("dev"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 
-app.use("/", (req, res, next) => {
-  res.status(200).json("Hello World");
-});
-app.use("/users", usersRouter);
+// * USE ALL THE DEDICATED ROUTERS HERE...
+app.use("/seller", sellerRouter);
+app.use("/customer", customerRouter);
 
 // * catch 404 and forward to error handler
 app.use(function (req, res, next) {
@@ -56,12 +75,12 @@ app.use(function (req, res, next) {
 app.use((err, req, res, next) => {
   // console.log("Error- ", err);
   res.statusCode = err.status || 500;
+  res.statusText = err.statusText || "Internal Server Error";
   res.setHeader("Content-Type", "application/json");
-  res.json(
-    err.message
-      ? { message: err.message }
-      : { message: "Internal Server Error" }
-  );
+  res.json({
+    errMessage:
+      err.message || "Server is unable to process request, Please try again",
+  });
 });
 
 server.listen(PORT, () => console.log(`Server listening on port ${PORT}!`));

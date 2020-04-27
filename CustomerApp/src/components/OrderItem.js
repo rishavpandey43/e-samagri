@@ -1,9 +1,16 @@
+// * Import required modules/dependencies
 import React from 'react';
 import {View} from 'react-native';
 import {Text} from 'react-native-elements';
 
+// * Import all store related stuffs
+
+// * Import all screens/components
+
+// * Import utilites
+
+// * Import all styling stuffs
 import mainStyles from '../styles/mainStyle';
-import variables from '../styles/variables';
 
 const Item = ({name, variant, quantity, price}) => {
   return (

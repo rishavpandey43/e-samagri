@@ -1,14 +1,22 @@
 import React, {Component} from 'react';
+import {bindActionCreators} from 'redux';
+import {connect} from 'react-redux';
 import {ScrollView, StyleSheet, View, Text, Button} from 'react-native';
 import {Header, Card} from 'react-native-elements';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
-import mainStyles from '../styles/mainStyle';
+import mainStyles from '../../styles/mainStyle';
+
+import * as ProfileActions from '../../store/actions/creators/ProfileActions';
 
 class DashBoardScreen extends Component {
   constructor(props) {
     super(props);
     this.state = {};
+  }
+
+  componentDidMount() {
+    this.props.getProfileFetch();
   }
 
   render() {
@@ -82,4 +90,17 @@ class DashBoardScreen extends Component {
 
 const styles = StyleSheet.create({});
 
-export default DashBoardScreen;
+const mapStateToProps = state => {
+  return {
+    profile: state.profile,
+  };
+};
+
+const mapDispatchToProps = dispatch => {
+  return bindActionCreators({...ProfileActions}, dispatch);
+};
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(DashBoardScreen);

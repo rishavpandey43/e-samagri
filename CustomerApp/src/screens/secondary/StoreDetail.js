@@ -94,7 +94,7 @@ class StoreDetailScreen extends Component {
     };
     // * Check if the cart is empty to add first product
     if (!this.props.cart.cart) {
-      this.props.addNewProductToCart(cart);
+      this.props.updateCartToServerFetch('new', cart);
     }
     // * Confirm to user, if he tries to add product from another store to cart
     else if (this.props.cart.cart.storeId !== this.props.store.store._id) {
@@ -111,7 +111,7 @@ class StoreDetailScreen extends Component {
           },
           {
             text: 'OK',
-            onPress: () => this.props.addNewProductToCart(cart),
+            onPress: () => this.props.updateCartToServerFetch('new', cart),
           },
         ],
       );
@@ -124,6 +124,7 @@ class StoreDetailScreen extends Component {
       )[0];
 
       if (productInCart) {
+        // * check for product with same variant in the cart, because if it's added ADD TO CART button will not be displayed
         let productIndexInCart = null;
         this.props.cart.cart.products.forEach((product, index) => {
           if (
@@ -135,21 +136,13 @@ class StoreDetailScreen extends Component {
           }
         });
 
-        // * If the product and variant are both same, then increment it's quantity
-        if (productIndexInCart !== null) {
-          let tempCart = {
-            ...this.props.cart.cart,
-          };
-          tempCart.products[productIndexInCart].quantity++;
-          this.props.incrementSameProductToCart(tempCart);
-        }
         // * If the product is same with different variant, then add it as new product in cart
-        else {
+        if (productIndexInCart === null) {
           let tempCart = {
             ...this.props.cart.cart,
           };
           tempCart.products.push(cart.products[0]);
-          this.props.addNewProductToCart(tempCart);
+          this.props.updateCartToServerFetch('new', tempCart);
           return;
         }
       }
@@ -159,13 +152,15 @@ class StoreDetailScreen extends Component {
           ...this.props.cart.cart,
         };
         tempCart.products.push(cart.products[0]);
-        this.props.addNewProductToCart(tempCart);
+        this.props.updateCartToServerFetch('new', tempCart);
         return;
       }
     }
   };
 
   changeProductQuantityinCart = (type, variant) => {
+    console.log(variant);
+
     let tempCart = {
       ...this.props.cart.cart,
     };
@@ -190,7 +185,7 @@ class StoreDetailScreen extends Component {
               text: 'OK',
               onPress: () => {
                 tempCart.products[productIndexInCart].quantity--;
-                this.props.changeProductQuantityinCart(tempCart);
+                this.props.updateCartToServerFetch('change', tempCart);
                 return;
               },
             },
@@ -198,15 +193,15 @@ class StoreDetailScreen extends Component {
         );
         return;
       } else {
-        this.props.changeProductQuantityinCart(tempCart);
+        this.props.updateCartToServerFetch('change', tempCart);
       }
     } else if (type === 'decrement') {
       tempCart.products[productIndexInCart].quantity--;
       if (tempCart.products[productIndexInCart].quantity === 0) {
         tempCart.products.splice(productIndexInCart, 1);
-        this.props.changeProductQuantityinCart(tempCart);
+        this.props.updateCartToServerFetch('change', tempCart);
       } else {
-        this.props.changeProductQuantityinCart(tempCart);
+        this.props.updateCartToServerFetch('change', tempCart);
       }
     } else return;
   };

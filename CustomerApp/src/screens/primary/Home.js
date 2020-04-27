@@ -16,6 +16,7 @@ import {
 import * as HomeActions from '../../store/actions/creators/HomeActions';
 import * as ProfileActions from '../../store/actions/creators/ProfileActions';
 import * as StoreActions from '../../store/actions/creators/StoreActions';
+import * as CartActions from '../../store/actions/creators/CartActions';
 
 // * Import all screens/components
 import Store from '../../components/Store';
@@ -38,6 +39,7 @@ class HomeScreen extends Component {
   componentDidMount() {
     this.props.getProfileFetch();
     this.props.getSellersFetch();
+    this.props.getCartDetailFetch();
   }
 
   componentDidUpdate(prevProps) {
@@ -45,6 +47,7 @@ class HomeScreen extends Component {
     if (prevProps.sellers.sellers.length != this.props.sellers.sellers.length) {
       this.props.getProfileFetch();
       this.props.getSellersFetch();
+      this.props.getCartDetailFetch();
       this.setState({storeList: this.props.sellers.sellers});
     }
   }
@@ -126,6 +129,7 @@ class HomeScreen extends Component {
                 onPress={() => {
                   this.props.getProfileFetch();
                   this.props.getSellersFetch();
+                  this.props.getCartDetailFetch();
                 }}
               />
             </Card>
@@ -177,7 +181,7 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return bindActionCreators(
-    {...HomeActions, ...ProfileActions, ...StoreActions},
+    {...HomeActions, ...ProfileActions, ...StoreActions, ...CartActions},
     dispatch,
   );
 };

@@ -4,8 +4,9 @@ import {createStackNavigator} from '@react-navigation/stack';
 
 import HomeScreen from '../../screens/primary/Home';
 import StoreDetailScreen from '../../screens/secondary/StoreDetail';
-import CartScreen from '../../screens/secondary/Cart';
 import ProductDetailScreen from '../../screens/secondary/ProductDetail';
+import CartScreen from '../../screens/secondary/Cart';
+import CheckoutScreen from '../../screens/secondary/Checkout';
 
 const Stack = createStackNavigator();
 
@@ -29,6 +30,13 @@ const HomeStack = () => (
       }}
     />
     <Stack.Screen
+      name="product-detail-screen"
+      component={ProductDetailScreen}
+      options={{
+        title: 'Product Detail',
+      }}
+    />
+    <Stack.Screen
       name="cart-screen"
       component={CartScreen}
       options={{
@@ -36,10 +44,10 @@ const HomeStack = () => (
       }}
     />
     <Stack.Screen
-      name="product-detail-screen"
-      component={ProductDetailScreen}
+      name="checkout-screen"
+      component={CheckoutScreen}
       options={{
-        title: 'Product Detail',
+        title: 'Checkout',
       }}
     />
   </Stack.Navigator>

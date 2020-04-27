@@ -10,11 +10,20 @@ const customerSchema = new Schema(
       email: { type: String, required: true },
       phone: { type: String, required: true },
     },
-    cart: [
-      {
-        type: mongoose.Schema.Types.ObjectId,
-      },
-    ],
+    cart: {
+      storeId: { type: mongoose.Schema.Types.ObjectId },
+      products: [
+        {
+          id: { type: mongoose.Schema.Types.ObjectId },
+          variantId: { type: mongoose.Schema.Types.ObjectId },
+          name: { type: String, required: true },
+          value: { type: String, required: true },
+          price: { type: Number, required: false },
+          quantity: { type: Number, required: false },
+        },
+      ],
+      deliveryCharge: { type: Number, required: false },
+    },
     favorite: [
       {
         type: mongoose.Schema.Types.ObjectId,

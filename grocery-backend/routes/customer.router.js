@@ -11,6 +11,8 @@ customerRouter
   .put(
     "/update-customer",
     customerRouterController.updateCustomerDetailController
-  );
+  )
+  .get("/get-cart", customerRouterController.getCartController)
+  .put("/update-cart", customerRouterController.updateCartController);
 
 module.exports = customerRouter;

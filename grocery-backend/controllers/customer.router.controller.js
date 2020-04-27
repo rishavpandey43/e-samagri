@@ -1,4 +1,6 @@
 const Customer = require("../models/customer.model");
+const Seller = require("../models/seller.model");
+const Product = require("../models/product.model");
 
 const addCustomerController = (req, res, next) => {
   Customer.findOne({ personalDetail: { email: req.body.email } })
@@ -44,6 +46,32 @@ const getCustomerController = (req, res, next) => {
     .catch((err) => next(err));
 };
 
+// TODO: Here we can improve to find more nearest store to the customer
+const getAllSellersController = (req, res, next) => {
+  Customer.findOne({ _id: req.query.id || req.params.id })
+    .then((customer) => {
+      let customerState = customer.address.pincode.toString()[0];
+      Seller.find({
+        "storeDetail.address.pincode": {
+          $gt: customerState * 100000,
+          $lt: (customerState + 1) * 100000,
+        },
+      })
+        .sort({ "storeDetail.address.pincode": 1 })
+        .populate([{ path: "products.root", model: Product }])
+        .then((sellers) => {
+          res.statusCode = 200;
+          res.statusMessage = "OK";
+          res.setHeader("Content-Type", "application/json");
+          res.json({
+            sellers,
+          });
+        })
+        .catch((err) => next(err));
+    })
+    .catch((err) => next(err));
+};
+
 const updateCustomerDetailController = (req, res, next) => {
   Customer.findOneAndUpdate(
     { _id: req.query.id || req.params.id },
@@ -70,4 +98,5 @@ const updateCustomerDetailController = (req, res, next) => {
 
 exports.addCustomerController = addCustomerController;
 exports.getCustomerController = getCustomerController;
+exports.getAllSellersController = getAllSellersController;
 exports.updateCustomerDetailController = updateCustomerDetailController;

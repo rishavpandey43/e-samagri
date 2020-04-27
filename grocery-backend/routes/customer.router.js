@@ -7,6 +7,7 @@ const customerRouter = express.Router(); // initialize express router
 customerRouter
   .post("/add-customer", customerRouterController.addCustomerController)
   .get("/get-customer", customerRouterController.getCustomerController)
+  .get("/get-all-sellers", customerRouterController.getAllSellersController)
   .put(
     "/update-customer",
     customerRouterController.updateCustomerDetailController

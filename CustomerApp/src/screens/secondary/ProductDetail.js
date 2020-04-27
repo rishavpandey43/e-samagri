@@ -63,7 +63,7 @@ class ProductDetailScreen extends Component {
     console.log(cart, this.props.cart.cart);
     // * Check if the cart is empty to add first product
     if (!this.props.cart.cart) {
-      this.props.addNewProductToCart(cart);
+      this.props.updateCartToServerFetch('new', cart);
     }
     // * Confirm to user, if he tries to add product from another store to cart
     else if (this.props.cart.cart.storeId !== this.props.store.store._id) {
@@ -80,7 +80,7 @@ class ProductDetailScreen extends Component {
           },
           {
             text: 'OK',
-            onPress: () => this.props.addNewProductToCart(cart),
+            onPress: () => this.props.updateCartToServerFetch('new', cart),
           },
         ],
       );
@@ -111,7 +111,7 @@ class ProductDetailScreen extends Component {
             ...this.props.cart.cart,
           };
           tempCart.products.push(cart.products[0]);
-          this.props.addNewProductToCart(tempCart);
+          this.props.updateCartToServerFetch('new', tempCart);
           return;
         }
       }
@@ -121,7 +121,7 @@ class ProductDetailScreen extends Component {
           ...this.props.cart.cart,
         };
         tempCart.products.push(cart.products[0]);
-        this.props.addNewProductToCart(tempCart);
+        this.props.updateCartToServerFetch('new', tempCart);
         return;
       }
     }
@@ -152,7 +152,7 @@ class ProductDetailScreen extends Component {
               text: 'OK',
               onPress: () => {
                 tempCart.products[productIndexInCart].quantity--;
-                this.props.changeProductQuantityinCart(tempCart);
+                this.props.updateCartToServerFetch('change', tempCart);
                 return;
               },
             },
@@ -160,15 +160,15 @@ class ProductDetailScreen extends Component {
         );
         return;
       } else {
-        this.props.changeProductQuantityinCart(tempCart);
+        this.props.updateCartToServerFetch('change', tempCart);
       }
     } else if (type === 'decrement') {
       tempCart.products[productIndexInCart].quantity--;
       if (tempCart.products[productIndexInCart].quantity === 0) {
         tempCart.products.splice(productIndexInCart, 1);
-        this.props.changeProductQuantityinCart(tempCart);
+        this.props.updateCartToServerFetch('change', tempCart);
       } else {
-        this.props.changeProductQuantityinCart(tempCart);
+        this.props.updateCartToServerFetch('change', tempCart);
       }
     } else return;
   };
@@ -192,6 +192,17 @@ class ProductDetailScreen extends Component {
             text: this.state.product ? this.state.product.root.name : '',
             style: {color: '#fff'},
           }}
+          rightComponent={
+            <Icon
+              type="font-awesome"
+              name="shopping-basket"
+              size={20}
+              color="#FFF"
+              onPress={() => {
+                this.props.navigation.navigate('cart-screen');
+              }}
+            />
+          }
           containerStyle={{
             backgroundColor: '#933dd4',
             justifyContent: 'space-around',

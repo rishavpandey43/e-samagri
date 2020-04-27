@@ -1,9 +1,12 @@
 // * Import required modules/dependencies
 import React, {Component} from 'react';
+import {bindActionCreators} from 'redux';
+import {connect} from 'react-redux';
 import {ScrollView, StyleSheet, View, ActivityIndicator} from 'react-native';
 import {Header, Card, Text, Button, Image, Icon} from 'react-native-elements';
 
 // * Import all store related stuffs
+import * as CartActions from '../../store/actions/creators/CartActions';
 
 // * Import all screens/components
 
@@ -17,11 +20,21 @@ class CartScreen extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      cart: null,
+      detailedCart: null,
+      totalProducts: this.props.cart.cart
+        ? this.props.cart.cart.products.length > 0
+          ? this.props.cart.cart.products.reduce((acc, cur) => ({
+              quantity: acc.quantity + cur.quantity,
+            })).quantity
+          : 0
+        : 0,
     };
   }
 
+  componentDidMount() {}
+
   render() {
+    console.log(this.state.totalProducts);
     const ItemCard = () => {
       return (
         <Card>
@@ -91,64 +104,84 @@ class CartScreen extends Component {
             justifyContent: 'space-around',
           }}
         />
-        <View style={{height: '62%'}}>
-          <ScrollView>
-            <View style={mainStyles.row}>
-              <ItemCard />
-              <ItemCard />
-              <ItemCard />
-              <ItemCard />
-            </View>
-          </ScrollView>
-        </View>
-        <View
-          style={{
-            marginTop: 20,
-            backgroundColor: '#fff',
-            width: '100%',
-            padding: 10,
-            position: 'absolute',
-            bottom: 0,
-            left: 0,
-          }}>
-          <View style={[mainStyles.row, {marginTop: 20}]}>
-            <View style={mainStyles.col6}>
-              <Text>Items Total Price:</Text>
-            </View>
-            <View style={mainStyles.col6}>
-              <Text style={{textAlign: 'right'}}>₹ 65</Text>
+        {!this.props.cart.cart || this.props.cart.cart.products.length === 0 ? (
+          <View
+            style={{
+              flex: 1,
+              height: '100%',
+              backgroundColor: '#fff',
+              justifyContent: 'center',
+            }}>
+            <View style={{alignItems: 'center'}}>
+              <Image
+                source={require('../../assets/images/cart_empty.png')}
+                style={{width: 250, height: 250}}
+                PlaceholderContent={<ActivityIndicator />}
+                containerStyle={{backgroundColor: 'red'}}
+              />
+              <Text style={{fontSize: 18, textAlign: 'center'}}>
+                Cart is empty, add your desired items to continue...
+              </Text>
             </View>
           </View>
+        ) : (
+          <View style={{flexDirection: 'column', height: '100%'}}>
+            <View style={{flex: 2, height: '100%'}}>
+              <ScrollView>
+                <View style={mainStyles.row}>
+                  <ItemCard />
+                  <ItemCard />
+                  <ItemCard />
+                  <ItemCard />
+                </View>
+              </ScrollView>
+            </View>
+            <View
+              style={{
+                flex: 1,
+                marginTop: 20,
+                marginBottom: 20,
+                backgroundColor: '#fff',
+                padding: 10,
+              }}>
+              <View style={[mainStyles.row, {marginTop: 20}]}>
+                <View style={mainStyles.col6}>
+                  <Text>Items Total Price:</Text>
+                </View>
+                <View style={mainStyles.col6}>
+                  <Text style={{textAlign: 'right'}}>₹ 65</Text>
+                </View>
+              </View>
+              <View style={[mainStyles.row, {marginTop: 20}]}>
+                <View style={mainStyles.col6}>
+                  <Text>Delivery Charge:</Text>
+                </View>
+                <View style={mainStyles.col6}>
+                  <Text style={{textAlign: 'right'}}>₹ 65</Text>
+                </View>
+              </View>
+              <View style={[mainStyles.row, {marginTop: 20}]}>
+                <View style={mainStyles.col6}>
+                  <Text>Final Amount:</Text>
+                </View>
+                <View style={mainStyles.col6}>
+                  <Text style={{textAlign: 'right'}}>₹ 130</Text>
+                </View>
+              </View>
 
-          <View style={[mainStyles.row, {marginTop: 20}]}>
-            <View style={mainStyles.col6}>
-              <Text>Delivery Charge:</Text>
-            </View>
-            <View style={mainStyles.col6}>
-              <Text style={{textAlign: 'right'}}>₹ 65</Text>
-            </View>
-          </View>
-
-          <View style={[mainStyles.row, {marginTop: 20}]}>
-            <View style={mainStyles.col6}>
-              <Text>Final Amount:</Text>
-            </View>
-            <View style={mainStyles.col6}>
-              <Text style={{textAlign: 'right'}}>₹ 130</Text>
+              <View style={{flex: 1, alignItems: 'center', margin: 10}}>
+                <Button
+                  title="Checkout"
+                  buttonStyle={{
+                    width: 150,
+                    borderRadius: 20,
+                    backgroundColor: variables.mainThemeColor,
+                  }}
+                />
+              </View>
             </View>
           </View>
-
-          <View style={{flex: 1, alignItems: 'center', margin: 10}}>
-            <Button
-              title="Checkout"
-              buttonStyle={{
-                width: 150,
-                borderRadius: 20,
-                backgroundColor: variables.mainThemeColor,
-              }}
-            />
-          </View>
-        </View>
+        )}
       </View>
     );
   }
@@ -168,4 +201,18 @@ const styles = StyleSheet.create({
   },
 });
 
-export default CartScreen;
+const mapStateToProps = state => {
+  return {
+    store: state.store,
+    cart: state.cart,
+  };
+};
+
+const mapDispatchToProps = dispatch => {
+  return bindActionCreators({...CartActions}, dispatch);
+};
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(CartScreen);

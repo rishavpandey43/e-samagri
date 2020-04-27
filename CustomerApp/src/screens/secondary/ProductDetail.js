@@ -93,6 +93,7 @@ class ProductDetailScreen extends Component {
       )[0];
 
       if (productInCart) {
+        // * check for product with same variant in the cart, because if it's added ADD TO CART button will not be displayed
         let productIndexInCart = null;
         this.props.cart.cart.products.forEach((product, index) => {
           if (
@@ -104,16 +105,8 @@ class ProductDetailScreen extends Component {
           }
         });
 
-        // * If the product and variant are both same, then increment it's quantity
-        if (productIndexInCart !== null) {
-          let tempCart = {
-            ...this.props.cart.cart,
-          };
-          tempCart.products[productIndexInCart].quantity++;
-          this.props.incrementSameProductToCart(tempCart);
-        }
         // * If the product is same with different variant, then add it as new product in cart
-        else {
+        if (productIndexInCart === null) {
           let tempCart = {
             ...this.props.cart.cart,
           };

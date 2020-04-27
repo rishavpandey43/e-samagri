@@ -10,20 +10,19 @@ const initialState = {
 
 const profile = (state = initialState, action) => {
   switch (action.type) {
-    case actionTypes.GET_SELLER_PROFILE_REQUEST:
+    case actionTypes.GET_PROFILE_REQUEST:
       return {
         ...state,
         fetchingProfile: true,
       };
-    case actionTypes.GET_SELLER_PROFILE_SUCCESS:
+    case actionTypes.GET_PROFILE_SUCCESS:
       return {
         ...state,
         fetchingProfile: false,
         profile: action.profile,
-
         errMessage: '',
       };
-    case actionTypes.GET_SELLER_PROFILE_FAILURE:
+    case actionTypes.GET_PROFILE_FAILURE:
       return {
         ...state,
         fetchingProfile: false,

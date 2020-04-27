@@ -5,7 +5,7 @@ import {NavigationContainer} from '@react-navigation/native';
 import {createDrawerNavigator} from '@react-navigation/drawer';
 
 import HomeStack from './stacks/HomeStack';
-import AccountStack from './stacks/AccountStack';
+import ProfileStack from './stacks/ProfileStack';
 import FavoriteStack from './stacks/FavoriteStack';
 import OrdersStack from './stacks/OrdersStack';
 import HelpStack from './stacks/HelpStack';
@@ -18,7 +18,7 @@ const MainDrawerNavigation = () => (
   <NavigationContainer>
     <Drawer.Navigator>
       <Drawer.Screen
-        name="home"
+        name="home-stack"
         component={HomeStack}
         options={{
           drawerLabel: 'Home',
@@ -28,17 +28,17 @@ const MainDrawerNavigation = () => (
         }}
       />
       <Drawer.Screen
-        name="profile"
-        component={AccountStack}
+        name="profile-stack"
+        component={ProfileStack}
         options={{
-          drawerLabel: 'My Account',
+          drawerLabel: 'My Profile',
           drawerIcon: () => (
             <Icon name="user" size={30} color={variable.mainThemeColor} />
           ),
         }}
       />
       <Drawer.Screen
-        name="favorite"
+        name="favorite-stack"
         component={FavoriteStack}
         options={{
           drawerLabel: 'My Favorites',
@@ -48,7 +48,7 @@ const MainDrawerNavigation = () => (
         }}
       />
       <Drawer.Screen
-        name="orders"
+        name="orders-stack"
         component={OrdersStack}
         options={{
           drawerLabel: 'Orders History',
@@ -58,7 +58,7 @@ const MainDrawerNavigation = () => (
         }}
       />
       <Drawer.Screen
-        name="help"
+        name="help-stack"
         component={HelpStack}
         options={{
           drawerLabel: 'Help',

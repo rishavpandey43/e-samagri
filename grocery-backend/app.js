@@ -7,6 +7,7 @@ const dotenv = require("dotenv");
 const mongoose = require("mongoose");
 
 const sellerRouter = require("./routes/seller.router");
+const customerRouter = require("./routes/customer.router");
 
 // * configure dotenv to access environment variables
 dotenv.config();
@@ -63,6 +64,7 @@ app.use(cookieParser());
 
 // * USE ALL THE DEDICATED ROUTERS HERE...
 app.use("/seller", sellerRouter);
+app.use("/customer", customerRouter);
 
 // * catch 404 and forward to error handler
 app.use(function (req, res, next) {

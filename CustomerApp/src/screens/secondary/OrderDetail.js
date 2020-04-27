@@ -1,11 +1,17 @@
+// * Import required modules/dependencies
 import React, {Component} from 'react';
-import {ScrollView, StyleSheet, View, Button} from 'react-native';
-import {Header, Card, Text} from 'react-native-elements';
-import Icon from 'react-native-vector-icons/FontAwesome';
+import {ScrollView, StyleSheet, View} from 'react-native';
+import {Header, Card, Text, Icon} from 'react-native-elements';
 
-import mainStyles from '../../styles/mainStyle';
+// * Import all store related stuffs
 
+// * Import all screens/components
 import Item from '../../components/OrderItem';
+
+// * Import utilites
+
+// * Import all styling stuffs
+import mainStyles from '../../styles/mainStyle';
 
 class OrderDetailScreen extends Component {
   constructor(props) {
@@ -19,6 +25,7 @@ class OrderDetailScreen extends Component {
         <Header
           leftComponent={
             <Icon
+              type="font-awesome"
               name="arrow-left"
               size={20}
               color="#FFF"

@@ -13,14 +13,14 @@ const OrdersStack = () => (
       headerShown: false,
     }}>
     <Stack.Screen
-      name="orders"
+      name="orders-screen"
       component={OrdersScreen}
       options={{
         title: 'Orders History',
       }}
     />
     <Stack.Screen
-      name="order-detail"
+      name="order-detail-screen"
       component={OrderDetailScreen}
       options={{
         title: 'Order Detail',

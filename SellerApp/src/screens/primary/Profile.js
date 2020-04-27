@@ -20,6 +20,7 @@ class ProfileScreen extends Component {
   }
 
   render() {
+    console.log(this.props.profile);
     return (
       <View>
         <Header
@@ -34,7 +35,7 @@ class ProfileScreen extends Component {
             />
           }
           centerComponent={{
-            text: 'YOUR PROFILE',
+            text: 'My Profile',
             style: {color: '#fff'},
           }}
           rightComponent={<Icon name="user" color="#FFF" size={30} />}
@@ -82,6 +83,7 @@ class ProfileScreen extends Component {
                   title={
                     <CardCustomTitle
                       title="Personal Detail"
+                      type="edit"
                       detail={this.props.profile.profile.personalDetail}
                       onPress={() => {
                         this.props.navigation.navigate('edit-profile-screen');
@@ -146,6 +148,7 @@ class ProfileScreen extends Component {
                   title={
                     <CardCustomTitle
                       title="Store Detail"
+                      type="edit"
                       detail={this.props.profile.profile.storeDetail}
                       onPress={() => {
                         this.props.navigation.navigate('edit-profile-screen');
@@ -264,6 +267,7 @@ class ProfileScreen extends Component {
                   title={
                     <CardCustomTitle
                       title="Bank Account Detail"
+                      type="edit"
                       detail={this.props.profile.profile.bankDetail}
                       onPress={() => {
                         this.props.navigation.navigate('edit-profile-screen');

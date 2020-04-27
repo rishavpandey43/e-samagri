@@ -5,9 +5,9 @@ import * as actionTypes from '../types/actionTypes';
 import * as helper from '../../../utils/helper';
 import {baseUrl} from '../../../utils/constant';
 
-const sellerId1 = '5e9fb135233b5b03d51de35b';
-const sellerId2 = '5e9fb291df5cf41033ca39e0';
-const sellerId3 = '5e9fb2a3df5cf41033ca39e1';
+const customerId1 = '5ea249c95c80eb0b619658f7';
+const customerId2 = '5ea249dc5c80eb0b619658f8';
+const customerId3 = '5ea249e75c80eb0b619658f9';
 
 export const getProfileRequest = () => {
   return {
@@ -33,13 +33,13 @@ export const getProfileFailure = response => {
 export const getProfileFetch = () => dispatch => {
   dispatch(getProfileRequest());
   axios
-    .get(baseUrl + '/seller/get-seller', {
+    .get(baseUrl + '/customer/get-customer', {
       params: {
-        id: sellerId1,
+        id: customerId2,
       },
     })
     .then(res => {
-      dispatch(getProfileSuccess({profile: {...res.data.seller}}));
+      dispatch(getProfileSuccess({profile: {...res.data.customer}}));
     })
     .catch(err => {
       dispatch(
@@ -79,15 +79,15 @@ export const updateProfileFetch = (data, dataType) => dispatch => {
   };
   dispatch(updateProfileRequest());
   axios
-    .put(baseUrl + '/seller/update-seller', newData, {
+    .put(baseUrl + '/customer/update-customer', newData, {
       params: {
-        id: sellerId1,
+        id: customerId2,
       },
     })
     .then(res => {
-      dispatch(updateProfileSuccess({profile: {...res.data.seller}}));
+      dispatch(updateProfileSuccess({profile: {...res.data.customer}}));
       ToastAndroid.show(
-        'Your store detail has been updated succesfully, please back to your profile',
+        'Your profile detail has been updated succesfully, please back to your profile',
         ToastAndroid.LONG,
       );
     })

@@ -9,7 +9,15 @@ import {
   ActivityIndicator,
   Alert,
 } from 'react-native';
-import {Header, Card, Text, Button, Image, Icon} from 'react-native-elements';
+import {
+  Header,
+  Card,
+  Text,
+  Button,
+  Image,
+  Icon,
+  CheckBox,
+} from 'react-native-elements';
 
 // * Import all store related stuffs
 import * as CartActions from '../../store/actions/creators/CartActions';
@@ -25,7 +33,12 @@ import variables from '../../styles/variables';
 class CheckoutScreen extends Component {
   constructor(props) {
     super(props);
+    this.state = {
+      paymentType: 'online',
+    };
   }
+
+  proceed = () => {};
 
   render() {
     return (
@@ -51,31 +64,97 @@ class CheckoutScreen extends Component {
             justifyContent: 'space-around',
           }}
         />
-        {!this.props.cart.cart || this.props.cart.cart.products.length === 0 ? (
-          <View
-            style={{
-              flex: 1,
-              height: '100%',
-              backgroundColor: '#fff',
-              justifyContent: 'center',
-            }}>
-            <View style={{alignItems: 'center'}}>
-              <Image
-                source={require('../../assets/images/cart_empty.png')}
-                style={{width: 250, height: 250}}
-                PlaceholderContent={<ActivityIndicator />}
-                containerStyle={{backgroundColor: 'red'}}
-              />
-              <Text style={{fontSize: 18, textAlign: 'center'}}>
-                Cart is empty, add your desired items to continue...
+        <ScrollView>
+          {!this.props.cart.cart ||
+          this.props.cart.cart.products.length === 0 ? (
+            <Card title="Error Message" containerStyle={{alignItems: 'center'}}>
+              <Text style={{marginBottom: 20, fontSize: 20, color: 'red'}}>
+                You cannot checkout with empty cart
               </Text>
+              <Button
+                title="Go back"
+                type="outline"
+                titleStyle={{color: variables.mainThemeColor}}
+                buttonStyle={mainStyles.outlineBtn}
+                onPress={() => {
+                  this.props.navigation.goBack();
+                }}
+              />
+            </Card>
+          ) : (
+            <View>
+              <Card title="You're almost there">
+                <View>
+                  <Text style={{fontSize: 20}}>
+                    Your Final amount is
+                    <Text style={{fontWeight: 'bold'}}>
+                      {`  ₹ ${this.props.cart.cart.products.reduce(
+                        (acc, cur) => acc + cur.quantity * cur.price,
+                        0,
+                      ) + this.props.cart.cart.deliveryCharge}`}
+                    </Text>
+                  </Text>
+                </View>
+                <View style={{marginTop: 15}}>
+                  <Text style={mainStyles.formLabel}>
+                    Choose your payment method:
+                  </Text>
+                  <View style={{alignItems: 'flex-start'}}>
+                    {/* <View>
+                      <CheckBox
+                        containerStyle={{
+                          backgroundColor: 'transparent',
+                          borderColor: 'transparent',
+                        }}
+                        center
+                        title="COD"
+                        checkedIcon="dot-circle-o"
+                        uncheckedIcon="circle-o"
+                        checkedColor={variables.mainThemeColor}
+                        checked={this.state.paymentType === 'cod'}
+                        onPress={() => {
+                          this.setState({
+                            paymentType: 'cod',
+                          });
+                        }}
+                      />
+                    </View> */}
+                    <View>
+                      <CheckBox
+                        containerStyle={{
+                          backgroundColor: 'transparent',
+                          borderColor: 'transparent',
+                        }}
+                        center
+                        title="Online"
+                        checkedIcon="dot-circle-o"
+                        uncheckedIcon="circle-o"
+                        checkedColor={variables.mainThemeColor}
+                        checked={this.state.paymentType === 'online'}
+                        onPress={() => {
+                          this.setState({
+                            paymentType: 'online',
+                          });
+                        }}
+                      />
+                    </View>
+                  </View>
+                </View>
+                <View style={{alignItems: 'center', marginTop: 15}}>
+                  <Button
+                    title="Proceed"
+                    buttonStyle={{
+                      width: 150,
+                      borderRadius: 20,
+                      backgroundColor: variables.mainThemeColor,
+                    }}
+                    onPress={this.proceed.bind(null)}
+                  />
+                </View>
+              </Card>
             </View>
-          </View>
-        ) : (
-          <View>
-            <Text>Hello Checkout Me</Text>
-          </View>
-        )}
+          )}
+        </ScrollView>
       </View>
     );
   }

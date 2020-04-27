@@ -118,6 +118,7 @@ class StoreDetailScreen extends Component {
     }
     // * Here, when user add product from same store to cart
     else if (this.props.cart.cart.storeId === this.props.store.store._id) {
+      // * check if the there is no product in cart
       let productInCart = this.props.cart.cart.products.filter(
         product => product.id === cart.products[0].id,
       )[0];

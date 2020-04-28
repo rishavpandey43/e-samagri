@@ -1,13 +1,15 @@
 // * Import required modules/dependencies
 import React, {Component} from 'react';
-import {View, Text} from 'react-native';
+import {View, Text, Alert, ToastAndroid} from 'react-native';
 import {Card, Input, Button} from 'react-native-elements';
+import axios from 'axios';
 
 // * Import all store related stuffs
 
 // * Import all screens/components
 
 // * Import utilites
+import {baseUrl} from '../../utils/constant';
 
 // * Import all styling stuffs
 import mainStyles from '../../styles/mainStyle';
@@ -17,16 +19,142 @@ class RegisterScreen extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      tempFirstName: '',
-      tempLastName: '',
-      tempEmail: '',
-      tempPhone: '',
-      emailOTP: '',
+      detail: {
+        tempFirstName: '',
+        tempLastName: '',
+        tempPhone: '',
+      },
       phoneOTP: '',
       displayEmailOTPField: false,
       displayPhoneOTPField: false,
+      authyId: '',
+      otpLoading: false,
+      registerLoading: false,
     };
   }
+
+  requestOTP = () => {
+    let isEmpty = false;
+    var phoneRegex = /[6-9][0-9]{9}/;
+    for (const detail in this.state.detail) {
+      if (this.state.detail[detail] === '') {
+        isEmpty = true;
+      }
+    }
+    if (isEmpty) {
+      Alert.alert('Input Invalid', 'Please fill all the details to continue.');
+      return;
+    } else if (
+      this.state.detail.tempFirstName.length < 3 ||
+      this.state.detail.tempLastName.length < 3
+    ) {
+      Alert.alert(
+        'Input Invalid',
+        'Lenght of your firstname and last name should be greater than 3',
+      );
+      return;
+    } else if (!phoneRegex.test(this.state.detail.tempPhone)) {
+      Alert.alert(
+        'Input Invalid',
+        'Input valid 10 digit mobile number to continue',
+      );
+      return;
+    } else {
+      this.setState({otpLoading: true});
+      axios
+        .get(baseUrl + '/customer/request-phone-otp', {
+          params: {
+            phone: this.state.detail.tempPhone,
+          },
+        })
+        .then(res => {
+          ToastAndroid.show(
+            'OTP sent to your entered phone number',
+            ToastAndroid.LONG,
+          );
+          this.setState({
+            authyId: res.data.authyId,
+            displayPhoneOTPField: true,
+            otpLoading: true,
+          });
+        })
+        .catch(err => {
+          ToastAndroid.show(
+            err.response.data.errMessage || 'Some error occured, try again.',
+            ToastAndroid.LONG,
+          );
+          this.setState({otpLoading: false});
+        });
+    }
+  };
+
+  register = () => {
+    let isEmpty = false;
+    var phoneRegex = /[6-9][0-9]{9}/;
+    for (const detail in this.state.detail) {
+      if (this.state.detail[detail] === '') {
+        isEmpty = true;
+      }
+    }
+    if (isEmpty) {
+      Alert.alert('Input Invalid', 'Please fill all the details to continue.');
+      return;
+    } else if (
+      this.state.detail.tempFirstName.length < 3 ||
+      this.state.detail.tempLastName.length < 3
+    ) {
+      Alert.alert(
+        'Input Invalid',
+        'Lenght of your firstname and last name should be greater than 3',
+      );
+      return;
+    } else if (!phoneRegex.test(this.state.detail.tempPhone)) {
+      Alert.alert(
+        'Input Invalid',
+        'Input valid 10 digit mobile number to continue',
+      );
+      return;
+    } else if (this.state.phoneOTP === '') {
+      Alert.alert('Input Invalid', 'Enter OTP to continue.');
+      return;
+    } else {
+      let data = {
+        firstName: this.state.detail.tempFirstName,
+        lastName: this.state.detail.tempLastName,
+        phone: this.state.detail.tempPhone,
+        authyId: this.state.authyId,
+        otp: this.state.phoneOTP,
+      };
+      this.setState({registerLoading: true});
+      axios
+        .post(baseUrl + '/customer/register', data)
+        .then(res => {
+          ToastAndroid.show(
+            "You've been successfully registered!",
+            ToastAndroid.LONG,
+          );
+          this.setState({
+            detail: {
+              tempFirstName: '',
+              tempLastName: '',
+              tempPhone: '',
+            },
+            phoneOTP: '',
+            displayEmailOTPField: false,
+            displayPhoneOTPField: false,
+            authyId: '',
+            registerLoading: false,
+          });
+        })
+        .catch(err => {
+          ToastAndroid.show(
+            err.response.data.errMessage || 'Some error occured, try again.',
+            ToastAndroid.LONG,
+          );
+          this.setState({registerLoading: false});
+        });
+    }
+  };
 
   render() {
     return (
@@ -38,23 +166,39 @@ class RegisterScreen extends Component {
                 <Input
                   label="First Name"
                   placeholder="John"
-                  value={this.state.tempFirstName}
+                  value={this.state.detail.tempFirstName}
+                  onChangeText={text => {
+                    this.setState({
+                      detail: {
+                        ...this.state.detail,
+                        tempFirstName: text,
+                      },
+                    });
+                  }}
                 />
               </View>
               <View style={mainStyles.formGroup}>
                 <Input
                   label="Last Name"
                   placeholder="Doe"
-                  value={this.state.tempLastName}
+                  value={this.state.detail.tempLastName}
+                  onChangeText={text => {
+                    this.setState({
+                      detail: {
+                        ...this.state.detail,
+                        tempLastName: text,
+                      },
+                    });
+                  }}
                 />
               </View>
-              {!this.state.displayEmailOTPField ? (
+              {/* {!this.state.displayEmailOTPField ? (
                 <View>
                   <View style={mainStyles.formGroup}>
                     <Input
                       label="Email"
                       placeholder="johndoe@john.com"
-                      value={this.state.tempEmail}
+                      value={this.state.detail.tempEmail}
                     />
                   </View>
                   <View
@@ -87,7 +231,7 @@ class RegisterScreen extends Component {
                     />
                   </View>
                 </View>
-              )}
+              )} */}
 
               {!this.state.displayPhoneOTPField ? (
                 <View>
@@ -96,7 +240,15 @@ class RegisterScreen extends Component {
                       label="Phone number"
                       keyboardType="numeric"
                       placeholder="97735XXXX0"
-                      value={this.state.tempPhone}
+                      value={this.state.detail.tempPhone}
+                      onChangeText={text => {
+                        this.setState({
+                          detail: {
+                            ...this.state.detail,
+                            tempPhone: text,
+                          },
+                        });
+                      }}
                     />
                   </View>
                   <View
@@ -106,6 +258,8 @@ class RegisterScreen extends Component {
                       titleStyle={{color: variables.mainThemeColor}}
                       type="outline"
                       buttonStyle={mainStyles.outlineBtn}
+                      onPress={this.requestOTP.bind(null)}
+                      loading={this.state.otpLoading}
                     />
                   </View>
                 </View>
@@ -117,9 +271,14 @@ class RegisterScreen extends Component {
                       keyboardType="numeric"
                       placeholder="123456"
                       value={this.state.phoneOTP}
+                      onChangeText={text => {
+                        this.setState({
+                          phoneOTP: text,
+                        });
+                      }}
                     />
                   </View>
-                  <View
+                  {/* <View
                     style={[mainStyles.formGroup, {alignItems: 'flex-start'}]}>
                     <Button
                       title="Resend OTP to phone"
@@ -127,7 +286,7 @@ class RegisterScreen extends Component {
                       type="outline"
                       buttonStyle={mainStyles.outlineBtn}
                     />
-                  </View>
+                  </View> */}
                 </View>
               )}
             </View>
@@ -148,7 +307,15 @@ class RegisterScreen extends Component {
                   buttonStyle={mainStyles.outlineBtn}
                   onPress={() => {
                     this.setState({
-                      personalDetailCardDisplay: false,
+                      detail: {
+                        tempFirstName: '',
+                        tempLastName: '',
+                        tempPhone: '',
+                      },
+                      phoneOTP: '',
+                      displayEmailOTPField: false,
+                      displayPhoneOTPField: false,
+                      authyId: '',
                     });
                   }}
                 />
@@ -159,10 +326,8 @@ class RegisterScreen extends Component {
                   titleStyle={{color: variables.mainThemeColor}}
                   type="outline"
                   buttonStyle={mainStyles.outlineBtn}
-                  // onPress={() => {
-                  //   this.updateDetail('personalDetail');
-                  // }}
-                  // loading={this.props.profile.profileUpdating}
+                  onPress={this.register.bind(null)}
+                  loading={this.state.registerLoading}
                 />
               </View>
             </View>

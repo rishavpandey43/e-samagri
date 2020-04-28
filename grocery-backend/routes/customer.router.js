@@ -5,6 +5,8 @@ const customerRouterController = require("../controllers/customer.router.control
 const customerRouter = express.Router(); // initialize express router
 
 customerRouter
+  .get("/request-phone-otp", customerRouterController.requestPhoneOTP)
+  .post("/register", customerRouterController.register)
   .post("/add-customer", customerRouterController.addCustomerController)
   .get("/get-customer", customerRouterController.getCustomerController)
   .get("/get-all-sellers", customerRouterController.getAllSellersController)

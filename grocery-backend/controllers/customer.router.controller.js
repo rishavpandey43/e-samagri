@@ -1,9 +1,17 @@
+const dotenv = require("dotenv");
+const jwt = require("jsonwebtoken");
+
+// * configure dotenv to access environment variables
+dotenv.config();
+
+const authy = require("authy")(process.env.TWILIO_PROD_API_KEY);
+
 const Customer = require("../models/customer.model");
 const Seller = require("../models/seller.model");
 const Product = require("../models/product.model");
 
-const addCustomerController = (req, res, next) => {
-  Customer.findOne({ personalDetail: { email: req.body.email } })
+exports.requestPhoneOTPForRegister = (req, res, next) => {
+  Customer.findOne({ "personalDetail.phone": req.query.phone })
     .then((customer) => {
       if (customer) {
         let err = new Error(`You're already registered.`);
@@ -11,23 +19,163 @@ const addCustomerController = (req, res, next) => {
         err.statusText = "Conflict";
         next(err);
       } else {
-        Customer.create({ personalDetail: req.body })
-          .then((customer) => {
-            res.statusCode = 201;
-            res.statusText = "Created";
-            res.setHeader("Content-Type", "application/json");
-            res.json({
-              customer,
+        authy.register_user("demo@email.com", req.query.phone, "91", function (
+          error,
+          response
+        ) {
+          if (error) {
+            let err = new Error(`Internal Server Error`);
+            err.status = 500;
+            err.statusText = "Internal Server Error";
+            next(err);
+          } else {
+            authy.request_sms(response.user.id, (force = true), function (
+              otpError,
+              otpResponse
+            ) {
+              if (otpError) {
+                let err = new Error(`Internal Server Error`);
+                err.status = 500;
+                err.statusText = "Internal Server Error";
+                next(err);
+              } else {
+                res.statusCode = 200;
+                res.statusText = "OK";
+                res.setHeader("Content-Type", "application/json");
+                res.json({
+                  authyId: response.user.id,
+                });
+              }
             });
-          })
-          .catch((err) => next(err));
+          }
+        });
       }
     })
     .catch((err) => next(err));
 };
 
-const getCustomerController = (req, res, next) => {
-  Customer.findOne({ _id: req.query.id || req.params.id })
+exports.register = (req, res, next) => {
+  Customer.findOne({ "personalDetail.phone": req.query.phone })
+    .then((customer) => {
+      if (customer) {
+        let err = new Error(`You're already registered.`);
+        err.status = 409;
+        err.statusText = "Conflict";
+        next(err);
+      } else {
+        authy.verify(req.body.authyId, req.body.otp, function (
+          error,
+          response
+        ) {
+          if (error) {
+            let err = new Error(
+              `OTP you entered was wrong, please enter correct otp to continue`
+            );
+            err.status = 500;
+            err.statusText = "Internal Server Error";
+            next(err);
+          } else {
+            Customer.create({
+              personalDetail: {
+                firstName: req.body.firstName,
+                lastName: req.body.lastName,
+                phone: req.body.phone,
+                authyId: req.body.authyId,
+              },
+            })
+              .then((customer) => {
+                res.statusCode = 201;
+                res.statusText = "Created";
+                res.setHeader("Content-Type", "application/json");
+                res.json({
+                  customer,
+                });
+              })
+              .catch((err) => next(err));
+          }
+        });
+      }
+    })
+    .catch((err) => next(err));
+};
+
+exports.requestPhoneOTPForLogin = (req, res, next) => {
+  Customer.findOne({ "personalDetail.phone": req.query.phone })
+    .then((customer) => {
+      if (customer) {
+        authy.request_sms(
+          customer.personalDetail.authyId,
+          (force = true),
+          function (otpError, otpResponse) {
+            if (otpError) {
+              console.log(otpError);
+              let err = new Error(`Internal Server Error`);
+              err.status = 500;
+              err.statusText = "Internal Server Error";
+              next(err);
+            } else {
+              res.statusCode = 200;
+              res.statusText = "OK";
+              res.setHeader("Content-Type", "application/json");
+              res.json({
+                message: "OTP sent",
+              });
+            }
+          }
+        );
+      } else {
+        let err = new Error(`You're not registered yet.`);
+        err.status = 500;
+        err.statusText = "Internal Server Error";
+        next(err);
+      }
+    })
+    .catch((err) => next(err));
+};
+
+exports.login = (req, res, next) => {
+  Customer.findOne({ "personalDetail.phone": req.query.phone })
+    .then((customer) => {
+      if (customer) {
+        authy.verify(customer.personalDetail.authyId, req.query.otp, function (
+          otpError,
+          otpResponse
+        ) {
+          if (otpError) {
+            let err = new Error(
+              `OTP you entered was wrong, please enter correct otp to continue`
+            );
+            err.status = 500;
+            err.statusText = "Internal Server Error";
+            next(err);
+          } else {
+            console.log(otpResponse);
+            let userId = customer._id;
+            // Issue JWT Token on validation
+            const token = jwt.sign({ userId }, process.env.JWT_SECRET_KEY, {
+              expiresIn: 90000,
+            });
+            res.statusCode = 200;
+            res.statusText = "OK";
+            res.setHeader("Content-Type", "application/json");
+            res.json({
+              token,
+              message: "You're logged in Successfully",
+            });
+          }
+        });
+      } else {
+        let err = new Error(`You're not registered yet.`);
+        err.status = 500;
+        err.statusText = "Internal Server Error";
+        next(err);
+      }
+    })
+    .catch((err) => next(err));
+};
+
+exports.getCustomerController = (req, res, next) => {
+  Customer.findOne({ _id: req.userId })
     .then((customer) => {
       if (customer) {
         res.statusCode = 200;
@@ -47,8 +195,8 @@ const getCustomerController = (req, res, next) => {
 };
 
 // TODO: Here we can improve to find more nearest store to the customer
-const getAllSellersController = (req, res, next) => {
-  Customer.findOne({ _id: req.query.id || req.params.id })
+exports.getAllSellersController = (req, res, next) => {
+  Customer.findOne({ _id: req.userId })
     .then((customer) => {
       let customerState = customer.address.pincode.toString()[0];
       Seller.find({
@@ -72,9 +220,9 @@ const getAllSellersController = (req, res, next) => {
     .catch((err) => next(err));
 };
 
-const updateCustomerDetailController = (req, res, next) => {
+exports.updateCustomerDetailController = (req, res, next) => {
   Customer.findOneAndUpdate(
-    { _id: req.query.id || req.params.id },
+    { _id: req.userId },
     { $set: { [req.body.dataType]: req.body.data } },
     { new: true }
   )
@@ -96,8 +244,8 @@ const updateCustomerDetailController = (req, res, next) => {
     .catch((err) => next(err));
 };
 
-const getCartController = (req, res, next) => {
-  Customer.findOne({ _id: req.query.id || req.params.id })
+exports.getCartController = (req, res, next) => {
+  Customer.findOne({ _id: req.userId })
     .then((customer) => {
       if (customer) {
         res.statusCode = 200;
@@ -116,8 +264,8 @@ const getCartController = (req, res, next) => {
     .catch((err) => next(err));
 };
 
-const updateCartController = (req, res, next) => {
-  Customer.findOne({ _id: req.query.id || req.params.id })
+exports.updateCartController = (req, res, next) => {
+  Customer.findOne({ _id: req.userId })
     .then((customer) => {
       if (customer) {
         let cartProducts = req.body.products;
@@ -173,10 +321,3 @@ const updateCartController = (req, res, next) => {
     })
     .catch((err) => next(err));
 };
-
-exports.addCustomerController = addCustomerController;
-exports.getCustomerController = getCustomerController;
-exports.getAllSellersController = getAllSellersController;
-exports.updateCustomerDetailController = updateCustomerDetailController;
-exports.getCartController = getCartController;
-exports.updateCartController = updateCartController;

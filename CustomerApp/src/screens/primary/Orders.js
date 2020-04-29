@@ -1,7 +1,9 @@
 // * Import required modules/dependencies
 import React, {Component} from 'react';
-import {ScrollView, StyleSheet, View} from 'react-native';
-import {Header, Icon} from 'react-native-elements';
+import {bindActionCreators} from 'redux';
+import {connect} from 'react-redux';
+import {ScrollView, StyleSheet, View, TouchableOpacity} from 'react-native';
+import {Header, Badge, Icon} from 'react-native-elements';
 
 // * Import all store related stuffs
 
@@ -12,6 +14,7 @@ import OrderCard from '../../components/OrderCard';
 
 // * Import all styling stuffs
 import mainStyles from '../../styles/mainStyle';
+import variables from '../../styles/variables';
 
 class OrdersScreen extends Component {
   constructor(props) {
@@ -29,6 +32,7 @@ class OrdersScreen extends Component {
               name="bars"
               size={20}
               color="#FFF"
+              underlayColor="transparent"
               onPress={() => {
                 this.props.navigation.toggleDrawer();
               }}
@@ -39,7 +43,38 @@ class OrdersScreen extends Component {
             style: {color: '#fff'},
           }}
           rightComponent={
-            <Icon type="font-awesome" name="history" color="#FFF" size={30} />
+            <View
+              style={{
+                flex: 1,
+                justifyContent: 'center',
+                alignItems: 'center',
+              }}>
+              <TouchableOpacity
+                onPress={() => {
+                  this.props.navigation.navigate('cart-screen');
+                }}
+                style={mainStyles.row}>
+                <Icon
+                  type="font-awesome"
+                  name="shopping-basket"
+                  color="#FFF"
+                  size={25}
+                />
+                <Badge
+                  value={
+                    this.props.cart.cart
+                      ? this.props.cart.cart.products.length
+                      : 0
+                  }
+                  badgeStyle={{backgroundColor: variables.mainThemeColor}}
+                  containerStyle={{
+                    position: 'absolute',
+                    top: -4,
+                    right: -4,
+                  }}
+                />
+              </TouchableOpacity>
+            </View>
           }
           containerStyle={{
             backgroundColor: '#933dd4',
@@ -63,4 +98,17 @@ class OrdersScreen extends Component {
 
 const styles = StyleSheet.create({});
 
-export default OrdersScreen;
+const mapStateToProps = state => {
+  return {
+    cart: state.cart,
+  };
+};
+
+const mapDispatchToProps = dispatch => {
+  return bindActionCreators({}, dispatch);
+};
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(OrdersScreen);

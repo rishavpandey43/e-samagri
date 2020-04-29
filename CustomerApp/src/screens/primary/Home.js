@@ -2,17 +2,25 @@
 import React, {Component} from 'react';
 import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
-import {ScrollView, StyleSheet, View, ActivityIndicator} from 'react-native';
+import {
+  ScrollView,
+  StyleSheet,
+  View,
+  ActivityIndicator,
+  TouchableOpacity,
+} from 'react-native';
 import {
   Header,
   Card,
   Text,
   Button,
   SearchBar,
+  Badge,
   Icon,
 } from 'react-native-elements';
 
 // * Import all store related stuffs
+import * as AuthActions from '../../store/actions/creators/AuthActions';
 import * as HomeActions from '../../store/actions/creators/HomeActions';
 import * as ProfileActions from '../../store/actions/creators/ProfileActions';
 import * as StoreActions from '../../store/actions/creators/StoreActions';
@@ -22,6 +30,7 @@ import * as CartActions from '../../store/actions/creators/CartActions';
 import Store from '../../components/Store';
 
 // * Import utilites
+import {getDataFromAsync} from '../../utils/helper';
 
 // * Import all styling stuffs
 import mainStyles from '../../styles/mainStyle';
@@ -37,17 +46,33 @@ class HomeScreen extends Component {
   }
 
   componentDidMount() {
-    this.props.getProfileFetch();
-    this.props.getSellersFetch();
-    this.props.getCartDetailFetch();
+    getDataFromAsync('authToken')
+      .then(token => {
+        this.props.getTokenFromAsync(token);
+      })
+      .catch(err => {
+        console.log(err);
+      });
   }
 
   componentDidUpdate(prevProps) {
+    // If user has logged in first time, redirect to update profile screen for filling up address.
+    if (this.props.profile.profile) {
+      if (!this.props.profile.profile.address) {
+        this.props.navigation.navigate('update-profile-screen');
+      }
+    }
+    // retreive data from server, once authentication is complete
+    if (prevProps.auth.authToken !== this.props.auth.authToken) {
+      this.props.getProfileFetch(this.props.auth.authToken);
+      this.props.getSellersFetch(this.props.auth.authToken);
+      this.props.getCartDetailFetch(this.props.auth.authToken);
+    }
     // * checks previous sellerlist with new received ASYNC seller list
     if (prevProps.sellers.sellers.length != this.props.sellers.sellers.length) {
-      this.props.getProfileFetch();
-      this.props.getSellersFetch();
-      this.props.getCartDetailFetch();
+      this.props.getProfileFetch(this.props.auth.authToken);
+      this.props.getSellersFetch(this.props.auth.authToken);
+      this.props.getCartDetailFetch(this.props.auth.authToken);
       this.setState({storeList: this.props.sellers.sellers});
     }
   }
@@ -75,6 +100,7 @@ class HomeScreen extends Component {
               name="bars"
               size={20}
               color="#FFF"
+              underlayColor="transparent"
               onPress={() => {
                 this.props.navigation.toggleDrawer();
               }}
@@ -91,15 +117,38 @@ class HomeScreen extends Component {
             style: {color: '#fff'},
           }}
           rightComponent={
-            <Icon
-              type="font-awesome"
-              name="shopping-basket"
-              color="#FFF"
-              size={25}
-              onPress={() => {
-                this.props.navigation.navigate('cart-screen');
-              }}
-            />
+            <View
+              style={{
+                flex: 1,
+                justifyContent: 'center',
+                alignItems: 'center',
+              }}>
+              <TouchableOpacity
+                onPress={() => {
+                  this.props.navigation.navigate('cart-screen');
+                }}
+                style={mainStyles.row}>
+                <Icon
+                  type="font-awesome"
+                  name="shopping-basket"
+                  color="#FFF"
+                  size={25}
+                />
+                <Badge
+                  value={
+                    this.props.cart.cart
+                      ? this.props.cart.cart.products.length
+                      : 0
+                  }
+                  badgeStyle={{backgroundColor: variables.mainThemeColor}}
+                  containerStyle={{
+                    position: 'absolute',
+                    top: -4,
+                    right: -4,
+                  }}
+                />
+              </TouchableOpacity>
+            </View>
           }
           containerStyle={{
             backgroundColor: '#933dd4',
@@ -127,9 +176,9 @@ class HomeScreen extends Component {
                 titleStyle={{color: variables.mainThemeColor}}
                 buttonStyle={mainStyles.outlineBtn}
                 onPress={() => {
-                  this.props.getProfileFetch();
-                  this.props.getSellersFetch();
-                  this.props.getCartDetailFetch();
+                  this.props.getProfileFetch(this.props.auth.authToken);
+                  this.props.getSellersFetch(this.props.auth.authToken);
+                  this.props.getCartDetailFetch(this.props.auth.authToken);
                 }}
               />
             </Card>
@@ -174,14 +223,22 @@ const styles = StyleSheet.create({});
 
 const mapStateToProps = state => {
   return {
+    auth: state.auth,
     profile: state.profile,
+    cart: state.cart,
     sellers: state.sellers,
   };
 };
 
 const mapDispatchToProps = dispatch => {
   return bindActionCreators(
-    {...HomeActions, ...ProfileActions, ...StoreActions, ...CartActions},
+    {
+      ...AuthActions,
+      ...HomeActions,
+      ...ProfileActions,
+      ...StoreActions,
+      ...CartActions,
+    },
     dispatch,
   );
 };

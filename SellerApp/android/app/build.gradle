@@ -129,7 +129,7 @@ android {
     }
 
     defaultConfig {
-        applicationId "com.sellerapp"
+        applicationId "com.esamagriseller"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1

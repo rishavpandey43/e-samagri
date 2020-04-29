@@ -5,10 +5,6 @@ import * as actionTypes from '../types/actionTypes';
 import * as helper from '../../../utils/helper';
 import {baseUrl} from '../../../utils/constant';
 
-const customerId1 = '5ea249c95c80eb0b619658f7';
-const customerId2 = '5ea249dc5c80eb0b619658f8';
-const customerId3 = '5ea249e75c80eb0b619658f9';
-
 export const addNewProductToCart = ({storeId, products, deliveryCharge}) => {
   return {
     type: actionTypes.ADD_NEW_PRODUCT_TO_CART,
@@ -53,12 +49,13 @@ export const getCartDetailFailure = response => {
   };
 };
 
-export const getCartDetailFetch = () => dispatch => {
+export const getCartDetailFetch = token => dispatch => {
   dispatch(getCartDetailRequest());
   axios
     .get(baseUrl + '/customer/get-cart', {
-      params: {
-        id: customerId2,
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
       },
     })
     .then(res => {
@@ -87,13 +84,14 @@ export const updateCartToServerFailure = () => {
   };
 };
 
-export const updateCartToServerFetch = (type, cart) => dispatch => {
+export const updateCartToServerFetch = (token, type, cart) => dispatch => {
   dispatch(updateCartToServerRequest());
 
   axios
     .put(baseUrl + '/customer/update-cart', cart, {
-      params: {
-        id: customerId2,
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
       },
     })
     .then(res => {

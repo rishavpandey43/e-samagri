@@ -9,6 +9,7 @@ import ProfileStack from './stacks/ProfileStack';
 import FavoriteStack from './stacks/FavoriteStack';
 import OrdersStack from './stacks/OrdersStack';
 import HelpStack from './stacks/HelpStack';
+import SettingStack from './stacks/SettingStack';
 
 import variable from '../styles/variables.js';
 
@@ -37,7 +38,7 @@ const MainDrawerNavigation = () => (
           ),
         }}
       />
-      <Drawer.Screen
+      {/* <Drawer.Screen
         name="favorite-stack"
         component={FavoriteStack}
         options={{
@@ -46,7 +47,7 @@ const MainDrawerNavigation = () => (
             <Icon name="heart" size={30} color={variable.mainThemeColor} />
           ),
         }}
-      />
+      /> */}
       <Drawer.Screen
         name="orders-stack"
         component={OrdersStack}
@@ -64,6 +65,16 @@ const MainDrawerNavigation = () => (
           drawerLabel: 'Help',
           drawerIcon: () => (
             <Icon name="question" size={30} color={variable.mainThemeColor} />
+          ),
+        }}
+      />
+      <Drawer.Screen
+        name="setting-stack"
+        component={SettingStack}
+        options={{
+          drawerLabel: 'Setting',
+          drawerIcon: () => (
+            <Icon name="cogs" size={30} color={variable.mainThemeColor} />
           ),
         }}
       />

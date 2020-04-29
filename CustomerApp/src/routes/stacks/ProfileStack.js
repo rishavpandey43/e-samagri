@@ -20,10 +20,10 @@ const AccountStack = () => (
       }}
     />
     <Stack.Screen
-      name="edit-profile-screen"
+      name="update-profile-screen"
       component={UpdateProfileScreen}
       options={{
-        title: 'Edit Profile',
+        title: 'Update Profile',
       }}
     />
   </Stack.Navigator>

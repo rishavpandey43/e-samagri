@@ -29,12 +29,13 @@ export const getSellersFailure = response => {
   };
 };
 
-export const getSellersFetch = () => dispatch => {
+export const getSellersFetch = token => dispatch => {
   dispatch(getSellersRequest());
   axios
     .get(baseUrl + '/customer/get-all-sellers', {
-      params: {
-        id: customerId1,
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
       },
     })
     .then(res => {

@@ -1,3 +1,5 @@
+import AsyncStorage from '@react-native-community/async-storage';
+
 import {addressType, categoryList} from './constant';
 
 export const filterProductBySeller = (sellerId, products) => {
@@ -50,6 +52,37 @@ export const getStoreCategory = products => {
   });
 
   return categoryList.map(category => getCategoryName(category));
+};
+
+export const storeDataInAsync = async (key, value) => {
+  try {
+    await AsyncStorage.setItem(key, value);
+  } catch (error) {
+    // Error retrieving data
+    console.log(error.message);
+  }
+};
+
+export const getDataFromAsync = async key => {
+  let value = '';
+  try {
+    value = (await AsyncStorage.getItem(key)) || null;
+    if (value !== null) {
+      // value previously stored
+      return value;
+    }
+  } catch (e) {
+    // error reading value
+  }
+};
+
+export const removeDataFromAsync = async key => {
+  try {
+    await AsyncStorage.removeItem(key);
+  } catch (error) {
+    // Error retrieving data
+    console.log(error.message);
+  }
 };
 
 // TODO: complete this function

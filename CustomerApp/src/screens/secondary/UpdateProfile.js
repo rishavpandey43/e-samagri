@@ -65,7 +65,11 @@ class UpdateProfileScreen extends Component {
       return;
     } else {
       let data = {...tempData};
-      this.props.updateProfileFetch(data, detailType);
+      this.props.updateProfileFetch(
+        this.props.auth.authToken,
+        data,
+        detailType,
+      );
     }
   };
 
@@ -79,6 +83,7 @@ class UpdateProfileScreen extends Component {
               name="arrow-left"
               size={20}
               color="#FFF"
+              underlayColor="transparent"
               onPress={() => {
                 this.props.navigation.goBack();
               }}
@@ -120,7 +125,7 @@ class UpdateProfileScreen extends Component {
             </Card>
           ) : (
             <View style={[mainStyles.container, {marginBottom: 100}]}>
-              <Card
+              {/* <Card
                 title={
                   <CardCustomTitle
                     title="Update your personal detail"
@@ -219,7 +224,7 @@ class UpdateProfileScreen extends Component {
                     </View>
                   </View>
                 </View>
-              </Card>
+              </Card> */}
 
               <Card
                 title={
@@ -420,6 +425,7 @@ const styles = StyleSheet.create({});
 
 const mapStateToProps = state => {
   return {
+    auth: state.auth,
     profile: state.profile,
   };
 };

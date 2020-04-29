@@ -47,6 +47,7 @@ class HelpScreen extends Component {
               name="bars"
               size={20}
               color="#FFF"
+              underlayColor="transparent"
               onPress={() => {
                 this.props.navigation.toggleDrawer();
               }}
@@ -56,9 +57,6 @@ class HelpScreen extends Component {
             text: 'Help Center',
             style: {color: '#fff'},
           }}
-          rightComponent={
-            <Icon type="font-awesome" name="question" color="#FFF" size={30} />
-          }
           containerStyle={{
             backgroundColor: '#933dd4',
             justifyContent: 'space-around',
@@ -99,7 +97,7 @@ class HelpScreen extends Component {
                   this.toggleModal('aboutOverlay');
                 }}
               />
-              <ListItem
+              {/* <ListItem
                 title="Send Feedback"
                 leftAvatar={
                   <Icon
@@ -113,7 +111,7 @@ class HelpScreen extends Component {
                   this.toggleModal('feedbackOverlay');
                 }}
                 chevron
-              />
+              /> */}
             </Card>
           </View>
         </ScrollView>

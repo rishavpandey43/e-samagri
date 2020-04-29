@@ -129,7 +129,7 @@ android {
     }
 
     defaultConfig {
-        applicationId "com.customerapp"
+        applicationId "com.esamagri"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1

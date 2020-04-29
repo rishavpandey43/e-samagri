@@ -44,8 +44,8 @@ def flipper_post_install(installer)
   end
 end
 
-target 'CustomerApp' do
-  # Pods for CustomerApp
+target 'ESamagri' do
+  # Pods for ESamagri
   pod 'FBLazyVector', :path => "../node_modules/react-native/Libraries/FBLazyVector"
   pod 'FBReactNativeSpec', :path => "../node_modules/react-native/Libraries/FBReactNativeSpec"
   pod 'RCTRequired', :path => "../node_modules/react-native/Libraries/RCTRequired"
@@ -83,7 +83,7 @@ target 'CustomerApp' do
 
   pod 'RNCAsyncStorage', :path => '../node_modules/@react-native-community/async-storage'
 
-  target 'CustomerAppTests' do
+  target 'ESamagriTests' do
     inherit! :complete
     # Pods for testing
   end
@@ -100,10 +100,10 @@ target 'CustomerApp' do
   end
 end
 
-target 'CustomerApp-tvOS' do
-  # Pods for CustomerApp-tvOS
+target 'ESamagri-tvOS' do
+  # Pods for ESamagri-tvOS
 
-  target 'CustomerApp-tvOSTests' do
+  target 'ESamagri-tvOSTests' do
     inherit! :search_paths
     # Pods for testing
   end

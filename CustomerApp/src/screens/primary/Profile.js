@@ -45,7 +45,15 @@ class ProfileScreen extends Component {
             style: {color: '#fff'},
           }}
           rightComponent={
-            <Icon type="font-awesome" name="home" color="#FFF" size={30} />
+            <Icon
+              type="font-awesome"
+              name="shopping-basket"
+              color="#FFF"
+              size={25}
+              onPress={() => {
+                this.props.navigation.navigate('cart-screen');
+              }}
+            />
           }
           containerStyle={{
             backgroundColor: '#933dd4',
@@ -80,7 +88,7 @@ class ProfileScreen extends Component {
           ) : (
             <View style={[mainStyles.container, {marginBottom: 100}]}>
               <Card containerStyle={{borderRadius: 10}}>
-                <View style={{alignItems: 'flex-end'}}>
+                <View style={{alignItems: 'flex-end', display: 'none'}}>
                   <Icon
                     type="font-awesome"
                     name="pencil"
@@ -88,7 +96,7 @@ class ProfileScreen extends Component {
                     color={variables.mainThemeColor}
                     containerStyle={{padding: 10}}
                     onPress={() => {
-                      this.props.navigation.navigate('edit-profile-screen');
+                      this.props.navigation.navigate('update-profile-screen');
                     }}
                   />
                 </View>
@@ -100,7 +108,7 @@ class ProfileScreen extends Component {
                     source={require('../../assets/images/boy.png')}
                   />
                 </View>
-                <View style={{marginTop: 20}}>
+                <View style={{marginTop: 20, alignItems: 'center'}}>
                   <Text style={styles.title}>
                     {this.props.profile.profile.personalDetail.firstName +
                       ' ' +
@@ -109,9 +117,9 @@ class ProfileScreen extends Component {
                   <Text style={styles.subTitle}>
                     {this.props.profile.profile.personalDetail.phone}
                   </Text>
-                  <Text style={styles.subTitle}>
+                  {/* <Text style={styles.subTitle}>
                     {this.props.profile.profile.personalDetail.email}
-                  </Text>
+                  </Text> */}
                 </View>
               </Card>
 
@@ -123,7 +131,7 @@ class ProfileScreen extends Component {
                     type="edit"
                     detail={this.props.profile.profile.personalDetail}
                     onPress={() => {
-                      this.props.navigation.navigate('edit-profile-screen');
+                      this.props.navigation.navigate('update-profile-screen');
                     }}
                   />
                 }>
@@ -143,7 +151,7 @@ class ProfileScreen extends Component {
                       titleStyle={{color: variables.mainThemeColor}}
                       buttonStyle={mainStyles.outlineBtn}
                       onPress={() => {
-                        this.props.navigation.navigate('edit-profile-screen');
+                        this.props.navigation.navigate('update-profile-screen');
                       }}
                     />
                   </View>

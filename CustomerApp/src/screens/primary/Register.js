@@ -1,14 +1,19 @@
 // * Import required modules/dependencies
 import React, {Component} from 'react';
+import {bindActionCreators} from 'redux';
+import {connect} from 'react-redux';
 import {View, Text, Alert, ToastAndroid} from 'react-native';
 import {Card, Input, Button} from 'react-native-elements';
 import axios from 'axios';
 
 // * Import all store related stuffs
+import * as AuthActions from '../../store/actions/creators/AuthActions';
 
 // * Import all screens/components
 
 // * Import utilites
+import {getDataFromAsync} from '../../utils/helper';
+
 import {baseUrl} from '../../utils/constant';
 
 // * Import all styling stuffs
@@ -33,7 +38,33 @@ class RegisterScreen extends Component {
     };
   }
 
-  requestOTP = () => {
+  componentDidMount() {
+    getDataFromAsync('authToken')
+      .then(token => {
+        this.props.getTokenFromAsync(token);
+      })
+      .catch(err => {
+        console.log(err);
+      });
+  }
+
+  _resetState = () => {
+    this.setState({
+      detail: {
+        tempFirstName: '',
+        tempLastName: '',
+        tempPhone: '',
+      },
+      phoneOTP: '',
+      displayEmailOTPField: false,
+      displayPhoneOTPField: false,
+      authyId: '',
+      otpLoading: false,
+      registerLoading: false,
+    });
+  };
+
+  _requestOTP = () => {
     let isEmpty = false;
     var phoneRegex = /[6-9][0-9]{9}/;
     for (const detail in this.state.detail) {
@@ -62,7 +93,7 @@ class RegisterScreen extends Component {
     } else {
       this.setState({otpLoading: true});
       axios
-        .get(baseUrl + '/customer/request-phone-otp', {
+        .get(baseUrl + '/customer/request-phone-otp-register', {
           params: {
             phone: this.state.detail.tempPhone,
           },
@@ -75,7 +106,6 @@ class RegisterScreen extends Component {
           this.setState({
             authyId: res.data.authyId,
             displayPhoneOTPField: true,
-            otpLoading: true,
           });
         })
         .catch(err => {
@@ -83,12 +113,12 @@ class RegisterScreen extends Component {
             err.response.data.errMessage || 'Some error occured, try again.',
             ToastAndroid.LONG,
           );
-          this.setState({otpLoading: false});
+          this._resetState();
         });
     }
   };
 
-  register = () => {
+  _register = () => {
     let isEmpty = false;
     var phoneRegex = /[6-9][0-9]{9}/;
     for (const detail in this.state.detail) {
@@ -133,25 +163,14 @@ class RegisterScreen extends Component {
             "You've been successfully registered!",
             ToastAndroid.LONG,
           );
-          this.setState({
-            detail: {
-              tempFirstName: '',
-              tempLastName: '',
-              tempPhone: '',
-            },
-            phoneOTP: '',
-            displayEmailOTPField: false,
-            displayPhoneOTPField: false,
-            authyId: '',
-            registerLoading: false,
-          });
+          this._resetState();
         })
         .catch(err => {
           ToastAndroid.show(
             err.response.data.errMessage || 'Some error occured, try again.',
             ToastAndroid.LONG,
           );
-          this.setState({registerLoading: false});
+          this._resetState();
         });
     }
   };
@@ -258,8 +277,9 @@ class RegisterScreen extends Component {
                       titleStyle={{color: variables.mainThemeColor}}
                       type="outline"
                       buttonStyle={mainStyles.outlineBtn}
-                      onPress={this.requestOTP.bind(null)}
+                      onPress={this._requestOTP.bind(null)}
                       loading={this.state.otpLoading}
+                      containerStyle={{minWidth: '50%'}}
                     />
                   </View>
                 </View>
@@ -305,19 +325,7 @@ class RegisterScreen extends Component {
                   titleStyle={{color: variables.mainThemeColor}}
                   type="outline"
                   buttonStyle={mainStyles.outlineBtn}
-                  onPress={() => {
-                    this.setState({
-                      detail: {
-                        tempFirstName: '',
-                        tempLastName: '',
-                        tempPhone: '',
-                      },
-                      phoneOTP: '',
-                      displayEmailOTPField: false,
-                      displayPhoneOTPField: false,
-                      authyId: '',
-                    });
-                  }}
+                  onPress={this._resetState.bind(null)}
                 />
               </View>
               <View style={mainStyles.col6}>
@@ -326,7 +334,7 @@ class RegisterScreen extends Component {
                   titleStyle={{color: variables.mainThemeColor}}
                   type="outline"
                   buttonStyle={mainStyles.outlineBtn}
-                  onPress={this.register.bind(null)}
+                  onPress={this._register.bind(null)}
                   loading={this.state.registerLoading}
                 />
               </View>
@@ -338,4 +346,17 @@ class RegisterScreen extends Component {
   }
 }
 
-export default RegisterScreen;
+const mapStateToProps = state => {
+  return {
+    auth: state.auth,
+  };
+};
+
+const mapDispatchToProps = dispatch => {
+  return bindActionCreators({...AuthActions}, dispatch);
+};
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(RegisterScreen);

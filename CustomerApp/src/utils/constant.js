@@ -1,5 +1,7 @@
 export const baseUrl = 'http://192.168.43.240:5555';
 
+export const storage_key = 'auth_token';
+
 export const categoryList = [
   {
     name: 'All',

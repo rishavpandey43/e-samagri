@@ -37,17 +37,23 @@ class HomeScreen extends Component {
   }
 
   componentDidMount() {
-    this.props.getProfileFetch();
-    this.props.getSellersFetch();
-    this.props.getCartDetailFetch();
+    this.props.getProfileFetch(this.props.auth.authToken);
+    this.props.getSellersFetch(this.props.auth.authToken);
+    this.props.getCartDetailFetch(this.props.auth.authToken);
   }
 
   componentDidUpdate(prevProps) {
+    // If user has logged in first time, redirect to update profile screen for filling up address.
+    if (this.props.profile.profile) {
+      if (!this.props.profile.profile.address) {
+        this.props.navigation.navigate('update-profile-screen');
+      }
+    }
     // * checks previous sellerlist with new received ASYNC seller list
     if (prevProps.sellers.sellers.length != this.props.sellers.sellers.length) {
-      this.props.getProfileFetch();
-      this.props.getSellersFetch();
-      this.props.getCartDetailFetch();
+      this.props.getProfileFetch(this.props.auth.authToken);
+      this.props.getSellersFetch(this.props.auth.authToken);
+      this.props.getCartDetailFetch(this.props.auth.authToken);
       this.setState({storeList: this.props.sellers.sellers});
     }
   }
@@ -127,9 +133,9 @@ class HomeScreen extends Component {
                 titleStyle={{color: variables.mainThemeColor}}
                 buttonStyle={mainStyles.outlineBtn}
                 onPress={() => {
-                  this.props.getProfileFetch();
-                  this.props.getSellersFetch();
-                  this.props.getCartDetailFetch();
+                  this.props.getProfileFetch(this.props.auth.authToken);
+                  this.props.getSellersFetch(this.props.auth.authToken);
+                  this.props.getCartDetailFetch(this.props.auth.authToken);
                 }}
               />
             </Card>
@@ -174,6 +180,7 @@ const styles = StyleSheet.create({});
 
 const mapStateToProps = state => {
   return {
+    auth: state.auth,
     profile: state.profile,
     sellers: state.sellers,
   };

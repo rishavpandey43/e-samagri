@@ -87,7 +87,15 @@ class FavoriteScreen extends Component {
             style: {color: '#fff'},
           }}
           rightComponent={
-            <Icon name="heart" type="font-awesome" color="#FFF" size={30} />
+            <Icon
+              type="font-awesome"
+              name="shopping-basket"
+              color="#FFF"
+              size={25}
+              onPress={() => {
+                this.props.navigation.navigate('cart-screen');
+              }}
+            />
           }
           containerStyle={{
             backgroundColor: '#933dd4',

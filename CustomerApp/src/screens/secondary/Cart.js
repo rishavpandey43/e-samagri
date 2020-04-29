@@ -54,7 +54,11 @@ class CartScreen extends Component {
               text: 'OK',
               onPress: () => {
                 tempCart.products[productIndexInCart].quantity--;
-                this.props.updateCartToServerFetch('change', tempCart);
+                this.props.updateCartToServerFetch(
+                  this.props.auth.authToken,
+                  'change',
+                  tempCart,
+                );
                 return;
               },
             },
@@ -62,15 +66,27 @@ class CartScreen extends Component {
         );
         return;
       } else {
-        this.props.updateCartToServerFetch('change', tempCart);
+        this.props.updateCartToServerFetch(
+          this.props.auth.authToken,
+          'change',
+          tempCart,
+        );
       }
     } else if (type === 'decrement') {
       tempCart.products[productIndexInCart].quantity--;
       if (tempCart.products[productIndexInCart].quantity === 0) {
         tempCart.products.splice(productIndexInCart, 1);
-        this.props.updateCartToServerFetch('change', tempCart);
+        this.props.updateCartToServerFetch(
+          this.props.auth.authToken,
+          'change',
+          tempCart,
+        );
       } else {
-        this.props.updateCartToServerFetch('change', tempCart);
+        this.props.updateCartToServerFetch(
+          this.props.auth.authToken,
+          'change',
+          tempCart,
+        );
       }
     } else return;
   };
@@ -317,6 +333,7 @@ const styles = StyleSheet.create({
 
 const mapStateToProps = state => {
   return {
+    auth: state.auth,
     store: state.store,
     cart: state.cart,
   };

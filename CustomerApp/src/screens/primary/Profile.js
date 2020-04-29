@@ -2,8 +2,22 @@
 import React, {Component} from 'react';
 import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
-import {ScrollView, StyleSheet, View, ActivityIndicator} from 'react-native';
-import {Header, Card, Text, Button, Avatar, Icon} from 'react-native-elements';
+import {
+  ScrollView,
+  StyleSheet,
+  View,
+  ActivityIndicator,
+  TouchableOpacity,
+} from 'react-native';
+import {
+  Header,
+  Card,
+  Text,
+  Button,
+  Avatar,
+  Badge,
+  Icon,
+} from 'react-native-elements';
 
 // * Import all store related stuffs
 import * as ProfileActions from '../../store/actions/creators/ProfileActions';
@@ -35,6 +49,7 @@ class ProfileScreen extends Component {
               name="bars"
               size={20}
               color="#FFF"
+              underlayColor="transparent"
               onPress={() => {
                 this.props.navigation.toggleDrawer();
               }}
@@ -45,15 +60,38 @@ class ProfileScreen extends Component {
             style: {color: '#fff'},
           }}
           rightComponent={
-            <Icon
-              type="font-awesome"
-              name="shopping-basket"
-              color="#FFF"
-              size={25}
-              onPress={() => {
-                this.props.navigation.navigate('cart-screen');
-              }}
-            />
+            <View
+              style={{
+                flex: 1,
+                justifyContent: 'center',
+                alignItems: 'center',
+              }}>
+              <TouchableOpacity
+                onPress={() => {
+                  this.props.navigation.navigate('cart-screen');
+                }}
+                style={mainStyles.row}>
+                <Icon
+                  type="font-awesome"
+                  name="shopping-basket"
+                  color="#FFF"
+                  size={25}
+                />
+                <Badge
+                  value={
+                    this.props.cart.cart
+                      ? this.props.cart.cart.products.length
+                      : 0
+                  }
+                  badgeStyle={{backgroundColor: variables.mainThemeColor}}
+                  containerStyle={{
+                    position: 'absolute',
+                    top: -4,
+                    right: -4,
+                  }}
+                />
+              </TouchableOpacity>
+            </View>
           }
           containerStyle={{
             backgroundColor: '#933dd4',
@@ -189,6 +227,7 @@ const styles = StyleSheet.create({
 
 const mapStateToProps = state => {
   return {
+    cart: state.cart,
     profile: state.profile,
   };
 };

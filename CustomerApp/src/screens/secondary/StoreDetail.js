@@ -18,6 +18,7 @@ import {
   Image,
   Icon,
   SearchBar,
+  Badge,
 } from 'react-native-elements';
 import {Picker} from '@react-native-community/picker';
 
@@ -412,6 +413,7 @@ class StoreDetailScreen extends Component {
               name="arrow-left"
               size={20}
               color="#FFF"
+              underlayColor="transparent"
               onPress={() => {
                 this.props.navigation.goBack();
               }}
@@ -425,15 +427,38 @@ class StoreDetailScreen extends Component {
             style: {color: '#fff'},
           }}
           rightComponent={
-            <Icon
-              type="font-awesome"
-              name="shopping-basket"
-              size={20}
-              color="#FFF"
-              onPress={() => {
-                this.props.navigation.navigate('cart-screen');
-              }}
-            />
+            <View
+              style={{
+                flex: 1,
+                justifyContent: 'center',
+                alignItems: 'center',
+              }}>
+              <TouchableOpacity
+                onPress={() => {
+                  this.props.navigation.navigate('cart-screen');
+                }}
+                style={mainStyles.row}>
+                <Icon
+                  type="font-awesome"
+                  name="shopping-basket"
+                  color="#FFF"
+                  size={25}
+                />
+                <Badge
+                  value={
+                    this.props.cart.cart
+                      ? this.props.cart.cart.products.length
+                      : 0
+                  }
+                  badgeStyle={{backgroundColor: variables.mainThemeColor}}
+                  containerStyle={{
+                    position: 'absolute',
+                    top: -4,
+                    right: -4,
+                  }}
+                />
+              </TouchableOpacity>
+            </View>
           }
           containerStyle={{
             backgroundColor: '#933dd4',

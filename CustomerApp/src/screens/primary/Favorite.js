@@ -1,13 +1,16 @@
 // * Import required modules/dependencies
 import React, {Component} from 'react';
+import {bindActionCreators} from 'redux';
+import {connect} from 'react-redux';
 import {
   ScrollView,
   StyleSheet,
   View,
   Text,
   ActivityIndicator,
+  TouchableOpacity,
 } from 'react-native';
-import {Header, Image, Button, Icon} from 'react-native-elements';
+import {Header, Image, Button, Badge, Icon} from 'react-native-elements';
 
 // * Import all store related stuffs
 
@@ -77,6 +80,7 @@ class FavoriteScreen extends Component {
               type="font-awesome"
               size={20}
               color="#FFF"
+              underlayColor="transparent"
               onPress={() => {
                 this.props.navigation.toggleDrawer();
               }}
@@ -87,15 +91,38 @@ class FavoriteScreen extends Component {
             style: {color: '#fff'},
           }}
           rightComponent={
-            <Icon
-              type="font-awesome"
-              name="shopping-basket"
-              color="#FFF"
-              size={25}
-              onPress={() => {
-                this.props.navigation.navigate('cart-screen');
-              }}
-            />
+            <View
+              style={{
+                flex: 1,
+                justifyContent: 'center',
+                alignItems: 'center',
+              }}>
+              <TouchableOpacity
+                onPress={() => {
+                  this.props.navigation.navigate('cart-screen');
+                }}
+                style={mainStyles.row}>
+                <Icon
+                  type="font-awesome"
+                  name="shopping-basket"
+                  color="#FFF"
+                  size={25}
+                />
+                <Badge
+                  value={
+                    this.props.cart.cart
+                      ? this.props.cart.cart.products.length
+                      : 0
+                  }
+                  badgeStyle={{backgroundColor: variables.mainThemeColor}}
+                  containerStyle={{
+                    position: 'absolute',
+                    top: -4,
+                    right: -4,
+                  }}
+                />
+              </TouchableOpacity>
+            </View>
           }
           containerStyle={{
             backgroundColor: '#933dd4',
@@ -117,4 +144,17 @@ class FavoriteScreen extends Component {
 
 const styles = StyleSheet.create({});
 
-export default FavoriteScreen;
+const mapStateToProps = state => {
+  return {
+    cart: state.cart,
+  };
+};
+
+const mapDispatchToProps = dispatch => {
+  return bindActionCreators({}, dispatch);
+};
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(FavoriteScreen);

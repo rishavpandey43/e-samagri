@@ -50,6 +50,7 @@ class CheckoutScreen extends Component {
               name="arrow-left"
               size={20}
               color="#FFF"
+              underlayColor="transparent"
               onPress={() => {
                 this.props.navigation.goBack();
               }}

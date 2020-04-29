@@ -47,6 +47,7 @@ class HelpScreen extends Component {
               name="bars"
               size={20}
               color="#FFF"
+              underlayColor="transparent"
               onPress={() => {
                 this.props.navigation.toggleDrawer();
               }}
@@ -56,17 +57,6 @@ class HelpScreen extends Component {
             text: 'Help Center',
             style: {color: '#fff'},
           }}
-          rightComponent={
-            <Icon
-              type="font-awesome"
-              name="shopping-basket"
-              color="#FFF"
-              size={25}
-              onPress={() => {
-                this.props.navigation.navigate('cart-screen');
-              }}
-            />
-          }
           containerStyle={{
             backgroundColor: '#933dd4',
             justifyContent: 'space-around',

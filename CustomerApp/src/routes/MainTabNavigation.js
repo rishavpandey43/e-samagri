@@ -41,21 +41,17 @@ const MainTabNavigation = () => (
         labelStyle: {fontSize: 18},
       }}>
       <Tab.Screen
-        name="register-screen"
-        component={RegisterScreen}
-        options={{
-          tabBarLabel: 'Register',
-          // tabBarIcon: () => (
-          //   <Icon name="user-plus" type="font-awesome" size={30} />
-          // ),
-        }}
-      />
-      <Tab.Screen
         name="login-screen"
         component={LoginScreen}
         options={{
           tabBarLabel: 'Login',
-          // tabBarIcon: () => <Icon name="home" type="font-awesome" size={30} />,
+        }}
+      />
+      <Tab.Screen
+        name="register-screen"
+        component={RegisterScreen}
+        options={{
+          tabBarLabel: 'Register',
         }}
       />
     </Tab.Navigator>

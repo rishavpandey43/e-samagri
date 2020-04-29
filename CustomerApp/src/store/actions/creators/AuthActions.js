@@ -4,7 +4,7 @@ import AsyncStorage from '@react-native-community/async-storage';
 
 import * as actionTypes from '../types/actionTypes';
 
-import {storeDataInAsync, getDataFromAsync} from '../../../utils/helper';
+import {storeDataInAsync, removeDataFromAsync} from '../../../utils/helper';
 import {baseUrl} from '../../../utils/constant';
 
 export const loginRequest = () => {
@@ -60,4 +60,33 @@ export const getTokenFromAsync = token => {
     type: actionTypes.GET_TOKEN,
     token,
   };
+};
+
+export const logoutRequest = () => {
+  return {
+    type: actionTypes.LOGOUT_REQUEST,
+  };
+};
+
+export const logoutSuccess = () => {
+  return {
+    type: actionTypes.LOGOUT_SUCCESS,
+  };
+};
+
+export const logoutFailure = () => {
+  return {
+    type: actionTypes.LOGOUT_FAILURE,
+  };
+};
+
+export const logoutFetch = () => dispatch => {
+  dispatch(logoutRequest());
+  removeDataFromAsync('authToken')
+    .then(response => {
+      dispatch(logoutSuccess());
+    })
+    .catch(err => {
+      dispatch(logoutFailure());
+    });
 };

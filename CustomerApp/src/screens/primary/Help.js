@@ -97,7 +97,7 @@ class HelpScreen extends Component {
                   this.toggleModal('aboutOverlay');
                 }}
               />
-              <ListItem
+              {/* <ListItem
                 title="Send Feedback"
                 leftAvatar={
                   <Icon
@@ -111,7 +111,7 @@ class HelpScreen extends Component {
                   this.toggleModal('feedbackOverlay');
                 }}
                 chevron
-              />
+              /> */}
             </Card>
           </View>
         </ScrollView>

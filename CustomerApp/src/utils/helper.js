@@ -66,13 +66,22 @@ export const storeDataInAsync = async (key, value) => {
 export const getDataFromAsync = async key => {
   let value = '';
   try {
-    value = (await AsyncStorage.getItem(key)) || 'none';
+    value = (await AsyncStorage.getItem(key)) || null;
     if (value !== null) {
       // value previously stored
       return value;
     }
   } catch (e) {
     // error reading value
+  }
+};
+
+export const removeDataFromAsync = async key => {
+  try {
+    await AsyncStorage.removeItem(key);
+  } catch (error) {
+    // Error retrieving data
+    console.log(error.message);
   }
 };
 

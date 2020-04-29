@@ -20,6 +20,7 @@ import {
 } from 'react-native-elements';
 
 // * Import all store related stuffs
+import * as AuthActions from '../../store/actions/creators/AuthActions';
 import * as HomeActions from '../../store/actions/creators/HomeActions';
 import * as ProfileActions from '../../store/actions/creators/ProfileActions';
 import * as StoreActions from '../../store/actions/creators/StoreActions';
@@ -29,6 +30,7 @@ import * as CartActions from '../../store/actions/creators/CartActions';
 import Store from '../../components/Store';
 
 // * Import utilites
+import {getDataFromAsync} from '../../utils/helper';
 
 // * Import all styling stuffs
 import mainStyles from '../../styles/mainStyle';
@@ -44,9 +46,13 @@ class HomeScreen extends Component {
   }
 
   componentDidMount() {
-    this.props.getProfileFetch(this.props.auth.authToken);
-    this.props.getSellersFetch(this.props.auth.authToken);
-    this.props.getCartDetailFetch(this.props.auth.authToken);
+    getDataFromAsync('authToken')
+      .then(token => {
+        this.props.getTokenFromAsync(token);
+      })
+      .catch(err => {
+        console.log(err);
+      });
   }
 
   componentDidUpdate(prevProps) {
@@ -55,6 +61,12 @@ class HomeScreen extends Component {
       if (!this.props.profile.profile.address) {
         this.props.navigation.navigate('update-profile-screen');
       }
+    }
+    // retreive data from server, once authentication is complete
+    if (prevProps.auth.authToken !== this.props.auth.authToken) {
+      this.props.getProfileFetch(this.props.auth.authToken);
+      this.props.getSellersFetch(this.props.auth.authToken);
+      this.props.getCartDetailFetch(this.props.auth.authToken);
     }
     // * checks previous sellerlist with new received ASYNC seller list
     if (prevProps.sellers.sellers.length != this.props.sellers.sellers.length) {
@@ -220,7 +232,13 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return bindActionCreators(
-    {...HomeActions, ...ProfileActions, ...StoreActions, ...CartActions},
+    {
+      ...AuthActions,
+      ...HomeActions,
+      ...ProfileActions,
+      ...StoreActions,
+      ...CartActions,
+    },
     dispatch,
   );
 };

@@ -14,7 +14,7 @@ const auth = (state = initialState, action) => {
     case actionTypes.GET_TOKEN:
       return {
         ...state,
-        isAuthenticated: true,
+        isAuthenticated: action.token ? true : false,
         authToken: action.token,
       };
     case actionTypes.LOGIN_REQUEST:
@@ -35,6 +35,24 @@ const auth = (state = initialState, action) => {
         ...state,
         isLoading: false,
         errMessage: action.errMessage,
+      };
+    case actionTypes.LOGOUT_REQUEST:
+      return {
+        ...state,
+        isLoading: true,
+      };
+    case actionTypes.LOGOUT_SUCCESS:
+      return {
+        ...state,
+        isLoading: false,
+        isAuthenticated: false,
+        authToken: false,
+        errMessage: null,
+      };
+    case actionTypes.LOGOUT_FAILURE:
+      return {
+        ...state,
+        isLoading: false,
       };
     default:
       return {

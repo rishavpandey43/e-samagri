@@ -4,6 +4,10 @@ const Schema = mongoose.Schema;
 
 const customerSchema = new Schema(
   {
+    fcm: {
+      token: { type: String, required: false },
+      status: { type: Boolean, required: false },
+    },
     personalDetail: {
       firstName: { type: String, required: true },
       lastName: { type: String, required: true },

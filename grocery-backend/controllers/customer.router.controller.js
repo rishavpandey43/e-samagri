@@ -125,8 +125,8 @@ exports.requestPhoneOTPForLogin = (req, res, next) => {
         );
       } else {
         let err = new Error(`You're not registered yet.`);
-        err.status = 500;
-        err.statusText = "Internal Server Error";
+        err.status = 404;
+        err.statusText = "Not Found";
         next(err);
       }
     })
@@ -149,25 +149,60 @@ exports.login = (req, res, next) => {
             err.statusText = "Internal Server Error";
             next(err);
           } else {
-            console.log(otpResponse);
-            let userId = customer._id;
-            // Issue JWT Token on validation
-            const token = jwt.sign({ userId }, process.env.JWT_SECRET_KEY, {
-              expiresIn: 90000,
-            });
-            res.statusCode = 200;
-            res.statusText = "OK";
-            res.setHeader("Content-Type", "application/json");
-            res.json({
-              token,
-              message: "You're logged in Successfully",
-            });
+            // save FCM Device token to DB with on successfull verification
+            customer.fcm = {
+              token: req.query.fcmDeviceToken,
+              status: true,
+            };
+            customer
+              .save()
+              .then((customer) => {
+                let userId = customer._id;
+                // Issue JWT Token on validation
+                const token = jwt.sign({ userId }, process.env.JWT_SECRET_KEY, {
+                  expiresIn: 90000,
+                });
+                res.statusCode = 200;
+                res.statusText = "OK";
+                res.setHeader("Content-Type", "application/json");
+                res.json({
+                  token,
+                  message: "You're logged in Successfully",
+                });
+              })
+              .catch((err) => next(err));
           }
         });
       } else {
         let err = new Error(`You're not registered yet.`);
-        err.status = 500;
-        err.statusText = "Internal Server Error";
+        err.status = 404;
+        err.statusText = "Not Found";
+        next(err);
+      }
+    })
+    .catch((err) => next(err));
+};
+
+exports.logout = (req, res, next) => {
+  Customer.findOne({ _id: req.userId })
+    .then((customer) => {
+      if (customer) {
+        customer.fcm.status = false;
+        customer
+          .save()
+          .then((customer) => {
+            res.statusCode = 200;
+            res.statusMessage = "OK";
+            res.setHeader("Content-Type", "application/json");
+            res.json({
+              message: "Logout successful",
+            });
+          })
+          .catch((err) => next(err));
+      } else {
+        let err = new Error(`You're not registered yet.`);
+        err.status = 404;
+        err.statusText = "Not Found";
         next(err);
       }
     })

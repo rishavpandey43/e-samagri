@@ -49,6 +49,9 @@ class HomeScreen extends Component {
     getDataFromAsync('authToken')
       .then(token => {
         this.props.getTokenFromAsync(token);
+        this.props.getProfileFetch(this.props.auth.authToken);
+        this.props.getSellersFetch(this.props.auth.authToken);
+        this.props.getCartDetailFetch(this.props.auth.authToken);
       })
       .catch(err => {
         console.log(err);

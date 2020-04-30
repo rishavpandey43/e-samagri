@@ -76,7 +76,10 @@ class SettingScreen extends Component {
                 }
                 chevron
                 bottomDivider
-                onPress={this.props.logoutFetch.bind(null)}
+                onPress={this.props.logoutFetch.bind(
+                  null,
+                  this.props.auth.authToken,
+                )}
               />
             </Card>
           </View>

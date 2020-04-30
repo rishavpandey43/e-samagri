@@ -5,7 +5,7 @@ import {connect} from 'react-redux';
 import {View, Text, Alert, ToastAndroid} from 'react-native';
 import {Card, Input, Button} from 'react-native-elements';
 import axios from 'axios';
-import AsyncStorage from '@react-native-community/async-storage';
+import messaging from '@react-native-firebase/messaging';
 
 // * Import all store related stuffs
 import * as AuthActions from '../../store/actions/creators/AuthActions';
@@ -28,10 +28,24 @@ class LoginScreen extends Component {
       phoneOTP: '',
       otpLoading: false,
       displayPhoneOTPField: false,
+      fcmDeviceToken: null,
     };
   }
 
-  componentDidMount() {}
+  componentDidMount() {
+    getDataFromAsync('authToken')
+      .then(token => {
+        this.props.getTokenFromAsync(token);
+      })
+      .catch(err => {
+        console.log(err);
+      });
+    messaging()
+      .getToken()
+      .then(token => {
+        this.setState({fcmDeviceToken: token});
+      });
+  }
 
   _resetState = () => {
     this.setState({
@@ -70,8 +84,11 @@ class LoginScreen extends Component {
           });
         })
         .catch(err => {
+          console.log(err.response);
           ToastAndroid.show(
-            err.response.data.errMessage || 'Some error occured, try again.',
+            err.response
+              ? err.response.data.errMessage || 'Some error occured, try again.'
+              : 'Some error occured, try again.',
             ToastAndroid.LONG,
           );
           this._resetState();
@@ -95,7 +112,7 @@ class LoginScreen extends Component {
         phone: this.state.tempPhone,
         otp: this.state.phoneOTP,
       };
-      this.props.loginFetch(data);
+      this.props.loginFetch(this.state.fcmDeviceToken, data);
     }
   };
 

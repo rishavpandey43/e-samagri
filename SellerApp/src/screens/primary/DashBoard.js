@@ -1,16 +1,21 @@
+// * Import required modules/dependencies
 import React, {Component} from 'react';
 import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
 import {ScrollView, StyleSheet, View, Text, Button} from 'react-native';
-import {Header, Card} from 'react-native-elements';
-import Icon from 'react-native-vector-icons/FontAwesome';
+import {Header, Card, Icon} from 'react-native-elements';
 
-import {getDataFromAsync} from '../../utils/helper';
-
-import mainStyles from '../../styles/mainStyle';
-
+// * Import all store related stuffs
 import * as ProfileActions from '../../store/actions/creators/ProfileActions';
 import * as AuthActions from '../../store/actions/creators/AuthActions';
+
+// * Import all screens/components
+
+// * Import utilites
+import {getDataFromAsync} from '../../utils/helper';
+
+// * Import all styling stuffs
+import mainStyles from '../../styles/mainStyle';
 
 class DashBoardScreen extends Component {
   constructor(props) {
@@ -36,8 +41,10 @@ class DashBoardScreen extends Component {
           leftComponent={
             <Icon
               name="bars"
+              type="font-awesome"
               size={20}
               color="#FFF"
+              underlayColor="transparent"
               onPress={() => {
                 this.props.navigation.toggleDrawer();
               }}
@@ -47,7 +54,9 @@ class DashBoardScreen extends Component {
             text: 'YOUR DASHBOARD',
             style: {color: '#fff'},
           }}
-          rightComponent={<Icon name="dashboard" color="#FFF" size={30} />}
+          rightComponent={
+            <Icon name="dashboard" type="font-awesome" color="#FFF" size={30} />
+          }
           containerStyle={{
             backgroundColor: '#933dd4',
             justifyContent: 'space-around',

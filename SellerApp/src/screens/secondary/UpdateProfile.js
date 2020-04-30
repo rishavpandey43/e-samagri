@@ -1,23 +1,26 @@
+// * Import required modules/dependencies
 import React, {Component} from 'react';
 import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
 import {
-  SafeAreaView,
   ScrollView,
   StyleSheet,
   View,
   Alert,
   ActivityIndicator,
 } from 'react-native';
-import {Header, Card, Button, Text, Input} from 'react-native-elements';
-import Icon from 'react-native-vector-icons/FontAwesome';
-import DocumentPicker from 'react-native-document-picker';
+import {Header, Card, Button, Text, Input, Icon} from 'react-native-elements';
 
-import CardCustomTitle from '../../components/CardCustomTitle';
-
+// * Import all store related stuffs
 import * as AuthActions from '../../store/actions/creators/AuthActions';
 import * as ProfileActions from '../../store/actions/creators/ProfileActions';
 
+// * Import all screens/components
+import CardCustomTitle from '../../components/CardCustomTitle';
+
+// * Import utilites
+
+// * Import all styling stuffs
 import variables from '../../styles/variables';
 import mainStyles from '../../styles/mainStyle';
 
@@ -130,8 +133,10 @@ class UpdateProfileScreen extends Component {
           leftComponent={
             <Icon
               name="arrow-left"
+              type="font-awesome"
               size={20}
               color="#FFF"
+              underlayColor="transparent"
               onPress={() => {
                 this.props.navigation.goBack();
               }}

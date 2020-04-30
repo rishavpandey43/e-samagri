@@ -1,4 +1,3 @@
-import {getDataFromAsync} from '../../utils/helper';
 import * as actionTypes from '../actions/types/actionTypes';
 
 const initialState = {

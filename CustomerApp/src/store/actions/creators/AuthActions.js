@@ -1,6 +1,5 @@
 import axios from 'axios';
 import {ToastAndroid} from 'react-native';
-import AsyncStorage from '@react-native-community/async-storage';
 
 import * as actionTypes from '../types/actionTypes';
 

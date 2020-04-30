@@ -1,3 +1,4 @@
+// * Import required modules/dependencies
 import React, {Component} from 'react';
 import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
@@ -22,8 +23,13 @@ import {
 import {Picker} from '@react-native-community/picker';
 import axios from 'axios';
 
-import CardCustomTitle from '../../components/CardCustomTitle';
+// * Import all store related stuffs
 
+// * Import all screens/components
+
+// * Import utilites
+
+// * Import all styling stuffs
 import mainStyles from '../../styles/mainStyle';
 import variables from '../../styles/variables';
 

@@ -155,6 +155,7 @@ class CartScreen extends Component {
                     type="outline"
                     buttonStyle={styles.btn}
                     title="-"
+                    titleStyle={{color: variables.mainThemeColor}}
                     onPress={this.changeProductQuantityinCart.bind(
                       null,
                       'decrement',
@@ -180,6 +181,7 @@ class CartScreen extends Component {
                     type="outline"
                     buttonStyle={styles.btn}
                     title="+"
+                    titleStyle={{color: variables.mainThemeColor}}
                     onPress={this.changeProductQuantityinCart.bind(
                       null,
                       'increment',
@@ -230,12 +232,6 @@ class CartScreen extends Component {
               justifyContent: 'center',
             }}>
             <View style={{alignItems: 'center'}}>
-              <Image
-                source={require('../../assets/images/cart_empty.png')}
-                style={{width: 250, height: 250}}
-                PlaceholderContent={<ActivityIndicator />}
-                containerStyle={{backgroundColor: 'red'}}
-              />
               <Text style={{fontSize: 18, textAlign: 'center'}}>
                 Cart is empty, add your desired items to continue...
               </Text>
@@ -324,7 +320,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   btn: {
-    width: '120%',
+    borderColor: variables.mainThemeColor,
     height: 20,
     borderRadius: 20,
     padding: 10,

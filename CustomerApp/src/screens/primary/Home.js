@@ -140,7 +140,10 @@ class HomeScreen extends Component {
                 <Badge
                   value={
                     this.props.cart.cart
-                      ? this.props.cart.cart.products.length
+                      ? this.props.cart.cart.products.reduce(
+                          (acc, cur) => acc + cur.quantity,
+                          0,
+                        )
                       : 0
                   }
                   badgeStyle={{backgroundColor: variables.mainThemeColor}}

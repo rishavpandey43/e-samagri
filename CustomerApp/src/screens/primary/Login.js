@@ -144,6 +144,7 @@ class LoginScreen extends Component {
                       buttonStyle={mainStyles.outlineBtn}
                       onPress={this._requestOTP.bind(null)}
                       loading={this.state.otpLoading}
+                      loadingStyle={{color: variables.mainThemeColor}}
                       containerStyle={{minWidth: '50%'}}
                     />
                   </View>
@@ -199,6 +200,7 @@ class LoginScreen extends Component {
                   buttonStyle={mainStyles.outlineBtn}
                   onPress={this._login.bind(null)}
                   loading={this.props.auth.isLoading}
+                  loadingStyle={{color: variables.mainThemeColor}}
                 />
               </View>
             </View>

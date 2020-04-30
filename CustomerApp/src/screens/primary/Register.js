@@ -279,6 +279,7 @@ class RegisterScreen extends Component {
                       buttonStyle={mainStyles.outlineBtn}
                       onPress={this._requestOTP.bind(null)}
                       loading={this.state.otpLoading}
+                      loadingStyle={{color: variables.mainThemeColor}}
                       containerStyle={{minWidth: '50%'}}
                     />
                   </View>
@@ -336,6 +337,7 @@ class RegisterScreen extends Component {
                   buttonStyle={mainStyles.outlineBtn}
                   onPress={this._register.bind(null)}
                   loading={this.state.registerLoading}
+                  loadingStyle={{color: variables.mainThemeColor}}
                 />
               </View>
             </View>

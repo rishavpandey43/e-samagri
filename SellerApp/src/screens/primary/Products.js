@@ -13,17 +13,17 @@ import {Header, Card, ListItem, Button, Text} from 'react-native-elements';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
 import * as ProductsActions from '../../store/actions/creators/ProductsActions';
+import * as AuthActions from '../../store/actions/creators/AuthActions';
 
 import variables from '../../styles/variables';
 import mainStyles from '../../styles/mainStyle';
 
 class ProductsScreen extends Component {
   componentDidMount() {
-    this.props.getProductsFetch();
+    this.props.getProductsFetch(this.props.auth.authToken);
   }
 
   render() {
-    console.log(this.props.products);
     return (
       <View>
         <Header
@@ -122,12 +122,13 @@ const styles = StyleSheet.create({});
 
 const mapStateToProps = state => {
   return {
+    auth: state.auth,
     products: state.products,
   };
 };
 
 const mapDispatchToProps = dispatch => {
-  return bindActionCreators(ProductsActions, dispatch);
+  return bindActionCreators({...AuthActions, ...ProductsActions}, dispatch);
 };
 
 export default connect(

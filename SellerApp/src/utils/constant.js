@@ -15,7 +15,7 @@ export const categoryList = [
   },
   {
     name: 'Packed Foods',
-    value: 'pc',
+    value: 'pf',
   },
   {
     name: 'Snacks & Cookies',

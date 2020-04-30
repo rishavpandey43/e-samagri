@@ -15,6 +15,7 @@ import DocumentPicker from 'react-native-document-picker';
 
 import CardCustomTitle from '../../components/CardCustomTitle';
 
+import * as AuthActions from '../../store/actions/creators/AuthActions';
 import * as ProfileActions from '../../store/actions/creators/ProfileActions';
 
 import variables from '../../styles/variables';
@@ -114,7 +115,11 @@ class UpdateProfileScreen extends Component {
           : {
               ...tempData,
             };
-      this.props.updateProfileFetch(data, detailType);
+      this.props.updateProfileFetch(
+        this.props.auth.authToken,
+        data,
+        detailType,
+      );
     }
   };
 
@@ -162,13 +167,13 @@ class UpdateProfileScreen extends Component {
                 titleStyle={{color: variables.mainThemeColor}}
                 buttonStyle={mainStyles.outlineBtn}
                 onPress={() => {
-                  this.props.getProfileFetch();
+                  this.props.getProfileFetch(this.props.auth.authToken);
                 }}
               />
             </Card>
           ) : (
             <View style={[mainStyles.container, {marginBottom: 100}]}>
-              <Card
+              {/* <Card
                 title={
                   <CardCustomTitle
                     title="Update Your Personal Detail"
@@ -282,7 +287,7 @@ class UpdateProfileScreen extends Component {
                     </View>
                   </View>
                 </View>
-              </Card>
+              </Card> */}
 
               <Card
                 title={
@@ -598,12 +603,13 @@ const styles = StyleSheet.create({});
 
 const mapStateToProps = state => {
   return {
+    auth: state.auth,
     profile: state.profile,
   };
 };
 
 const mapDispatchToProps = dispatch => {
-  return bindActionCreators({...ProfileActions}, dispatch);
+  return bindActionCreators({...AuthActions, ...ProfileActions}, dispatch);
 };
 
 export default connect(

@@ -29,6 +29,7 @@ class ProductDetailScreen extends Component {
 
   componentDidMount() {
     if (this.props.route.params.productId) {
+      console.log(this.props.route.params.productId);
       this.setState({
         product: this.props.products.products.filter(
           product => product._id === this.props.route.params.productId,

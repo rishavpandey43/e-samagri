@@ -20,7 +20,6 @@ class ProfileScreen extends Component {
   }
 
   render() {
-    console.log(this.props.profile);
     return (
       <View>
         <Header
@@ -84,7 +83,6 @@ class ProfileScreen extends Component {
                     <CardCustomTitle
                       title="Personal Detail"
                       type="edit"
-                      detail={this.props.profile.profile.personalDetail}
                       onPress={() => {
                         this.props.navigation.navigate('edit-profile-screen');
                       }}
@@ -109,7 +107,7 @@ class ProfileScreen extends Component {
                     </View>
                   </View>
 
-                  <View style={mainStyles.infoGroup}>
+                  {/* <View style={mainStyles.infoGroup}>
                     <View style={mainStyles.labelGroup}>
                       <Icon
                         name="envelope"
@@ -124,7 +122,7 @@ class ProfileScreen extends Component {
                         {this.props.profile.profile.personalDetail.email}
                       </Text>
                     </View>
-                  </View>
+                  </View> */}
 
                   <View style={mainStyles.infoGroup}>
                     <View style={mainStyles.labelGroup}>

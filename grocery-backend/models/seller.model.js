@@ -7,8 +7,8 @@ const sellerSchema = new Schema(
     personalDetail: {
       firstName: { type: String, required: true },
       lastName: { type: String, required: true },
-      email: { type: String, required: true },
       phone: { type: String, required: true },
+      authyId: { type: String, required: false },
     },
     storeDetail: {
       name: { type: String, required: false },

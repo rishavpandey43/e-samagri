@@ -11,12 +11,12 @@ import {Provider} from 'react-redux';
 
 import store from './store/store';
 
-import MainDrawerNavigation from './routes/MainDrawerNavigation';
+import MainApp from './MainApp';
 
 const App = () => {
   return (
     <Provider store={store}>
-      <MainDrawerNavigation />
+      <MainApp />
     </Provider>
   );
 };

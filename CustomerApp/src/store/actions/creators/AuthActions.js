@@ -25,12 +25,13 @@ export const loginFailure = () => {
   };
 };
 
-export const loginFetch = ({phone, otp}) => dispatch => {
+export const loginFetch = (fcmDeviceToken, {phone, otp}) => dispatch => {
   dispatch(loginRequest());
 
   axios
     .get(baseUrl + '/customer/login', {
       params: {
+        fcmDeviceToken,
         phone,
         otp,
       },
@@ -80,13 +81,26 @@ export const logoutFailure = () => {
   };
 };
 
-export const logoutFetch = () => dispatch => {
+export const logoutFetch = token => dispatch => {
   dispatch(logoutRequest());
-  removeDataFromAsync('authToken')
-    .then(response => {
-      dispatch(logoutSuccess());
+  axios
+    .get(baseUrl + '/customer/logout', {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+    })
+    .then(res => {
+      removeDataFromAsync('authToken')
+        .then(response => {
+          dispatch(logoutSuccess());
+        })
+        .catch(err => {
+          dispatch(logoutFailure());
+        });
     })
     .catch(err => {
+      console.log(err);
       dispatch(logoutFailure());
     });
 };

@@ -17,6 +17,7 @@ customerRouter
     customerRouterController.requestPhoneOTPForLogin
   )
   .get("/login", customerRouterController.login)
+  .get("/logout", middleWares.verifyUserToken, customerRouterController.logout)
   .get(
     "/get-customer",
     middleWares.verifyUserToken,

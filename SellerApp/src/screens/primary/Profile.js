@@ -104,7 +104,7 @@ class ProfileScreen extends Component {
                         type="font-awesome"
                         color={variables.mainThemeColor}
                         size={20}
-                        style={styles.marginRight}
+                        containerStyle={styles.marginRight}
                       />
                       <Text style={mainStyles.labelText}>Owner Name:</Text>
                     </View>
@@ -124,7 +124,7 @@ class ProfileScreen extends Component {
                         type="font-awesome"
                         color={variables.mainThemeColor}
                         size={20}
-                        style={styles.marginRight}
+                        containerStyle={styles.marginRight}
                       />
                       <Text style={mainStyles.labelText}>Email:</Text>
                     </View>
@@ -142,7 +142,7 @@ class ProfileScreen extends Component {
                         type="font-awesome"
                         color={variables.mainThemeColor}
                         size={20}
-                        style={styles.marginRight}
+                        containerStyle={styles.marginRight}
                       />
                       <Text style={mainStyles.labelText}>Mobile number:</Text>
                     </View>
@@ -187,7 +187,7 @@ class ProfileScreen extends Component {
                             type="font-awesome"
                             color={variables.mainThemeColor}
                             size={20}
-                            style={styles.marginRight}
+                            containerStyle={styles.marginRight}
                           />
                           <Text style={mainStyles.labelText}>Store Name:</Text>
                         </View>
@@ -205,7 +205,7 @@ class ProfileScreen extends Component {
                             type="font-awesome"
                             color={variables.mainThemeColor}
                             size={20}
-                            style={styles.marginRight}
+                            containerStyle={styles.marginRight}
                           />
                           <Text style={mainStyles.labelText}>
                             Store Address:
@@ -227,7 +227,7 @@ class ProfileScreen extends Component {
                             type="font-awesome"
                             color={variables.mainThemeColor}
                             size={20}
-                            style={styles.marginRight}
+                            containerStyle={styles.marginRight}
                           />
                           <Text style={mainStyles.labelText}>
                             PAN Card number:
@@ -247,7 +247,7 @@ class ProfileScreen extends Component {
                             type="font-awesome"
                             color={variables.mainThemeColor}
                             size={20}
-                            style={styles.marginRight}
+                            containerStyle={styles.marginRight}
                           />
                           <Text style={mainStyles.labelText}>GST number:</Text>
                         </View>
@@ -310,7 +310,7 @@ class ProfileScreen extends Component {
                             type="font-awesome"
                             color={variables.mainThemeColor}
                             size={20}
-                            style={styles.marginRight}
+                            containerStyle={styles.marginRight}
                           />
                           <Text style={mainStyles.labelText}>Bank Name:</Text>
                         </View>
@@ -328,7 +328,7 @@ class ProfileScreen extends Component {
                             type="font-awesome"
                             color={variables.mainThemeColor}
                             size={20}
-                            style={styles.marginRight}
+                            containerStyle={styles.marginRight}
                           />
                           <Text style={mainStyles.labelText}>
                             Account number:
@@ -351,7 +351,7 @@ class ProfileScreen extends Component {
                             type="font-awesome"
                             color={variables.mainThemeColor}
                             size={20}
-                            style={styles.marginRight}
+                            containerStyle={styles.marginRight}
                           />
                           <Text style={mainStyles.labelText}>IFSC code:</Text>
                         </View>
@@ -369,7 +369,7 @@ class ProfileScreen extends Component {
                             type="font-awesome"
                             color={variables.mainThemeColor}
                             size={20}
-                            style={styles.marginRight}
+                            containerStyle={styles.marginRight}
                           />
                           <Text style={mainStyles.labelText}>Branch Name:</Text>
                         </View>

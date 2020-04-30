@@ -21,10 +21,12 @@ export const obtainItemsInString = (items, i) => {
   return orderName;
 };
 
-export const obtainAddressInString = addressObject => {
-  let address = ' ';
-  address += Object.keys(addressObject).map(key => addressObject[key] + ' ');
-  return address;
+export const obtainAddressInString = address => {
+  let addressString = '';
+  for (const key in address) {
+    addressString += address[key] + ', ';
+  }
+  return addressString;
 };
 
 export const getCategoryName = categoryValue => {

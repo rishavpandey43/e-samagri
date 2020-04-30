@@ -19,7 +19,6 @@ import {
   CheckBox,
   Icon,
 } from 'react-native-elements';
-// import Icon from 'react-native-vector-icons/FontAwesome'
 import {Picker} from '@react-native-community/picker';
 import axios from 'axios';
 
@@ -145,9 +144,11 @@ class AddNewProductScreen extends Component {
           leftComponent={
             <Icon
               name="arrow-left"
+              type="font-awesome"
               size={20}
               color="#FFF"
               type="font-awesome"
+              underlayColor="transparent"
               onPress={() => {
                 this.props.navigation.goBack();
               }}

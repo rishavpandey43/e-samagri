@@ -1,22 +1,26 @@
+// * Import required modules/dependencies
 import React, {Component} from 'react';
 import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
 import {
-  SafeAreaView,
   ScrollView,
   StyleSheet,
   View,
   Alert,
   ActivityIndicator,
 } from 'react-native';
-import {Header, Card, Button, Text, Input} from 'react-native-elements';
-import Icon from 'react-native-vector-icons/FontAwesome';
-import DocumentPicker from 'react-native-document-picker';
+import {Header, Card, Button, Text, Input, Icon} from 'react-native-elements';
 
-import CardCustomTitle from '../../components/CardCustomTitle';
-
+// * Import all store related stuffs
+import * as AuthActions from '../../store/actions/creators/AuthActions';
 import * as ProfileActions from '../../store/actions/creators/ProfileActions';
 
+// * Import all screens/components
+import CardCustomTitle from '../../components/CardCustomTitle';
+
+// * Import utilites
+
+// * Import all styling stuffs
 import variables from '../../styles/variables';
 import mainStyles from '../../styles/mainStyle';
 
@@ -114,7 +118,11 @@ class UpdateProfileScreen extends Component {
           : {
               ...tempData,
             };
-      this.props.updateProfileFetch(data, detailType);
+      this.props.updateProfileFetch(
+        this.props.auth.authToken,
+        data,
+        detailType,
+      );
     }
   };
 
@@ -125,8 +133,10 @@ class UpdateProfileScreen extends Component {
           leftComponent={
             <Icon
               name="arrow-left"
+              type="font-awesome"
               size={20}
               color="#FFF"
+              underlayColor="transparent"
               onPress={() => {
                 this.props.navigation.goBack();
               }}
@@ -162,13 +172,13 @@ class UpdateProfileScreen extends Component {
                 titleStyle={{color: variables.mainThemeColor}}
                 buttonStyle={mainStyles.outlineBtn}
                 onPress={() => {
-                  this.props.getProfileFetch();
+                  this.props.getProfileFetch(this.props.auth.authToken);
                 }}
               />
             </Card>
           ) : (
             <View style={[mainStyles.container, {marginBottom: 100}]}>
-              <Card
+              {/* <Card
                 title={
                   <CardCustomTitle
                     title="Update Your Personal Detail"
@@ -282,7 +292,7 @@ class UpdateProfileScreen extends Component {
                     </View>
                   </View>
                 </View>
-              </Card>
+              </Card> */}
 
               <Card
                 title={
@@ -598,12 +608,13 @@ const styles = StyleSheet.create({});
 
 const mapStateToProps = state => {
   return {
+    auth: state.auth,
     profile: state.profile,
   };
 };
 
 const mapDispatchToProps = dispatch => {
-  return bindActionCreators({...ProfileActions}, dispatch);
+  return bindActionCreators({...AuthActions, ...ProfileActions}, dispatch);
 };
 
 export default connect(

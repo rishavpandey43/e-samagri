@@ -1,3 +1,4 @@
+// * Import required modules/dependencies
 import React, {Component} from 'react';
 import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
@@ -7,31 +8,44 @@ import {
   View,
   FlatList,
   ActivityIndicator,
-  SafeAreaView,
 } from 'react-native';
-import {Header, Card, ListItem, Button, Text} from 'react-native-elements';
-import Icon from 'react-native-vector-icons/FontAwesome';
+import {
+  Header,
+  Card,
+  ListItem,
+  Button,
+  Text,
+  Icon,
+} from 'react-native-elements';
 
+// * Import all store related stuffs
 import * as ProductsActions from '../../store/actions/creators/ProductsActions';
+import * as AuthActions from '../../store/actions/creators/AuthActions';
 
+// * Import all screens/components
+
+// * Import utilites
+
+// * Import all styling stuffs
 import variables from '../../styles/variables';
 import mainStyles from '../../styles/mainStyle';
 
 class ProductsScreen extends Component {
   componentDidMount() {
-    this.props.getProductsFetch();
+    this.props.getProductsFetch(this.props.auth.authToken);
   }
 
   render() {
-    console.log(this.props.products);
     return (
       <View>
         <Header
           leftComponent={
             <Icon
               name="bars"
+              type="font-awesome"
               size={20}
               color="#FFF"
+              underlayColor="transparent"
               onPress={() => {
                 this.props.navigation.toggleDrawer();
               }}
@@ -41,7 +55,14 @@ class ProductsScreen extends Component {
             text: 'YOUR PRODUCTS',
             style: {color: '#fff'},
           }}
-          rightComponent={<Icon name="product-hunt" color="#FFF" size={30} />}
+          rightComponent={
+            <Icon
+              name="product-hunt"
+              type="font-awesome"
+              color="#FFF"
+              size={30}
+            />
+          }
           containerStyle={{
             backgroundColor: '#933dd4',
             justifyContent: 'space-around',
@@ -122,12 +143,13 @@ const styles = StyleSheet.create({});
 
 const mapStateToProps = state => {
   return {
+    auth: state.auth,
     products: state.products,
   };
 };
 
 const mapDispatchToProps = dispatch => {
-  return bindActionCreators(ProductsActions, dispatch);
+  return bindActionCreators({...AuthActions, ...ProductsActions}, dispatch);
 };
 
 export default connect(

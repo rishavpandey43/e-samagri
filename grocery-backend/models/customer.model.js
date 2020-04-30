@@ -12,7 +12,7 @@ const customerSchema = new Schema(
       firstName: { type: String, required: true },
       lastName: { type: String, required: true },
       phone: { type: String, required: true },
-      authyId: { type: String, required: true },
+      authyId: { type: String, required: false },
     },
     cart: {
       storeId: { type: mongoose.Schema.Types.ObjectId },

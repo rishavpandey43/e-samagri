@@ -4,6 +4,7 @@ const jwt = require("jsonwebtoken");
 // * configure dotenv to access environment variables
 dotenv.config();
 
+// * configure and add AUTHY module
 const authy = require("authy")(process.env.TWILIO_PROD_API_KEY);
 
 const Customer = require("../models/customer.model");
@@ -19,36 +20,38 @@ exports.requestPhoneOTPForRegister = (req, res, next) => {
         err.statusText = "Conflict";
         next(err);
       } else {
-        authy.register_user("demo@email.com", req.query.phone, "91", function (
-          error,
-          response
-        ) {
-          if (error) {
-            let err = new Error(`Internal Server Error`);
-            err.status = 500;
-            err.statusText = "Internal Server Error";
-            next(err);
-          } else {
-            authy.request_sms(response.user.id, (force = true), function (
-              otpError,
-              otpResponse
-            ) {
-              if (otpError) {
-                let err = new Error(`Internal Server Error`);
-                err.status = 500;
-                err.statusText = "Internal Server Error";
-                next(err);
-              } else {
-                res.statusCode = 200;
-                res.statusText = "OK";
-                res.setHeader("Content-Type", "application/json");
-                res.json({
-                  authyId: response.user.id,
-                });
-              }
-            });
+        authy.register_user(
+          "customer@demo.com",
+          req.query.phone,
+          "91",
+          function (error, response) {
+            if (error) {
+              let err = new Error(`Internal Server Error`);
+              err.status = 500;
+              err.statusText = "Internal Server Error";
+              next(err);
+            } else {
+              authy.request_sms(response.user.id, (force = true), function (
+                otpError,
+                otpResponse
+              ) {
+                if (otpError) {
+                  let err = new Error(`Internal Server Error`);
+                  err.status = 500;
+                  err.statusText = "Internal Server Error";
+                  next(err);
+                } else {
+                  res.statusCode = 200;
+                  res.statusText = "OK";
+                  res.setHeader("Content-Type", "application/json");
+                  res.json({
+                    authyId: response.user.id,
+                  });
+                }
+              });
+            }
           }
-        });
+        );
       }
     })
     .catch((err) => next(err));

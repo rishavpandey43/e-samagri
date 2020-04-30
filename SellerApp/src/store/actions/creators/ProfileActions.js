@@ -5,10 +5,6 @@ import * as actionTypes from '../types/actionTypes';
 import * as helper from '../../../utils/helper';
 import {baseUrl} from '../../../utils/constant';
 
-const sellerId1 = '5e9fb135233b5b03d51de35b';
-const sellerId2 = '5e9fb291df5cf41033ca39e0';
-const sellerId3 = '5e9fb2a3df5cf41033ca39e1';
-
 export const getProfileRequest = () => {
   return {
     type: actionTypes.GET_PROFILE_REQUEST,
@@ -30,12 +26,13 @@ export const getProfileFailure = response => {
   };
 };
 
-export const getProfileFetch = () => dispatch => {
+export const getProfileFetch = token => dispatch => {
   dispatch(getProfileRequest());
   axios
     .get(baseUrl + '/seller/get-seller', {
-      params: {
-        id: sellerId1,
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
       },
     })
     .then(res => {
@@ -72,7 +69,7 @@ export const updateProfileFailure = response => {
   };
 };
 
-export const updateProfileFetch = (data, dataType) => dispatch => {
+export const updateProfileFetch = (token, data, dataType) => dispatch => {
   let newData = {
     data,
     dataType,
@@ -80,8 +77,9 @@ export const updateProfileFetch = (data, dataType) => dispatch => {
   dispatch(updateProfileRequest());
   axios
     .put(baseUrl + '/seller/update-seller', newData, {
-      params: {
-        id: sellerId1,
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
       },
     })
     .then(res => {

@@ -1,3 +1,4 @@
+// * Import required modules/dependencies
 import React, {Component} from 'react';
 import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
@@ -7,15 +8,18 @@ import {
   ActivityIndicator,
   StyleSheet,
   FlatList,
-  VirtualizedList,
   SafeAreaView,
 } from 'react-native';
-import {Header, Card, Text} from 'react-native-elements';
-import Icon from 'react-native-vector-icons/FontAwesome';
+import {Header, Card, Text, Icon} from 'react-native-elements';
 
+// * Import all store related stuffs
 import * as actionCreators from '../../store/actions/creators/GetOrders';
 
-import variables from '../../styles/variables';
+// * Import all screens/components
+
+// * Import utilites
+
+// * Import all styling stuffs
 import mainStyles from '../../styles/mainStyle';
 
 class OrderDetailScreen extends Component {
@@ -41,8 +45,10 @@ class OrderDetailScreen extends Component {
           leftComponent={
             <Icon
               name="arrow-left"
+              type="font-awesome"
               size={20}
               color="#FFF"
+              underlayColor="transparent"
               onPress={() => {
                 this.props.navigation.goBack();
               }}
@@ -52,7 +58,6 @@ class OrderDetailScreen extends Component {
             text: 'YOUR ORDERS',
             style: {color: '#fff'},
           }}
-          rightComponent={<Icon name="" color="#FFF" size={30} />}
           containerStyle={{
             backgroundColor: '#933dd4',
             justifyContent: 'space-around',

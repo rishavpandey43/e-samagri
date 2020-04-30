@@ -28,7 +28,7 @@ export const loginFetch = (fcmDeviceToken, {phone, otp}) => dispatch => {
   dispatch(loginRequest());
 
   axios
-    .get(baseUrl + '/customer/login', {
+    .get(baseUrl + '/seller/login', {
       params: {
         fcmDeviceToken,
         phone,
@@ -36,7 +36,7 @@ export const loginFetch = (fcmDeviceToken, {phone, otp}) => dispatch => {
       },
     })
     .then(res => {
-      storeDataInAsync('authToken', res.data.token);
+      storeDataInAsync('eSamagri_seller_auth_token', res.data.token);
       ToastAndroid.show('Login Successfull', ToastAndroid.LONG);
       dispatch(loginSuccess({token: res.data.token}));
     })
@@ -83,14 +83,14 @@ export const logoutFailure = () => {
 export const logoutFetch = token => dispatch => {
   dispatch(logoutRequest());
   axios
-    .get(baseUrl + '/customer/logout', {
+    .get(baseUrl + '/seller/logout', {
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${token}`,
       },
     })
     .then(res => {
-      removeDataFromAsync('authToken')
+      removeDataFromAsync('eSamagri_seller_auth_token')
         .then(response => {
           dispatch(logoutSuccess());
         })

@@ -1,12 +1,7 @@
 import * as actionTypes from '../types/actionTypes';
 import axios from 'axios';
 
-import * as helper from '../../../utils/helper';
 import {baseUrl} from '../../../utils/constant';
-
-const sellerId1 = '5e9fb135233b5b03d51de35b';
-const sellerId2 = '5e9fb291df5cf41033ca39e0';
-const sellerId3 = '5e9fb2a3df5cf41033ca39e1';
 
 export const getProductsRequest = () => {
   return {
@@ -29,12 +24,13 @@ export const getProductsFailure = response => {
   };
 };
 
-export const getProductsFetch = () => dispatch => {
+export const getProductsFetch = token => dispatch => {
   dispatch(getProductsRequest());
   axios
     .get(baseUrl + '/seller/get-all-products', {
-      params: {
-        id: sellerId1,
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
       },
     })
     .then(res => {

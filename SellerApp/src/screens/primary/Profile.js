@@ -1,16 +1,21 @@
+// * Import required modules/dependencies
 import React, {Component} from 'react';
 import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
 import {ScrollView, StyleSheet, View, ActivityIndicator} from 'react-native';
-import {Header, Card, Image, Button, Text} from 'react-native-elements';
-import Icon from 'react-native-vector-icons/FontAwesome';
+import {Header, Card, Button, Text, Icon} from 'react-native-elements';
 
+// * Import all store related stuffs
+import * as ProfileActions from '../../store/actions/creators/ProfileActions';
+
+// * Import all screens/components
 import CardCustomTitle from '../../components/CardCustomTitle';
 
+// * Import utilites
+
+// * Import all styling stuffs
 import mainStyles from '../../styles/mainStyle';
 import variables from '../../styles/variables';
-
-import * as ProfileActions from '../../store/actions/creators/ProfileActions';
 
 import * as helper from '../../utils/helper';
 class ProfileScreen extends Component {
@@ -20,15 +25,16 @@ class ProfileScreen extends Component {
   }
 
   render() {
-    console.log(this.props.profile);
     return (
       <View>
         <Header
           leftComponent={
             <Icon
               name="bars"
+              type="font-awesome"
               size={20}
               color="#FFF"
+              underlayColor="transparent"
               onPress={() => {
                 this.props.navigation.toggleDrawer();
               }}
@@ -38,7 +44,9 @@ class ProfileScreen extends Component {
             text: 'My Profile',
             style: {color: '#fff'},
           }}
-          rightComponent={<Icon name="user" color="#FFF" size={30} />}
+          rightComponent={
+            <Icon name="user" type="font-awesome" color="#FFF" size={30} />
+          }
           containerStyle={{
             backgroundColor: '#933dd4',
             justifyContent: 'space-around',
@@ -84,7 +92,6 @@ class ProfileScreen extends Component {
                     <CardCustomTitle
                       title="Personal Detail"
                       type="edit"
-                      detail={this.props.profile.profile.personalDetail}
                       onPress={() => {
                         this.props.navigation.navigate('edit-profile-screen');
                       }}
@@ -94,9 +101,10 @@ class ProfileScreen extends Component {
                     <View style={mainStyles.labelGroup}>
                       <Icon
                         name="user"
+                        type="font-awesome"
                         color={variables.mainThemeColor}
                         size={20}
-                        style={styles.marginRight}
+                        containerStyle={styles.marginRight}
                       />
                       <Text style={mainStyles.labelText}>Owner Name:</Text>
                     </View>
@@ -109,13 +117,14 @@ class ProfileScreen extends Component {
                     </View>
                   </View>
 
-                  <View style={mainStyles.infoGroup}>
+                  {/* <View style={mainStyles.infoGroup}>
                     <View style={mainStyles.labelGroup}>
                       <Icon
                         name="envelope"
+                        type="font-awesome"
                         color={variables.mainThemeColor}
                         size={20}
-                        style={styles.marginRight}
+                        containerStyle={styles.marginRight}
                       />
                       <Text style={mainStyles.labelText}>Email:</Text>
                     </View>
@@ -124,15 +133,16 @@ class ProfileScreen extends Component {
                         {this.props.profile.profile.personalDetail.email}
                       </Text>
                     </View>
-                  </View>
+                  </View> */}
 
                   <View style={mainStyles.infoGroup}>
                     <View style={mainStyles.labelGroup}>
                       <Icon
                         name="phone"
+                        type="font-awesome"
                         color={variables.mainThemeColor}
                         size={20}
-                        style={styles.marginRight}
+                        containerStyle={styles.marginRight}
                       />
                       <Text style={mainStyles.labelText}>Mobile number:</Text>
                     </View>
@@ -174,9 +184,10 @@ class ProfileScreen extends Component {
                         <View style={mainStyles.labelGroup}>
                           <Icon
                             name="shopping-cart"
+                            type="font-awesome"
                             color={variables.mainThemeColor}
                             size={20}
-                            style={styles.marginRight}
+                            containerStyle={styles.marginRight}
                           />
                           <Text style={mainStyles.labelText}>Store Name:</Text>
                         </View>
@@ -191,9 +202,10 @@ class ProfileScreen extends Component {
                         <View style={mainStyles.labelGroup}>
                           <Icon
                             name="map-marker"
+                            type="font-awesome"
                             color={variables.mainThemeColor}
                             size={20}
-                            style={styles.marginRight}
+                            containerStyle={styles.marginRight}
                           />
                           <Text style={mainStyles.labelText}>
                             Store Address:
@@ -212,9 +224,10 @@ class ProfileScreen extends Component {
                         <View style={mainStyles.labelGroup}>
                           <Icon
                             name="file-o"
+                            type="font-awesome"
                             color={variables.mainThemeColor}
                             size={20}
-                            style={styles.marginRight}
+                            containerStyle={styles.marginRight}
                           />
                           <Text style={mainStyles.labelText}>
                             PAN Card number:
@@ -231,9 +244,10 @@ class ProfileScreen extends Component {
                         <View style={mainStyles.labelGroup}>
                           <Icon
                             name="file-o"
+                            type="font-awesome"
                             color={variables.mainThemeColor}
                             size={20}
-                            style={styles.marginRight}
+                            containerStyle={styles.marginRight}
                           />
                           <Text style={mainStyles.labelText}>GST number:</Text>
                         </View>
@@ -293,9 +307,10 @@ class ProfileScreen extends Component {
                         <View style={mainStyles.labelGroup}>
                           <Icon
                             name="bank"
+                            type="font-awesome"
                             color={variables.mainThemeColor}
                             size={20}
-                            style={styles.marginRight}
+                            containerStyle={styles.marginRight}
                           />
                           <Text style={mainStyles.labelText}>Bank Name:</Text>
                         </View>
@@ -310,9 +325,10 @@ class ProfileScreen extends Component {
                         <View style={mainStyles.labelGroup}>
                           <Icon
                             name="credit-card"
+                            type="font-awesome"
                             color={variables.mainThemeColor}
                             size={20}
-                            style={styles.marginRight}
+                            containerStyle={styles.marginRight}
                           />
                           <Text style={mainStyles.labelText}>
                             Account number:
@@ -332,9 +348,10 @@ class ProfileScreen extends Component {
                         <View style={mainStyles.labelGroup}>
                           <Icon
                             name="file-o"
+                            type="font-awesome"
                             color={variables.mainThemeColor}
                             size={20}
-                            style={styles.marginRight}
+                            containerStyle={styles.marginRight}
                           />
                           <Text style={mainStyles.labelText}>IFSC code:</Text>
                         </View>
@@ -349,9 +366,10 @@ class ProfileScreen extends Component {
                         <View style={mainStyles.labelGroup}>
                           <Icon
                             name="file-o"
+                            type="font-awesome"
                             color={variables.mainThemeColor}
                             size={20}
-                            style={styles.marginRight}
+                            containerStyle={styles.marginRight}
                           />
                           <Text style={mainStyles.labelText}>Branch Name:</Text>
                         </View>

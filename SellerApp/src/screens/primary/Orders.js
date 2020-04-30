@@ -9,8 +9,14 @@ import {
   ActivityIndicator,
   SafeAreaView,
 } from 'react-native';
-import {Header, Card, ListItem, Button, Text} from 'react-native-elements';
-import Icon from 'react-native-vector-icons/FontAwesome';
+import {
+  Header,
+  Card,
+  ListItem,
+  Button,
+  Text,
+  Icon,
+} from 'react-native-elements';
 
 import * as actionCreators from '../../store/actions/creators/GetOrders';
 
@@ -64,8 +70,10 @@ class OrdersScreen extends Component {
           leftComponent={
             <Icon
               name="bars"
+              type="font-awesome"
               size={20}
               color="#FFF"
+              underlayColor="transparent"
               onPress={() => {
                 this.props.navigation.toggleDrawer();
               }}
@@ -75,7 +83,14 @@ class OrdersScreen extends Component {
             text: 'YOUR ORDERS',
             style: {color: '#fff'},
           }}
-          rightComponent={<Icon name="product-hunt" color="#FFF" size={30} />}
+          rightComponent={
+            <Icon
+              name="product-hunt"
+              type="font-awesome"
+              color="#FFF"
+              size={30}
+            />
+          }
           containerStyle={{
             backgroundColor: '#933dd4',
             justifyContent: 'space-around',

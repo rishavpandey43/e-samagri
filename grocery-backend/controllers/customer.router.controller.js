@@ -249,10 +249,20 @@ exports.getAllSellersController = (req, res, next) => {
     .then((customer) => {
       let customerState = customer.address.pincode.toString()[0];
       Seller.find({
-        "storeDetail.address.pincode": {
-          $gt: customerState * 100000,
-          $lt: (customerState + 1) * 100000,
-        },
+        $and: [
+          {
+            "storeDetail.address.pincode": {
+              $gt: customerState * 100000,
+              $lt: (customerState + 1) * 100000,
+            },
+          },
+          {
+            "storeDetail.verified": true,
+          },
+          {
+            "bankDetail.verified": true,
+          },
+        ],
       })
         .sort({ "storeDetail.address.pincode": 1 })
         .populate([{ path: "products.root", model: Product }])

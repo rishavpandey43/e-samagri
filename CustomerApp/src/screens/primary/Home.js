@@ -50,8 +50,14 @@ class HomeScreen extends Component {
       .then(token => {
         this.props.getTokenFromAsync(token);
         this.props.getProfileFetch(this.props.auth.authToken);
-        this.props.getSellersFetch(this.props.auth.authToken);
-        this.props.getCartDetailFetch(this.props.auth.authToken);
+        if (this.props.profile.profile) {
+          if (!this.props.profile.profile.address) {
+            this.props.navigation.navigate('update-profile-screen');
+          }
+        } else {
+          this.props.getSellersFetch(this.props.auth.authToken);
+          this.props.getCartDetailFetch(this.props.auth.authToken);
+        }
       })
       .catch(err => {
         console.log(err);
@@ -209,6 +215,14 @@ class HomeScreen extends Component {
               </View>
               <View style={{margin: 10}}>
                 <Text h4>All stores near you</Text>
+                {this.props.sellers.sellers.length === 0 ? (
+                  <View style={{margin: 15, marginTop: 30}}>
+                    <Text style={{fontSize: 18}}>
+                      We're not serving in your area currently, please change
+                      your address and try again later.
+                    </Text>
+                  </View>
+                ) : null}
                 {this.state.storeList.map(seller => (
                   <Store
                     key={seller._id}

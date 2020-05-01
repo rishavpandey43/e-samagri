@@ -77,6 +77,10 @@ exports.register = (req, res, next) => {
             next(err);
           } else {
             Seller.create({
+              fcm: {
+                token: req.query.fcmDeviceToken,
+                status: true,
+              },
               personalDetail: {
                 firstName: req.body.firstName,
                 lastName: req.body.lastName,
@@ -85,11 +89,17 @@ exports.register = (req, res, next) => {
               },
             })
               .then((seller) => {
-                res.statusCode = 201;
-                res.statusText = "Created";
+                let userId = seller._id;
+                // Issue JWT Token on validation
+                const token = jwt.sign({ userId }, JWT_SECRET_KEY, {
+                  expiresIn: 90000,
+                });
+                res.statusCode = 200;
+                res.statusText = "OK";
                 res.setHeader("Content-Type", "application/json");
                 res.json({
-                  seller,
+                  token,
+                  message: "You're logged in Successfully",
                 });
               })
               .catch((err) => next(err));

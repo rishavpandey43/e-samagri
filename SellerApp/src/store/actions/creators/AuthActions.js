@@ -6,6 +6,60 @@ import * as actionTypes from '../types/actionTypes';
 import {storeDataInAsync, removeDataFromAsync} from '../../../utils/helper';
 import {baseUrl} from '../../../utils/constant';
 
+export const getTokenFromAsync = token => {
+  return {
+    type: actionTypes.GET_TOKEN,
+    token,
+  };
+};
+
+export const registerRequest = () => {
+  return {
+    type: actionTypes.REGISTER_REQUEST,
+  };
+};
+
+export const registerSuccess = () => {
+  return {
+    type: actionTypes.REGISTER_SUCCESS,
+  };
+};
+
+export const registerFailure = () => {
+  return {
+    type: actionTypes.REGISTER_FAILURE,
+  };
+};
+
+export const registerFetch = (fcmDeviceToken, data) => dispatch => {
+  dispatch(registerRequest());
+
+  axios
+    .post(baseUrl + '/seller/register', data, {
+      params: {
+        fcmDeviceToken,
+      },
+    })
+    .then(res => {
+      storeDataInAsync('eSamagri_seller_auth_token', res.data.token);
+      ToastAndroid.show('Registration Successfull', ToastAndroid.SHORT);
+      dispatch(registerSuccess({token: res.data.token}));
+    })
+    .catch(err => {
+      ToastAndroid.show(
+        err.response.data.errMessage || 'Some error occured, try again.',
+        ToastAndroid.LONG,
+      );
+      dispatch(
+        registerFailure({
+          message: err.response
+            ? err.response.data.errMessage || 'Internal Server Error'
+            : 'Internal Server Error',
+        }),
+      );
+    });
+};
+
 export const loginRequest = () => {
   return {
     type: actionTypes.LOGIN_REQUEST,
@@ -37,7 +91,7 @@ export const loginFetch = (fcmDeviceToken, {phone, otp}) => dispatch => {
     })
     .then(res => {
       storeDataInAsync('eSamagri_seller_auth_token', res.data.token);
-      ToastAndroid.show('Login Successfull', ToastAndroid.LONG);
+      ToastAndroid.show('Login Successfull', ToastAndroid.SHORT);
       dispatch(loginSuccess({token: res.data.token}));
     })
     .catch(err => {
@@ -53,13 +107,6 @@ export const loginFetch = (fcmDeviceToken, {phone, otp}) => dispatch => {
         }),
       );
     });
-};
-
-export const getTokenFromAsync = token => {
-  return {
-    type: actionTypes.GET_TOKEN,
-    token,
-  };
 };
 
 export const logoutRequest = () => {
@@ -93,6 +140,10 @@ export const logoutFetch = token => dispatch => {
       removeDataFromAsync('eSamagri_seller_auth_token')
         .then(response => {
           dispatch(logoutSuccess());
+          ToastAndroid.show(
+            "You've been logged Successfully",
+            ToastAndroid.SHORT,
+          );
         })
         .catch(err => {
           dispatch(logoutFailure());

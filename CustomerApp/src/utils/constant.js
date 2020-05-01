@@ -1,4 +1,4 @@
-export const baseUrl = 'http://192.168.43.240:5555';
+export const baseUrl = 'https://e-samagri-backend.herokuapp.com';
 
 export const storage_key = 'auth_token';
 

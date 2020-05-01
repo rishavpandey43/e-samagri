@@ -3,6 +3,7 @@ const jwt = require("jsonwebtoken");
 
 // * configure dotenv to access environment variables
 dotenv.config();
+const JWT_SECRET_KEY = process.env.JWT_SECRET_KEY;
 
 // * configure and add AUTHY module
 const authy = require("authy")(process.env.TWILIO_PROD_API_KEY);
@@ -79,6 +80,10 @@ exports.register = (req, res, next) => {
             next(err);
           } else {
             Customer.create({
+              fcm: {
+                token: req.query.fcmDeviceToken,
+                status: true,
+              },
               personalDetail: {
                 firstName: req.body.firstName,
                 lastName: req.body.lastName,
@@ -87,11 +92,17 @@ exports.register = (req, res, next) => {
               },
             })
               .then((customer) => {
-                res.statusCode = 201;
-                res.statusText = "Created";
+                let userId = customer._id;
+                // Issue JWT Token on validation
+                const token = jwt.sign({ userId }, JWT_SECRET_KEY, {
+                  expiresIn: 90000,
+                });
+                res.statusCode = 200;
+                res.statusText = "OK";
                 res.setHeader("Content-Type", "application/json");
                 res.json({
-                  customer,
+                  token,
+                  message: "You're logged in Successfully",
                 });
               })
               .catch((err) => next(err));

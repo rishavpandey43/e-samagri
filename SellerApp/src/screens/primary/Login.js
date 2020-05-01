@@ -5,6 +5,7 @@ import {connect} from 'react-redux';
 import {View, Text, Alert, ToastAndroid} from 'react-native';
 import {Card, Input, Button} from 'react-native-elements';
 import axios from 'axios';
+import messaging from '@react-native-firebase/messaging';
 
 // * Import all store related stuffs
 import * as AuthActions from '../../store/actions/creators/AuthActions';
@@ -38,6 +39,11 @@ class LoginScreen extends Component {
       })
       .catch(err => {
         console.log(err);
+      });
+    messaging()
+      .getToken()
+      .then(token => {
+        this.setState({fcmDeviceToken: token});
       });
   }
 

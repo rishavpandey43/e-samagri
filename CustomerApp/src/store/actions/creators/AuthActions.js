@@ -99,7 +99,10 @@ export const logoutFetch = token => dispatch => {
         });
     })
     .catch(err => {
-      console.log(err);
+      ToastAndroid.show(
+        err.response.data.errMessage || 'Some error occured, try again.',
+        ToastAndroid.LONG,
+      );
       dispatch(logoutFailure());
     });
 };

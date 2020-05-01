@@ -13,21 +13,11 @@ const MainApp = ({auth}) => {
   useEffect(() => {
     permissionStatus
       .then(res => {
-        messaging()
-          .getToken()
-          .then(token => {});
         messageListener();
       })
       .catch(err => {
         permissionGranted
-          .then(res => {
-            messaging().onNotificationOpenedApp(remoteMessage => {
-              console.log(
-                'Notification caused app to open from background state:',
-                remoteMessage.notification,
-              );
-            });
-          })
+          .then(res => {})
           .catch(err => {
             console.log('User canceled the permission');
           });

@@ -5,12 +5,21 @@ const cookieParser = require("cookie-parser");
 const logger = require("morgan");
 const dotenv = require("dotenv");
 const mongoose = require("mongoose");
+const admin = require("firebase-admin");
 
 const sellerRouter = require("./routes/seller.router");
 const customerRouter = require("./routes/customer.router");
+const orderRouter = require("./routes/order.router");
 
 // * configure dotenv to access environment variables
 dotenv.config();
+
+// * Initialise firebase to the application
+const serviceAccount = require("./util/online-grocery-store-1e940-firebase-adminsdk-exp4e-314edbcaac.json");
+
+admin.initializeApp({
+  credential: admin.credential.cert(serviceAccount),
+});
 
 // * Normalize a port into a number, string, or false.
 function normalizePort(val) {
@@ -65,6 +74,7 @@ app.use(cookieParser());
 // * USE ALL THE DEDICATED ROUTERS HERE...
 app.use("/seller", sellerRouter);
 app.use("/customer", customerRouter);
+app.use("/order", orderRouter);
 
 // * catch 404 and forward to error handler
 app.use(function (req, res, next) {

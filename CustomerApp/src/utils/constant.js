@@ -62,3 +62,33 @@ export const addressType = [
     icon: 'map-marker',
   },
 ];
+
+export const paymentMode = [
+  {
+    name: 'Cash on Delivery',
+    value: 'cod',
+  },
+  {
+    name: 'Online',
+    value: 'online',
+  },
+];
+
+export const orderStatus = [
+  {
+    name: 'Pending',
+    value: 'pen',
+  },
+  {
+    name: 'Processing',
+    value: 'prc',
+  },
+  {
+    name: 'Out For Delivery',
+    value: 'ofd',
+  },
+  {
+    name: 'Delivered',
+    value: 'del',
+  },
+];

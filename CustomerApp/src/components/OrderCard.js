@@ -13,23 +13,23 @@ import {Text, Button, Card} from 'react-native-elements';
 import mainStyles from '../styles/mainStyle';
 import variables from '../styles/variables';
 
-const OrderCard = ({navigation}) => {
+const OrderCard = ({order, navigation}) => {
   return (
     <Card containerStyle={{borderRadius: 10}}>
       <View style={mainStyles.row}>
         <View style={mainStyles.col6}>
           <View>
             <Text style={styles.title}>Order Date</Text>
-            <Text>Processing</Text>
+            <Text>{order.createdAt}</Text>
           </View>
           <View style={styles.marginTop}>
-            <Text style={{color: 'orange'}}>PROCESSING</Text>
+            <Text style={{color: 'orange'}}>{order.status}</Text>
           </View>
         </View>
         <View style={mainStyles.col6}>
           <View>
             <Text style={styles.title}>Order Id</Text>
-            <Text>#3456tr4567</Text>
+            <Text>#{order._id}</Text>
           </View>
           <View style={styles.marginTop}>
             <Button
@@ -38,7 +38,9 @@ const OrderCard = ({navigation}) => {
               raised
               titleStyle={{color: variables.mainThemeColor}}
               onPress={() => {
-                navigation.navigate('order-detail');
+                navigation.navigate('order-detail-screen', {
+                  orderId: order._id,
+                });
               }}
             />
           </View>

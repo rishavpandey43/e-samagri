@@ -122,7 +122,7 @@ class ProfileScreen extends Component {
                 titleStyle={{color: variables.mainThemeColor}}
                 buttonStyle={mainStyles.outlineBtn}
                 onPress={() => {
-                  this.props.getProfileFetch();
+                  this.props.getProfileFetch(this.props.auth.authToken);
                 }}
               />
             </Card>
@@ -230,6 +230,7 @@ const styles = StyleSheet.create({
 
 const mapStateToProps = state => {
   return {
+    auth: state.auth,
     cart: state.cart,
     profile: state.profile,
   };

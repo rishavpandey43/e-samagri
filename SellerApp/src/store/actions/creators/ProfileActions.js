@@ -85,7 +85,7 @@ export const updateProfileFetch = (token, data, dataType) => dispatch => {
     .then(res => {
       dispatch(updateProfileSuccess({profile: {...res.data.seller}}));
       ToastAndroid.show(
-        'Your store detail has been updated succesfully, please back to your profile',
+        'Your details has been updated succesfully, You can go back to your profile',
         ToastAndroid.LONG,
       );
     })

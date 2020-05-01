@@ -115,7 +115,7 @@ export const updateCartToServerFetch = (token, type, cart) => dispatch => {
         }),
       );
       ToastAndroid.show(
-        "Sorry, prodct can't be added to cart, try again.",
+        "Sorry, product can't be added to cart, try again.",
         ToastAndroid.LONG,
       );
     });

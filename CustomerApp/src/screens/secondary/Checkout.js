@@ -34,7 +34,7 @@ class CheckoutScreen extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      paymentType: 'online',
+      paymentType: 'cod',
     };
   }
 
@@ -101,7 +101,7 @@ class CheckoutScreen extends Component {
                     Choose your payment method:
                   </Text>
                   <View style={{alignItems: 'flex-start'}}>
-                    {/* <View>
+                    <View>
                       <CheckBox
                         containerStyle={{
                           backgroundColor: 'transparent',
@@ -119,8 +119,8 @@ class CheckoutScreen extends Component {
                           });
                         }}
                       />
-                    </View> */}
-                    <View>
+                    </View>
+                    {/* <View>
                       <CheckBox
                         containerStyle={{
                           backgroundColor: 'transparent',
@@ -138,7 +138,7 @@ class CheckoutScreen extends Component {
                           });
                         }}
                       />
-                    </View>
+                    </View> */}
                   </View>
                 </View>
                 <View style={{alignItems: 'center', marginTop: 15}}>

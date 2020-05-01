@@ -241,6 +241,7 @@ class StoreDetailScreen extends Component {
   };
 
   render() {
+    console.log(this.props.store.store);
     const Product = ({product}) => {
       return (
         <View

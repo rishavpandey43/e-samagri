@@ -46,7 +46,7 @@ class HomeScreen extends Component {
   }
 
   componentDidMount() {
-    getDataFromAsync('authToken')
+    getDataFromAsync('eSamagri_customer_auth_token')
       .then(token => {
         this.props.getTokenFromAsync(token);
         this.props.getProfileFetch(this.props.auth.authToken);

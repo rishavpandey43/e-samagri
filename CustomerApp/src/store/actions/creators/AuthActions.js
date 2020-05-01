@@ -36,7 +36,7 @@ export const loginFetch = (fcmDeviceToken, {phone, otp}) => dispatch => {
       },
     })
     .then(res => {
-      storeDataInAsync('authToken', res.data.token);
+      storeDataInAsync('eSamagri_customer_auth_token', res.data.token);
       ToastAndroid.show('Login Successfull', ToastAndroid.LONG);
       dispatch(loginSuccess({token: res.data.token}));
     })
@@ -90,7 +90,7 @@ export const logoutFetch = token => dispatch => {
       },
     })
     .then(res => {
-      removeDataFromAsync('authToken')
+      removeDataFromAsync('eSamagri_customer_auth_token')
         .then(response => {
           dispatch(logoutSuccess());
         })

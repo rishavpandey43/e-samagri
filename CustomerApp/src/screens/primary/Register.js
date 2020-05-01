@@ -39,7 +39,7 @@ class RegisterScreen extends Component {
   }
 
   componentDidMount() {
-    getDataFromAsync('authToken')
+    getDataFromAsync('eSamagri_customer_auth_token')
       .then(token => {
         this.props.getTokenFromAsync(token);
       })
@@ -226,6 +226,7 @@ class RegisterScreen extends Component {
                       title="Get OTP for email"
                       titleStyle={{color: variables.mainThemeColor}}
                       type="outline"
+                      raised
                       buttonStyle={mainStyles.outlineBtn}
                     />
                   </View>
@@ -246,6 +247,7 @@ class RegisterScreen extends Component {
                       title="Resend OTP to email"
                       titleStyle={{color: variables.mainThemeColor}}
                       type="outline"
+                      raised
                       buttonStyle={mainStyles.outlineBtn}
                     />
                   </View>
@@ -276,10 +278,10 @@ class RegisterScreen extends Component {
                       title="Get OTP for phone"
                       titleStyle={{color: variables.mainThemeColor}}
                       type="outline"
+                      raised
                       buttonStyle={mainStyles.outlineBtn}
                       onPress={this._requestOTP.bind(null)}
                       loading={this.state.otpLoading}
-                      loadingStyle={{color: variables.mainThemeColor}}
                       containerStyle={{minWidth: '50%'}}
                     />
                   </View>
@@ -305,6 +307,7 @@ class RegisterScreen extends Component {
                       title="Resend OTP to phone"
                       titleStyle={{color: variables.mainThemeColor}}
                       type="outline"
+                      raised
                       buttonStyle={mainStyles.outlineBtn}
                     />
                   </View> */}
@@ -325,6 +328,7 @@ class RegisterScreen extends Component {
                   title="Cancel"
                   titleStyle={{color: variables.mainThemeColor}}
                   type="outline"
+                  raised
                   buttonStyle={mainStyles.outlineBtn}
                   onPress={this._resetState.bind(null)}
                 />
@@ -334,10 +338,10 @@ class RegisterScreen extends Component {
                   title="Register"
                   titleStyle={{color: variables.mainThemeColor}}
                   type="outline"
+                  raised
                   buttonStyle={mainStyles.outlineBtn}
                   onPress={this._register.bind(null)}
                   loading={this.state.registerLoading}
-                  loadingStyle={{color: variables.mainThemeColor}}
                 />
               </View>
             </View>

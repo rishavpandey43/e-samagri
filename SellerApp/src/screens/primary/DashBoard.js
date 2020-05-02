@@ -72,11 +72,13 @@ class DashBoardScreen extends Component {
       });
 
       messaging().onNotificationOpenedApp(notification => {
-        console.log('notificationOpenListener-', notification);
+        this.props.getOrdersFetch(this.props.auth.authToken);
+        this.props.navigation.navigate('orders-stack');
       });
 
       messaging().getInitialNotification(notification => {
-        console.log('initialNotificationListener-', notification);
+        this.props.getOrdersFetch(this.props.auth.authToken);
+        this.props.navigation.navigate('orders-stack');
       });
     };
 

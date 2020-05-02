@@ -8,6 +8,9 @@ const Order = require("../models/order.model");
 const Customer = require("../models/customer.model");
 const Seller = require("../models/seller.model");
 
+const helpers = require("../util/helpers");
+const constants = require("../util/constant");
+
 exports.getAllOrdersCustomer = (req, res, next) => {
   Order.find({ orderedBy: req.userId })
     .populate([{ path: "orderedFrom", model: Seller }])
@@ -63,9 +66,14 @@ exports.placeOrder = (req, res, next) => {
                                 orderId: JSON.stringify(order._id),
                               },
                               notification: {
-                                title: "New Order",
-                                body:
-                                  "You have received new order, click to proceed!",
+                                title: helpers.getNotificationFromValue(
+                                  constants.alertNotificationForSeller,
+                                  "nwo"
+                                ).title,
+                                body: helpers.getNotificationFromValue(
+                                  constants.alertNotificationForSeller,
+                                  "nwo"
+                                ).body,
                               },
                             },
                             {
@@ -143,8 +151,14 @@ exports.processOrderSeller = (req, res, next) => {
             orderId: JSON.stringify(order._id),
           },
           notification: {
-            title: "New Order",
-            body: "You have received new order, click to proceed!",
+            title: helpers.getNotificationFromValue(
+              constants.alertNotificationForCustomer,
+              req.body.processType
+            ).title,
+            body: helpers.getNotificationFromValue(
+              constants.alertNotificationForCustomer,
+              req.body.processType
+            ).body,
           },
         },
         {

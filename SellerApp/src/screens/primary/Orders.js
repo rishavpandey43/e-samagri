@@ -1,14 +1,7 @@
 import React, {Component} from 'react';
 import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
-import {
-  ScrollView,
-  StyleSheet,
-  View,
-  FlatList,
-  ActivityIndicator,
-  SafeAreaView,
-} from 'react-native';
+import {ScrollView, StyleSheet, View, ActivityIndicator} from 'react-native';
 import {
   Header,
   Card,
@@ -46,9 +39,36 @@ class OrdersScreen extends Component {
   }
 
   componentDidUpdate(prevProps) {
-    if (prevProps.orders.orders.length !== this.props.orders.orders.length) {
+    if (
+      prevProps.orders.orders &&
+      prevProps.orders.orders.length !== this.props.orders.orders.length
+    ) {
       this.setState({filteredOrders: this.props.orders.orders});
     }
+    if (
+      prevProps.orders.orders &&
+      prevProps.orders.orders.length === this.props.orders.orders.length
+    ) {
+      for (let i = 0; i < prevProps.orders.orders.length; i++) {
+        if (
+          prevProps.orders.orders[i].status !==
+          this.props.orders.orders[i].status
+        ) {
+          this.setState({filteredOrders: this.props.orders.orders});
+        }
+      }
+    }
+    // if (
+    //   prevProps.orders.orders &&
+    //   prevProps.orders.orders.length === this.props.orders.orders.length
+    // ) {
+    //   for (let i = 0; i < this.props.orders.orders.length.length; i++) {
+    //     if (prevProps.orders.orders.status != this.props.orders.orders.status) {
+    //       console.log('object');
+    //       this.setState({filteredOrders: this.props.orders.orders});
+    //     }
+    //   }
+    // }
   }
 
   _filterByStatus = status => {
@@ -83,7 +103,6 @@ class OrdersScreen extends Component {
   };
 
   render() {
-    console.log(this.props.orders);
     return (
       <View>
         <Header
@@ -170,7 +189,8 @@ class OrdersScreen extends Component {
                   </Picker>
                 </View>
               </View>
-              {this.state.filteredOrders.length === 0 ? (
+              {this.state.filteredOrders &&
+              this.state.filteredOrders.length === 0 ? (
                 <Text style={{padding: 10, fontSize: 18}}>
                   You don't have any orders of selected category for now. Try to
                   change your category or try again later.

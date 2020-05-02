@@ -9,3 +9,12 @@ exports.extractToken = (req) => {
   }
   return null;
 };
+
+exports.getNotificationFromValue = (sender, value) => {
+  return (
+    sender.filter((notification) => notification.value === value)[0] || {
+      title: "Order Update",
+      body: "You've new update regarding your order",
+    }
+  );
+};

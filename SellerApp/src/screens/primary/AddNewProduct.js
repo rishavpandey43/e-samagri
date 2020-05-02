@@ -459,8 +459,9 @@ class AddNewProductScreen extends Component {
                 <View style={mainStyles.col6}>
                   <Button
                     title="Cancel"
-                    titleStyle={{color: variables.mainThemeColor}}
                     type="outline"
+                    raised
+                    titleStyle={{color: variables.mainThemeColor}}
                     buttonStyle={mainStyles.outlineBtn}
                     onPress={() => {
                       this.setState({
@@ -478,8 +479,9 @@ class AddNewProductScreen extends Component {
                 <View style={mainStyles.col6}>
                   <Button
                     title="Submit"
-                    titleStyle={{color: variables.mainThemeColor}}
                     type="outline"
+                    raised
+                    titleStyle={{color: variables.mainThemeColor}}
                     buttonStyle={mainStyles.outlineBtn}
                     onPress={this.addProduct.bind(null)}
                     loading={this.props.profile.profileUpdating}

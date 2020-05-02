@@ -17,8 +17,14 @@ import {
   Text,
   Icon,
 } from 'react-native-elements';
+import {Picker} from '@react-native-community/picker';
 
-import * as actionCreators from '../../store/actions/creators/GetOrders';
+// * Import all store related stuffs
+import * as OrderActions from '../../store/actions/creators/OrdersActions';
+
+import OrderCard from '../../components/OrderCard';
+
+import {orderStatus} from '../../utils/constant';
 
 import variables from '../../styles/variables';
 import mainStyles from '../../styles/mainStyle';
@@ -29,20 +35,33 @@ class OrdersScreen extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      orders: this.props.orders,
+      filteredOrders: [],
+      selectedStatus: 'all',
     };
   }
 
   componentDidMount() {
-    this.props.getOrdersFetch();
-    if (this.props.orders.orders) {
-      ('Product received');
+    this.props.getOrdersFetch(this.props.auth.authToken);
+    this.setState({filteredOrders: this.props.orders.orders});
+  }
+
+  componentDidUpdate(prevProps) {
+    if (prevProps.orders.orders.length !== this.props.orders.orders.length) {
+      this.setState({filteredOrders: this.props.orders.orders});
     }
   }
 
-  componentWillReceiveProps(nextProps) {
-    this.setState({orders: {...nextProps.orders}});
-  }
+  _filterByStatus = status => {
+    if (status === 'all') {
+      this.setState({filteredOrders: this.props.orders.orders});
+    } else {
+      this.setState({
+        filteredOrders: this.props.orders.orders.filter(
+          order => order.status === status,
+        ),
+      });
+    }
+  };
 
   renderOrderList = ({item, index}) => {
     return (
@@ -53,7 +72,7 @@ class OrdersScreen extends Component {
           subtitle={`Status- ${item.status}`}
           chevron
           onPress={() =>
-            this.props.navigation.navigate('Order Detail', {
+            this.props.navigation.navigate('order-detail-screen', {
               orderId: item._id,
             })
           }>
@@ -64,6 +83,7 @@ class OrdersScreen extends Component {
   };
 
   render() {
+    console.log(this.props.orders);
     return (
       <View>
         <Header
@@ -80,7 +100,7 @@ class OrdersScreen extends Component {
             />
           }
           centerComponent={{
-            text: 'YOUR ORDERS',
+            text: 'Your Orders',
             style: {color: '#fff'},
           }}
           rightComponent={
@@ -88,6 +108,7 @@ class OrdersScreen extends Component {
               name="product-hunt"
               type="font-awesome"
               color="#FFF"
+              underlayColor="transparent"
               size={30}
             />
           }
@@ -97,36 +118,73 @@ class OrdersScreen extends Component {
           }}
         />
         <ScrollView>
-          <View style={mainStyles.container}>
-            {this.state.orders.orders ? (
-              <SafeAreaView>
-                <FlatList
-                  data={this.state.orders.orders}
-                  renderItem={this.renderOrderList.bind(null)}
-                  keyExtractor={item => item._id.toString()}
-                />
-              </SafeAreaView>
-            ) : this.state.orders.isLoading ? (
-              <ActivityIndicator
-                animating={this.state.orders.isLoading}
-                size={50}
-                color={variables.mainThemeColor}
+          {this.props.orders.fetchingOrders ? (
+            <View
+              style={{
+                marginTop: 50,
+                justifyContent: 'center',
+                alignItems: 'center',
+              }}>
+              <ActivityIndicator size="large" />
+            </View>
+          ) : this.props.orders.errMessage || !this.props.orders.orders ? (
+            <Card title="Error Message" containerStyle={{alignItems: 'center'}}>
+              <Text style={{marginBottom: 20, fontSize: 20, color: 'red'}}>
+                {this.props.orders.errMessage || 'Internal Server Error'}
+              </Text>
+              <Button
+                title="Retry"
+                type="outline"
+                titleStyle={{color: variables.mainThemeColor}}
+                buttonStyle={mainStyles.outlineBtn}
+                onPress={() => {
+                  this.props.getOrdersFetch(this.props.auth.authToken);
+                }}
               />
-            ) : (
-              <Card title="Error Message">
-                <Text style={{marginBottom: 20}}>
-                  {this.state.orders.errMessage}
+            </Card>
+          ) : (
+            <View style={[mainStyles.container, {marginBottom: 100}]}>
+              <View style={mainStyles.formGroup}>
+                <Text style={mainStyles.formLabel}>
+                  Filter by order status:
                 </Text>
-                <Button
-                  type="outline"
-                  title="Retry"
-                  onPress={() => {
-                    this.props.getOrdersFetch();
-                  }}
+                <View>
+                  <Picker
+                    selectedValue={this.state.selectedStatus}
+                    style={{
+                      height: 30,
+                      width: '50%',
+                    }}
+                    onValueChange={(itemValue, itemIndex) => {
+                      this.setState({selectedStatus: itemValue});
+                      this._filterByStatus(itemValue);
+                    }}>
+                    <Picker.Item label={'All'} value={'all'} />
+                    {orderStatus.map(category => (
+                      <Picker.Item
+                        key={category.value}
+                        label={category.name}
+                        value={category.value}
+                      />
+                    ))}
+                  </Picker>
+                </View>
+              </View>
+              {this.state.filteredOrders.length === 0 ? (
+                <Text style={{padding: 10, fontSize: 18}}>
+                  You don't have any orders of selected category for now. Try to
+                  change your category or try again later.
+                </Text>
+              ) : null}
+              {this.state.filteredOrders.map(order => (
+                <OrderCard
+                  key={order._id}
+                  order={order}
+                  navigation={this.props.navigation}
                 />
-              </Card>
-            )}
-          </View>
+              ))}
+            </View>
+          )}
         </ScrollView>
       </View>
     );
@@ -137,12 +195,13 @@ const styles = StyleSheet.create({});
 
 const mapStateToProps = state => {
   return {
+    auth: state.auth,
     orders: state.orders,
   };
 };
 
 const mapDispatchToProps = dispatch => {
-  return bindActionCreators(actionCreators, dispatch);
+  return bindActionCreators({...OrderActions}, dispatch);
 };
 
 export default connect(

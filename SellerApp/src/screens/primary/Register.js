@@ -35,7 +35,7 @@ class RegisterScreen extends Component {
       displayPhoneOTPField: false,
       authyId: '',
       otpLoading: false,
-      registerLoading: false,
+
       fcmDeviceToken: null,
     };
   }

@@ -2,12 +2,14 @@
 import React, {Component} from 'react';
 import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
-import {ScrollView, StyleSheet, View, Text, Button} from 'react-native';
+import {ScrollView, StyleSheet, View, Text, Button, Alert} from 'react-native';
 import {Header, Card, Icon} from 'react-native-elements';
+import messaging from '@react-native-firebase/messaging';
 
 // * Import all store related stuffs
 import * as ProfileActions from '../../store/actions/creators/ProfileActions';
 import * as AuthActions from '../../store/actions/creators/AuthActions';
+import * as OrderActions from '../../store/actions/creators/OrdersActions';
 
 // * Import all screens/components
 
@@ -28,9 +30,66 @@ class DashBoardScreen extends Component {
       .then(token => {
         this.props.getTokenFromAsync(token);
         this.props.getProfileFetch(this.props.auth.authToken);
+        this.props.getOrdersFetch(this.props.auth.authToken);
       })
       .catch(err => {
         console.log(err);
+      });
+
+    const permissionStatus = messaging().hasPermission();
+    const permissionGranted = messaging().requestPermission();
+
+    const messageListener = () => {
+      messaging().onMessage(message => {
+        this.props.getOrdersFetch(this.props.auth.authToken);
+
+        Alert.alert(
+          'New Order',
+          ` Hello ${
+            this.props.profile.profile
+              ? this.props.profile.profile.personalDetail.firstName +
+                ' ' +
+                this.props.profile.profile.personalDetail.lastName
+              : ''
+          } You've received new order`,
+          [
+            {
+              text: 'Not now',
+              onPress: () => {
+                return;
+              },
+              style: 'cancel',
+            },
+            {
+              text: 'Proceed',
+              onPress: () => {
+                this.props.navigation.navigate('orders-stack');
+                return;
+              },
+            },
+          ],
+        );
+      });
+
+      messaging().onNotificationOpenedApp(notification => {
+        console.log('notificationOpenListener-', notification);
+      });
+
+      messaging().getInitialNotification(notification => {
+        console.log('initialNotificationListener-', notification);
+      });
+    };
+
+    permissionStatus
+      .then(res => {
+        messageListener();
+      })
+      .catch(err => {
+        permissionGranted
+          .then(res => {})
+          .catch(err => {
+            console.log('User canceled the permission');
+          });
       });
   }
 
@@ -117,7 +176,10 @@ const mapStateToProps = state => {
 };
 
 const mapDispatchToProps = dispatch => {
-  return bindActionCreators({...AuthActions, ...ProfileActions}, dispatch);
+  return bindActionCreators(
+    {...AuthActions, ...ProfileActions, ...OrderActions},
+    dispatch,
+  );
 };
 
 export default connect(

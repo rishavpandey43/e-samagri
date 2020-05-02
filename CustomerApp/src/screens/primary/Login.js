@@ -119,7 +119,7 @@ class LoginScreen extends Component {
   render() {
     return (
       <View style={{justifyContent: 'center', height: '100%'}}>
-        <Card title="Welcome back :)">
+        <Card title="Login to continue">
           <View>
             <View>
               {!this.state.displayPhoneOTPField ? (

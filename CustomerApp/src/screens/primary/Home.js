@@ -50,13 +50,13 @@ class HomeScreen extends Component {
       .then(token => {
         this.props.getTokenFromAsync(token);
         this.props.getProfileFetch(this.props.auth.authToken);
+        this.props.getCartDetailFetch(this.props.auth.authToken);
         if (this.props.profile.profile) {
           if (!this.props.profile.profile.address) {
             this.props.navigation.navigate('update-profile-screen');
+          } else if (this.props.profile.profile.address) {
+            this.props.getSellersFetch(this.props.auth.authToken);
           }
-        } else {
-          this.props.getSellersFetch(this.props.auth.authToken);
-          this.props.getCartDetailFetch(this.props.auth.authToken);
         }
       })
       .catch(err => {
@@ -70,20 +70,16 @@ class HomeScreen extends Component {
       if (!this.props.profile.profile.address) {
         this.props.navigation.navigate('update-profile-screen');
       }
+
+      if (
+        prevProps.sellers.sellers.length != this.props.sellers.sellers.length
+      ) {
+        this.props.getSellersFetch(this.props.auth.authToken);
+        this.setState({storeList: this.props.sellers.sellers});
+      }
     }
-    // retreive data from server, once authentication is complete
-    if (prevProps.auth.authToken !== this.props.auth.authToken) {
-      this.props.getProfileFetch(this.props.auth.authToken);
-      this.props.getSellersFetch(this.props.auth.authToken);
-      this.props.getCartDetailFetch(this.props.auth.authToken);
-    }
+    // // retreive data from server, once authentication is complete
     // * checks previous sellerlist with new received ASYNC seller list
-    if (prevProps.sellers.sellers.length != this.props.sellers.sellers.length) {
-      this.props.getProfileFetch(this.props.auth.authToken);
-      this.props.getSellersFetch(this.props.auth.authToken);
-      this.props.getCartDetailFetch(this.props.auth.authToken);
-      this.setState({storeList: this.props.sellers.sellers});
-    }
   }
 
   searchStore = search => {
@@ -188,9 +184,24 @@ class HomeScreen extends Component {
                 titleStyle={{color: variables.mainThemeColor}}
                 buttonStyle={mainStyles.outlineBtn}
                 onPress={() => {
-                  this.props.getProfileFetch(this.props.auth.authToken);
                   this.props.getSellersFetch(this.props.auth.authToken);
-                  this.props.getCartDetailFetch(this.props.auth.authToken);
+                }}
+              />
+            </Card>
+          ) : this.props.profile.profile &&
+            !this.props.profile.profile.address ? (
+            <Card title="Alert" containerStyle={{alignItems: 'center'}}>
+              <Text style={{marginBottom: 20, fontSize: 20, color: 'red'}}>
+                You haven't added your adddress, update your adddress to
+                continue
+              </Text>
+              <Button
+                title="Update now"
+                type="outline"
+                titleStyle={{color: variables.mainThemeColor}}
+                buttonStyle={mainStyles.outlineBtn}
+                onPress={() => {
+                  this.props.navigation.navigate('update-profile-screen');
                 }}
               />
             </Card>

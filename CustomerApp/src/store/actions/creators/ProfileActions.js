@@ -2,7 +2,8 @@ import axios from 'axios';
 import {ToastAndroid} from 'react-native';
 import * as actionTypes from '../types/actionTypes';
 
-import * as helper from '../../../utils/helper';
+import {getSellersFetch} from './HomeActions';
+
 import {baseUrl} from '../../../utils/constant';
 
 export const getProfileRequest = () => {
@@ -88,6 +89,7 @@ export const updateProfileFetch = (token, data, dataType) => dispatch => {
         'Your profile detail has been updated succesfully, please back to your profile',
         ToastAndroid.LONG,
       );
+      dispatch(getSellersFetch(token));
     })
     .catch(err => {
       dispatch(

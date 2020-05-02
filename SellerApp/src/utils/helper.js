@@ -1,6 +1,6 @@
 import AsyncStorage from '@react-native-community/async-storage';
 
-import {categoryList, orderStatus} from './constant';
+import {categoryList, orderStatus, paymentMode} from './constant';
 
 export const storeDataInAsync = async (key, value) => {
   try {

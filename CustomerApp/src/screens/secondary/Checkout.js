@@ -2,21 +2,12 @@
 import React, {Component} from 'react';
 import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
-import {
-  ScrollView,
-  StyleSheet,
-  View,
-  ActivityIndicator,
-  Alert,
-  ToastAndroid,
-  BackHandler,
-} from 'react-native';
+import {ScrollView, StyleSheet, View, ToastAndroid} from 'react-native';
 import {
   Header,
   Card,
   Text,
   Button,
-  Image,
   Icon,
   CheckBox,
 } from 'react-native-elements';
@@ -53,7 +44,7 @@ class CheckoutScreen extends Component {
           quantity: product.quantity,
           price: product.price,
         })),
-        status: 'pending',
+        status: 'pen',
         paymentMode: 'cod',
         amount: {
           itemsPrice: this.props.cart.cart.products.reduce(
@@ -114,10 +105,12 @@ class CheckoutScreen extends Component {
         <ScrollView>
           {!this.props.cart.cart ||
           this.props.cart.cart.products.length === 0 ? (
-            <Card title="Error Message" containerStyle={{alignItems: 'center'}}>
-              <Text style={{marginBottom: 20, fontSize: 20, color: 'red'}}>
-                You cannot checkout with empty cart
+            <Card title="Success" containerStyle={{alignItems: 'center'}}>
+              <Text style={{marginBottom: 20, fontSize: 20, color: 'green'}}>
+                You're already placed your order successfully. You'll be updated
+                once it's processed.
               </Text>
+
               <Button
                 title="Go to Home"
                 type="outline"

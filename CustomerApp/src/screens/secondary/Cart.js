@@ -238,8 +238,13 @@ class CartScreen extends Component {
             </View>
           </View>
         ) : (
-          <View style={{flexDirection: 'column', height: '100%'}}>
-            <View style={{flex: 2, height: '100%'}}>
+          <View
+            style={{
+              flex: 1,
+              flexDirection: 'column',
+              height: '100%',
+            }}>
+            <View style={{flex: 2}}>
               <ScrollView>
                 <View style={mainStyles.row}>
                   {this.props.cart.cart.products.map(product => (
@@ -252,7 +257,7 @@ class CartScreen extends Component {
               style={{
                 flex: 1,
                 marginTop: 20,
-                marginBottom: 20,
+                paddingBottom: 20,
                 backgroundColor: '#fff',
                 padding: 10,
               }}>

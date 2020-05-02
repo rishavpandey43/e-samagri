@@ -8,6 +8,7 @@ import {Text, Button, Card} from 'react-native-elements';
 // * Import all screens/components
 
 // * Import utilites
+import {getOrderStatus} from '../utils/helper';
 
 // * Import all styling stuffs
 import mainStyles from '../styles/mainStyle';
@@ -17,13 +18,15 @@ const OrderCard = ({order, navigation}) => {
   return (
     <Card containerStyle={{borderRadius: 10}}>
       <View style={mainStyles.row}>
-        <View style={mainStyles.col6}>
+        <View style={[mainStyles.col6, {justifyContent: 'center'}]}>
           <View>
             <Text style={styles.title}>Order Date</Text>
             <Text>{order.createdAt}</Text>
           </View>
           <View style={styles.marginTop}>
-            <Text style={{color: 'orange'}}>{order.status}</Text>
+            <Text style={{color: getOrderStatus(order.status).color}}>
+              {getOrderStatus(order.status).name}
+            </Text>
           </View>
         </View>
         <View style={mainStyles.col6}>
@@ -37,6 +40,7 @@ const OrderCard = ({order, navigation}) => {
               type="outline"
               raised
               titleStyle={{color: variables.mainThemeColor}}
+              buttonStyle={mainStyles.outlineBtn}
               onPress={() => {
                 navigation.navigate('order-detail-screen', {
                   orderId: order._id,

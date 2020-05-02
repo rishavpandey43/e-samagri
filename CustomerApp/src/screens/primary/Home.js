@@ -8,6 +8,7 @@ import {
   View,
   ActivityIndicator,
   TouchableOpacity,
+  Alert,
 } from 'react-native';
 import {
   Header,
@@ -18,6 +19,7 @@ import {
   Badge,
   Icon,
 } from 'react-native-elements';
+import messaging from '@react-native-firebase/messaging';
 
 // * Import all store related stuffs
 import * as AuthActions from '../../store/actions/creators/AuthActions';
@@ -25,6 +27,7 @@ import * as HomeActions from '../../store/actions/creators/HomeActions';
 import * as ProfileActions from '../../store/actions/creators/ProfileActions';
 import * as StoreActions from '../../store/actions/creators/StoreActions';
 import * as CartActions from '../../store/actions/creators/CartActions';
+import * as OrderActions from '../../store/actions/creators/OrderActions';
 
 // * Import all screens/components
 import Store from '../../components/Store';
@@ -49,18 +52,66 @@ class HomeScreen extends Component {
     getDataFromAsync('eSamagri_customer_auth_token')
       .then(token => {
         this.props.getTokenFromAsync(token);
+        if (this.props.profile.profile && !this.props.profile.profile.address) {
+          this.props.navigation.navigate('update-profile-screen');
+        }
         this.props.getProfileFetch(this.props.auth.authToken);
         this.props.getCartDetailFetch(this.props.auth.authToken);
-        if (this.props.profile.profile) {
-          if (!this.props.profile.profile.address) {
-            this.props.navigation.navigate('update-profile-screen');
-          } else if (this.props.profile.profile.address) {
-            this.props.getSellersFetch(this.props.auth.authToken);
-          }
-        }
+        this.props.getSellersFetch(this.props.auth.authToken);
       })
       .catch(err => {
         console.log(err);
+      });
+
+    // * BELOW ARE THE COFIGURATION TO HANDLE RECEIVED NOTIFICATIONS
+    const permissionStatus = messaging().hasPermission();
+    const permissionGranted = messaging().requestPermission();
+
+    const messageListener = () => {
+      messaging().onMessage(message => {
+        this.props.getOrdersFetch(this.props.auth.authToken);
+
+        Alert.alert(
+          message.notification.title,
+          `Hello ${
+            this.props.profile.profile
+              ? this.props.profile.profile.personalDetail.firstName +
+                ' ' +
+                this.props.profile.profile.personalDetail.lastName
+              : ''
+          } ${message.notification.body}`,
+          [
+            {
+              text: 'Ok',
+              onPress: () => {
+                return;
+              },
+            },
+          ],
+        );
+      });
+
+      messaging().onNotificationOpenedApp(notification => {
+        this.props.getOrdersFetch(this.props.auth.authToken);
+        this.props.navigation.navigate('orders-stack');
+      });
+
+      messaging().getInitialNotification(notification => {
+        this.props.getOrdersFetch(this.props.auth.authToken);
+        this.props.navigation.navigate('orders-stack');
+      });
+    };
+
+    permissionStatus
+      .then(res => {
+        messageListener();
+      })
+      .catch(err => {
+        permissionGranted
+          .then(res => {})
+          .catch(err => {
+            console.log('User canceled the permission');
+          });
       });
   }
 
@@ -74,7 +125,6 @@ class HomeScreen extends Component {
       if (
         prevProps.sellers.sellers.length != this.props.sellers.sellers.length
       ) {
-        this.props.getSellersFetch(this.props.auth.authToken);
         this.setState({storeList: this.props.sellers.sellers});
       }
     }
@@ -269,6 +319,7 @@ const mapDispatchToProps = dispatch => {
       ...ProfileActions,
       ...StoreActions,
       ...CartActions,
+      ...OrderActions,
     },
     dispatch,
   );

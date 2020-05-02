@@ -12,9 +12,7 @@ import MainDrawerNavigation from './routes/MainDrawerNavigation';
 const MainApp = ({auth}) => {
   useEffect(() => {
     permissionStatus
-      .then(res => {
-        messageListener();
-      })
+      .then(res => {})
       .catch(err => {
         permissionGranted
           .then(res => {})
@@ -27,20 +25,6 @@ const MainApp = ({auth}) => {
   const permissionStatus = messaging().hasPermission();
   const permissionGranted = messaging().requestPermission();
 
-  const messageListener = () => {
-    messaging().onMessage(message => {
-      console.log('onMessageListener-', message);
-    });
-
-    messaging().onNotificationOpenedApp(notification => {
-      console.log('notificationOpenListener-', notification);
-    });
-
-    messaging().getInitialNotification(notification => {
-      console.log('initialNotificationListener-', notification);
-    });
-  };
-
   return auth.isAuthenticated ? (
     <MainDrawerNavigation />
   ) : (
@@ -50,6 +34,7 @@ const MainApp = ({auth}) => {
 
 const mapStateToProps = state => {
   return {
+    profile: state.profile,
     auth: state.auth,
   };
 };

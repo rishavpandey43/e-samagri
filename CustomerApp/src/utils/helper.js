@@ -1,6 +1,37 @@
 import AsyncStorage from '@react-native-community/async-storage';
 
-import {addressType, categoryList} from './constant';
+import {addressType, categoryList, orderStatus} from './constant';
+
+export const storeDataInAsync = async (key, value) => {
+  try {
+    await AsyncStorage.setItem(key, value);
+  } catch (error) {
+    // Error retrieving data
+    console.log(error.message);
+  }
+};
+
+export const getDataFromAsync = async key => {
+  let value = '';
+  try {
+    value = (await AsyncStorage.getItem(key)) || null;
+    if (value !== null) {
+      // value previously stored
+      return value;
+    }
+  } catch (e) {
+    // error reading value
+  }
+};
+
+export const removeDataFromAsync = async key => {
+  try {
+    await AsyncStorage.removeItem(key);
+  } catch (error) {
+    // Error retrieving data
+    console.log(error.message);
+  }
+};
 
 export const filterProductBySeller = (sellerId, products) => {
   products = products.filter(product => product.seller === sellerId);
@@ -54,35 +85,8 @@ export const getStoreCategory = products => {
   return categoryList.map(category => getCategoryName(category));
 };
 
-export const storeDataInAsync = async (key, value) => {
-  try {
-    await AsyncStorage.setItem(key, value);
-  } catch (error) {
-    // Error retrieving data
-    console.log(error.message);
-  }
-};
-
-export const getDataFromAsync = async key => {
-  let value = '';
-  try {
-    value = (await AsyncStorage.getItem(key)) || null;
-    if (value !== null) {
-      // value previously stored
-      return value;
-    }
-  } catch (e) {
-    // error reading value
-  }
-};
-
-export const removeDataFromAsync = async key => {
-  try {
-    await AsyncStorage.removeItem(key);
-  } catch (error) {
-    // Error retrieving data
-    console.log(error.message);
-  }
+export const getOrderStatus = type => {
+  return orderStatus.filter(status => status.value === type)[0];
 };
 
 // TODO: complete this function

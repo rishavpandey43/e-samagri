@@ -32,7 +32,7 @@ const Item = ({name, variant, quantity, price}) => {
         <Text style={{textAlign: 'right'}}>Qty: {quantity}</Text>
       </View>
       <View style={{flex: 1}}>
-        <Text style={{textAlign: 'right'}}>₹ {price}</Text>
+        <Text style={{textAlign: 'right'}}>₹ {quantity * price}</Text>
       </View>
     </View>
   );

@@ -29,11 +29,8 @@ class OrderConfirmationScreen extends Component {
     this.props.getCartDetailFetch(this.props.auth.authToken);
     this.props.getOrdersFetch(this.props.auth.authToken);
     setTimeout(() => {
-      // this.props.navigation.navigate('home-screen');
+      this.props.navigation.navigate('home-screen');
     }, 5000);
-    // BackHandler.addEventListener('hardwareBackPress', () => {
-    //   return true;
-    // });
   }
 
   render() {

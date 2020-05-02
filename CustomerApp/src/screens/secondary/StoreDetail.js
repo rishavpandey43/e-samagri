@@ -7,6 +7,7 @@ import {
   StyleSheet,
   View,
   TouchableOpacity,
+  TouchableHighlight,
   ActivityIndicator,
   Alert,
 } from 'react-native';
@@ -245,25 +246,38 @@ class StoreDetailScreen extends Component {
           style={[
             mainStyles.row,
             {
+              flex: 1,
               marginBottom: 10,
             },
           ]}>
           <View
             style={[
-              mainStyles.col8,
-              {justifyContent: 'center', marginTop: 10},
+              {
+                flex: 2,
+                justifyContent: 'center',
+                marginTop: 10,
+                marginRight: 25,
+              },
             ]}>
-            <TouchableOpacity
+            <TouchableHighlight
+              underlayColor="#eee"
               onPress={() => {
                 this.props.navigation.navigate('product-detail-screen', {
                   productId: product._id,
                 });
               }}>
-              <View style={mainStyles.row}>
-                <View style={mainStyles.col10}>
+              <View style={{flexDirection: 'row'}}>
+                <View style={{flex: 2}}>
                   <Text style={{fontSize: 20}}>{product.root.name}</Text>
                 </View>
-                <View style={[mainStyles.col2, {justifyContent: 'center'}]}>
+                <View
+                  style={[
+                    {
+                      flex: 1,
+                      justifyContent: 'center',
+                      alignItems: 'flex-end',
+                    },
+                  ]}>
                   <Icon
                     type="font-awesome"
                     name="chevron-right"
@@ -272,7 +286,7 @@ class StoreDetailScreen extends Component {
                   />
                 </View>
               </View>
-            </TouchableOpacity>
+            </TouchableHighlight>
             <Picker
               selectedValue={
                 this.state.productVariantForPicker.filter(
@@ -306,7 +320,7 @@ class StoreDetailScreen extends Component {
               ))}
             </Picker>
           </View>
-          <View style={[mainStyles.col4, {justifyContent: 'center'}]}>
+          <View style={[{flex: 1, justifyContent: 'center', marginLeft: 5}]}>
             {this.props.cart.cart ? (
               // * AWESOME LOGIC OF DISPLAYING BUTTONS BASED ON VARIANTS ADDED IN CART
               !this.props.cart.cart.products.filter(

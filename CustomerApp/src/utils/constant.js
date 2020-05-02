@@ -1,4 +1,4 @@
-export const baseUrl = 'https://e-samagri-backend.herokuapp.com';
+export const baseUrl = 'http://192.168.43.240:5555';
 
 export const addressType = [
   {
@@ -71,6 +71,7 @@ export const paymentMode = [
     value: 'online',
   },
 ];
+
 export const orderStatus = [
   {
     name: 'Pending',
@@ -80,17 +81,22 @@ export const orderStatus = [
   {
     name: 'Processing',
     value: 'prc',
-    color: 'orange',
+    color: 'blue',
+  },
+  {
+    name: 'Processed',
+    value: 'prcd',
+    color: '#EE82EE',
   },
   {
     name: 'Out For Delivery',
     value: 'ofd',
-    color: 'orange',
+    color: 'yellow',
   },
   {
     name: 'Delivered',
     value: 'del',
-    color: 'orange',
+    color: 'green',
   },
   {
     name: 'Cancelled',

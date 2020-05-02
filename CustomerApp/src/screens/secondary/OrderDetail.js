@@ -11,7 +11,7 @@ import {Header, Card, Text, Icon} from 'react-native-elements';
 import Item from '../../components/OrderItem';
 
 // * Import utilites
-import {getOrderStatus} from '../../utils/helper';
+import {getOrderStatus, getpaymentMode} from '../../utils/helper';
 
 // * Import all styling stuffs
 import mainStyles from '../../styles/mainStyle';
@@ -65,24 +65,25 @@ class OrderDetailScreen extends Component {
           ) : (
             <View style={[mainStyles.container, {marginBottom: 100}]}>
               <Card>
-                <View style={[mainStyles.row, {marginBottom: 20}]}>
-                  <View style={[mainStyles.col5]}>
+                <View style={{flex: 1, flexDirection: 'row', marginBottom: 20}}>
+                  <View style={{flex: 1}}>
                     <Text style={styles.label}>Ordered from:</Text>
                   </View>
-                  <View
-                    style={[mainStyles.col7, mainStyles.justifyContentCenter]}>
-                    <Text>{this.state.order.orderedFrom.storeDetail.name}</Text>
+                  <View style={{flex: 1, justifyContent: 'center'}}>
+                    <Text style={{fontSize: 18}}>
+                      {this.state.order.orderedFrom.storeDetail.name}
+                    </Text>
                   </View>
                 </View>
 
-                <View style={[mainStyles.row, {marginBottom: 20}]}>
-                  <View style={[mainStyles.col5]}>
-                    <Text style={styles.label}>status:</Text>
+                <View style={{flex: 1, flexDirection: 'row', marginBottom: 20}}>
+                  <View style={{flex: 1}}>
+                    <Text style={styles.label}>Status:</Text>
                   </View>
-                  <View
-                    style={[mainStyles.col7, mainStyles.justifyContentCenter]}>
+                  <View style={{flex: 1, justifyContent: 'center'}}>
                     <Text
                       style={{
+                        fontSize: 18,
                         color: getOrderStatus(this.state.order.status).color,
                       }}>
                       {getOrderStatus(this.state.order.status).name}
@@ -94,51 +95,52 @@ class OrderDetailScreen extends Component {
                   Order Summary:
                 </Text>
 
-                {this.state.order.items.map(item => (
+                {this.state.order.items.map((item, i) => (
                   <Item
+                    key={i}
                     name={item.name}
                     variant={item.value}
                     quantity={item.quantity}
                     price={item.price}
                   />
                 ))}
-                <View style={[mainStyles.row, {marginTop: 20}]}>
-                  <View style={mainStyles.col6}>
+                <View style={{flex: 1, flexDirection: 'row', marginTop: 20}}>
+                  <View style={{flex: 1}}>
                     <Text>Item Total:</Text>
                   </View>
-                  <View style={mainStyles.col6}>
+                  <View style={{flex: 1}}>
                     <Text style={{textAlign: 'right'}}>
                       ₹ {this.state.order.amount.itemsPrice}
                     </Text>
                   </View>
                 </View>
 
-                <View style={[mainStyles.row, {marginTop: 20}]}>
-                  <View style={mainStyles.col6}>
+                <View style={{flex: 1, flexDirection: 'row', marginTop: 20}}>
+                  <View style={{flex: 1}}>
                     <Text>Delivery Charge:</Text>
                   </View>
-                  <View style={mainStyles.col6}>
+                  <View style={{flex: 1}}>
                     <Text style={{textAlign: 'right'}}>
                       ₹ {this.state.order.amount.deliveryCharge}
                     </Text>
                   </View>
                 </View>
 
-                <View style={[mainStyles.row, {marginTop: 20}]}>
-                  <View style={mainStyles.col6}>
+                <View style={{flex: 1, flexDirection: 'row', marginTop: 20}}>
+                  <View style={{flex: 1}}>
                     <Text>Payment Mode:</Text>
                   </View>
-                  <View style={mainStyles.col6}>
+                  <View style={{flex: 1}}>
                     <Text style={{textAlign: 'right'}}>
-                      {this.state.order.paymentMode}
+                      {getpaymentMode(this.state.order.paymentMode)}
                     </Text>
                   </View>
                 </View>
-                <View style={[mainStyles.row, {marginTop: 20}]}>
-                  <View style={mainStyles.col6}>
+                <View style={{flex: 1, flexDirection: 'row', marginTop: 20}}>
+                  <View style={{flex: 1}}>
                     <Text>Payment Status:</Text>
                   </View>
-                  <View style={mainStyles.col6}>
+                  <View style={{flex: 1}}>
                     <Text style={{textAlign: 'right'}}>
                       {this.state.order.paymentMode === 'cod'
                         ? 'Pending'

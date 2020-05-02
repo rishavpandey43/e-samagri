@@ -3,14 +3,7 @@ import React, {Component} from 'react';
 import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
 import {ScrollView, View, BackHandler, Alert} from 'react-native';
-import {
-  Header,
-  Card,
-  Text,
-  Button,
-  Icon,
-  CheckBox,
-} from 'react-native-elements';
+import {Header, Card, Text, Button} from 'react-native-elements';
 
 // * Import all store related stuffs
 import * as CartActions from '../../store/actions/creators/CartActions';
@@ -27,15 +20,20 @@ import variables from '../../styles/variables';
 class OrderConfirmationScreen extends Component {
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = {
+      timeRemaining: 5,
+    };
   }
 
   componentDidMount() {
     this.props.getCartDetailFetch(this.props.auth.authToken);
     this.props.getOrdersFetch(this.props.auth.authToken);
-    BackHandler.addEventListener('hardwareBackPress', () => {
-      return true;
-    });
+    setTimeout(() => {
+      // this.props.navigation.navigate('home-screen');
+    }, 5000);
+    // BackHandler.addEventListener('hardwareBackPress', () => {
+    //   return true;
+    // });
   }
 
   render() {
@@ -59,6 +57,11 @@ class OrderConfirmationScreen extends Component {
                   ' ' +
                   this.props.profile.profile.personalDetail
                     .lastName}, You're order has been placed successfully. You'll be updated once it's processed.`}
+              </Text>
+              <Text style={{marginBottom: 20, fontSize: 20, color: 'green'}}>
+                {`Now, you'll be automatically redirected to Home in ${
+                  this.state.timeRemaining
+                } ${this.state.timeRemaining === 1 ? 'second' : 'seconds'}`}
               </Text>
               <Button
                 title="Go to Home"

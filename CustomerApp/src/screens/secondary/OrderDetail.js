@@ -11,6 +11,7 @@ import {Header, Card, Text, Icon} from 'react-native-elements';
 import Item from '../../components/OrderItem';
 
 // * Import utilites
+import {getOrderStatus} from '../../utils/helper';
 
 // * Import all styling stuffs
 import mainStyles from '../../styles/mainStyle';
@@ -80,8 +81,11 @@ class OrderDetailScreen extends Component {
                   </View>
                   <View
                     style={[mainStyles.col7, mainStyles.justifyContentCenter]}>
-                    <Text style={{color: 'orange'}}>
-                      {this.state.order.status}
+                    <Text
+                      style={{
+                        color: getOrderStatus(this.state.order.status).color,
+                      }}>
+                      {getOrderStatus(this.state.order.status).name}
                     </Text>
                   </View>
                 </View>

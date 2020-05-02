@@ -79,6 +79,14 @@ class OrdersScreen extends Component {
             </Card>
           ) : (
             <View style={[mainStyles.container, {marginBottom: 100}]}>
+              {this.props.orders.orders.length === 0 ? (
+                <View style={{margin: 15, marginTop: 30}}>
+                  <Text style={{fontSize: 18}}>
+                    You haven't placed any order yet, place an order from your
+                    desired store and come back.
+                  </Text>
+                </View>
+              ) : null}
               {this.props.orders.orders.map(order => (
                 <OrderCard
                   key={order._id}

@@ -177,8 +177,6 @@ class StoreDetailScreen extends Component {
   };
 
   changeProductQuantityinCart = (type, variant) => {
-    console.log(variant);
-
     let tempCart = {
       ...this.props.cart.cart,
     };
@@ -320,20 +318,35 @@ class StoreDetailScreen extends Component {
               )[0] ? (
                 <View style={{alignItems: 'center'}}>
                   <Button
-                    type="outline"
-                    buttonStyle={styles.btn}
                     title="Add to cart"
+                    type="outline"
+                    buttonStyle={[
+                      styles.btn,
+                      mainStyles.outlineBtn,
+                      {width: '100%'},
+                    ]}
+                    loading={this.props.cart.cart.updatingCart}
                     onPress={this.addToCart.bind(null, product._id)}
                     titleStyle={{color: variables.mainThemeColor}}
                   />
                 </View>
               ) : (
                 <View style={[mainStyles.row, {marginTop: 15}]}>
-                  <View style={{flex: 1}}>
+                  <View style={{flex: 1, justifyContent: 'center'}}>
                     <Button
-                      type="outline"
-                      buttonStyle={[styles.btn, {padding: 2}]}
                       title="-"
+                      titleStyle={{
+                        fontSize: 20,
+                        fontWeight: 'bold',
+                        color: variables.mainThemeColor,
+                      }}
+                      type="outline"
+                      buttonStyle={[
+                        styles.btn,
+                        mainStyles.outlineBtn,
+                        {padding: 2, width: '100%', minHeight: 35},
+                      ]}
+                      loading={this.props.cart.cart.updatingCart}
                       onPress={this.changeProductQuantityinCart.bind(
                         null,
                         'decrement',
@@ -341,11 +354,6 @@ class StoreDetailScreen extends Component {
                           variant => variant.productId === product._id,
                         )[0],
                       )}
-                      titleStyle={{
-                        fontSize: 20,
-                        fontWeight: 'bold',
-                        color: variables.mainThemeColor,
-                      }}
                     />
                   </View>
                   <View
@@ -368,9 +376,19 @@ class StoreDetailScreen extends Component {
                   </View>
                   <View style={{flex: 1}}>
                     <Button
-                      type="outline"
-                      buttonStyle={[styles.btn, {padding: 2}]}
                       title="+"
+                      titleStyle={{
+                        fontSize: 20,
+                        fontWeight: 'bold',
+                        color: variables.mainThemeColor,
+                      }}
+                      type="outline"
+                      buttonStyle={[
+                        styles.btn,
+                        mainStyles.outlineBtn,
+                        {padding: 2, width: '100%', minHeight: 35},
+                      ]}
+                      loading={this.props.cart.cart.updatingCart}
                       onPress={this.changeProductQuantityinCart.bind(
                         null,
                         'increment',
@@ -378,11 +396,6 @@ class StoreDetailScreen extends Component {
                           variant => variant.productId === product._id,
                         )[0],
                       )}
-                      titleStyle={{
-                        fontSize: 20,
-                        fontWeight: 'bold',
-                        color: variables.mainThemeColor,
-                      }}
                     />
                   </View>
                 </View>

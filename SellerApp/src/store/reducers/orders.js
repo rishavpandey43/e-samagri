@@ -1,9 +1,8 @@
 import * as actionTypes from '../actions/types/actionTypes';
 
 const initialState = {
-  isLoading: false,
-  orders: null,
-  successMessage: null,
+  fetchingOrders: false,
+  orders: [],
   errMessage: null,
 };
 
@@ -12,19 +11,19 @@ const orders = (state = initialState, action) => {
     case actionTypes.GET_ORDERS_REQUEST:
       return {
         ...state,
-        isLoading: true,
+        fetchingOrders: true,
       };
     case actionTypes.GET_ORDERS_SUCCESS:
       return {
         ...state,
-        isLoading: false,
+        fetchingOrders: false,
         orders: action.orders,
-        successMessage: action.message,
+        errMessage: null,
       };
     case actionTypes.GET_ORDERS_FAILURE:
       return {
         ...state,
-        isLoading: false,
+        fetchingOrders: false,
         orders: null,
         errMessage: action.message,
       };

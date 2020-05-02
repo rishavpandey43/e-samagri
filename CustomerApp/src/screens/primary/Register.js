@@ -5,6 +5,7 @@ import {connect} from 'react-redux';
 import {View, Text, Alert, ToastAndroid} from 'react-native';
 import {Card, Input, Button} from 'react-native-elements';
 import axios from 'axios';
+import messaging from '@react-native-firebase/messaging';
 
 // * Import all store related stuffs
 import * as AuthActions from '../../store/actions/creators/AuthActions';
@@ -34,17 +35,22 @@ class RegisterScreen extends Component {
       displayPhoneOTPField: false,
       authyId: '',
       otpLoading: false,
-      registerLoading: false,
+      fcmDeviceToken: null,
     };
   }
 
   componentDidMount() {
-    getDataFromAsync('authToken')
+    getDataFromAsync('eSamagri_customer_auth_token')
       .then(token => {
         this.props.getTokenFromAsync(token);
       })
       .catch(err => {
         console.log(err);
+      });
+    messaging()
+      .getToken()
+      .then(token => {
+        this.setState({fcmDeviceToken: token});
       });
   }
 
@@ -155,23 +161,7 @@ class RegisterScreen extends Component {
         authyId: this.state.authyId,
         otp: this.state.phoneOTP,
       };
-      this.setState({registerLoading: true});
-      axios
-        .post(baseUrl + '/customer/register', data)
-        .then(res => {
-          ToastAndroid.show(
-            "You've been successfully registered!",
-            ToastAndroid.LONG,
-          );
-          this._resetState();
-        })
-        .catch(err => {
-          ToastAndroid.show(
-            err.response.data.errMessage || 'Some error occured, try again.',
-            ToastAndroid.LONG,
-          );
-          this._resetState();
-        });
+      this.props.registerFetch(this.state.fcmDeviceToken, data);
     }
   };
 
@@ -226,6 +216,7 @@ class RegisterScreen extends Component {
                       title="Get OTP for email"
                       titleStyle={{color: variables.mainThemeColor}}
                       type="outline"
+                      raised
                       buttonStyle={mainStyles.outlineBtn}
                     />
                   </View>
@@ -246,6 +237,7 @@ class RegisterScreen extends Component {
                       title="Resend OTP to email"
                       titleStyle={{color: variables.mainThemeColor}}
                       type="outline"
+                      raised
                       buttonStyle={mainStyles.outlineBtn}
                     />
                   </View>
@@ -276,10 +268,10 @@ class RegisterScreen extends Component {
                       title="Get OTP for phone"
                       titleStyle={{color: variables.mainThemeColor}}
                       type="outline"
+                      raised
                       buttonStyle={mainStyles.outlineBtn}
                       onPress={this._requestOTP.bind(null)}
                       loading={this.state.otpLoading}
-                      loadingStyle={{color: variables.mainThemeColor}}
                       containerStyle={{minWidth: '50%'}}
                     />
                   </View>
@@ -305,6 +297,7 @@ class RegisterScreen extends Component {
                       title="Resend OTP to phone"
                       titleStyle={{color: variables.mainThemeColor}}
                       type="outline"
+                      raised
                       buttonStyle={mainStyles.outlineBtn}
                     />
                   </View> */}
@@ -325,6 +318,7 @@ class RegisterScreen extends Component {
                   title="Cancel"
                   titleStyle={{color: variables.mainThemeColor}}
                   type="outline"
+                  raised
                   buttonStyle={mainStyles.outlineBtn}
                   onPress={this._resetState.bind(null)}
                 />
@@ -334,10 +328,10 @@ class RegisterScreen extends Component {
                   title="Register"
                   titleStyle={{color: variables.mainThemeColor}}
                   type="outline"
+                  raised
                   buttonStyle={mainStyles.outlineBtn}
                   onPress={this._register.bind(null)}
                   loading={this.state.registerLoading}
-                  loadingStyle={{color: variables.mainThemeColor}}
                 />
               </View>
             </View>

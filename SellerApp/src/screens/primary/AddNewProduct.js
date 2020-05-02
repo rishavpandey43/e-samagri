@@ -48,6 +48,7 @@ class AddNewProductScreen extends Component {
     this.state = {
       product: {
         name: '',
+        desc: '',
         category: '',
         type: 'packet',
         brand: '',
@@ -85,6 +86,7 @@ class AddNewProductScreen extends Component {
       let data = {
         general: {
           name: tempData.name.toLowerCase(),
+          desc: tempData.desc.toLowerCase(),
           category: tempData.category.toLowerCase(),
           type: tempData.type.toLowerCase(),
           brand: tempData.brand.toLowerCase(),
@@ -207,6 +209,24 @@ class AddNewProductScreen extends Component {
               </View>
 
               <View style={mainStyles.formGroup}>
+                <Input
+                  label="Product Description:"
+                  multiline
+                  maxLength={200}
+                  placeholder="Description can't be in more than 200 characters."
+                  value={this.state.product.desc}
+                  onChangeText={desc => {
+                    this.setState({
+                      product: {
+                        ...this.state.product,
+                        desc,
+                      },
+                    });
+                  }}
+                />
+              </View>
+
+              <View style={mainStyles.formGroup}>
                 <Text style={mainStyles.formLabel}>Category:</Text>
                 <View>
                   <Picker
@@ -223,6 +243,10 @@ class AddNewProductScreen extends Component {
                         },
                       })
                     }>
+                    <Picker.Item
+                      label="Choose the appropriate category"
+                      value="-"
+                    />
                     {categoryList.map(category => (
                       <Picker.Item
                         key={category.value}
@@ -435,8 +459,9 @@ class AddNewProductScreen extends Component {
                 <View style={mainStyles.col6}>
                   <Button
                     title="Cancel"
-                    titleStyle={{color: variables.mainThemeColor}}
                     type="outline"
+                    raised
+                    titleStyle={{color: variables.mainThemeColor}}
                     buttonStyle={mainStyles.outlineBtn}
                     onPress={() => {
                       this.setState({
@@ -454,8 +479,9 @@ class AddNewProductScreen extends Component {
                 <View style={mainStyles.col6}>
                   <Button
                     title="Submit"
-                    titleStyle={{color: variables.mainThemeColor}}
                     type="outline"
+                    raised
+                    titleStyle={{color: variables.mainThemeColor}}
                     buttonStyle={mainStyles.outlineBtn}
                     onPress={this.addProduct.bind(null)}
                     loading={this.props.profile.profileUpdating}

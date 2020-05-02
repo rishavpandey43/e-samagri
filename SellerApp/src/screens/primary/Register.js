@@ -2,9 +2,10 @@
 import React, {Component} from 'react';
 import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
-import {View, Text, Alert, ToastAndroid} from 'react-native';
+import {View, Alert, ToastAndroid} from 'react-native';
 import {Card, Input, Button} from 'react-native-elements';
 import axios from 'axios';
+import messaging from '@react-native-firebase/messaging';
 
 // * Import all store related stuffs
 import * as AuthActions from '../../store/actions/creators/AuthActions';
@@ -12,7 +13,7 @@ import * as AuthActions from '../../store/actions/creators/AuthActions';
 // * Import all screens/components
 
 // * Import utilites
-import {getDataFromAsync} from '../../utils/helper';
+import {storeDataInAsync, getDataFromAsync} from '../../utils/helper';
 
 import {baseUrl} from '../../utils/constant';
 
@@ -34,7 +35,8 @@ class RegisterScreen extends Component {
       displayPhoneOTPField: false,
       authyId: '',
       otpLoading: false,
-      registerLoading: false,
+
+      fcmDeviceToken: null,
     };
   }
 
@@ -45,6 +47,11 @@ class RegisterScreen extends Component {
       })
       .catch(err => {
         console.log(err);
+      });
+    messaging()
+      .getToken()
+      .then(token => {
+        this.setState({fcmDeviceToken: token});
       });
   }
 
@@ -60,7 +67,6 @@ class RegisterScreen extends Component {
       displayPhoneOTPField: false,
       authyId: '',
       otpLoading: false,
-      registerLoading: false,
     });
   };
 
@@ -155,23 +161,7 @@ class RegisterScreen extends Component {
         authyId: this.state.authyId,
         otp: this.state.phoneOTP,
       };
-      this.setState({registerLoading: true});
-      axios
-        .post(baseUrl + '/seller/register', data)
-        .then(res => {
-          ToastAndroid.show(
-            "You've been successfully registered!",
-            ToastAndroid.LONG,
-          );
-          this._resetState();
-        })
-        .catch(err => {
-          ToastAndroid.show(
-            err.response.data.errMessage || 'Some error occured, try again.',
-            ToastAndroid.LONG,
-          );
-          this._resetState();
-        });
+      this.props.registerFetch(this.state.fcmDeviceToken, data);
     }
   };
 

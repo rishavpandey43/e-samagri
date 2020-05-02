@@ -33,7 +33,7 @@ class LoginScreen extends Component {
   }
 
   componentDidMount() {
-    getDataFromAsync('authToken')
+    getDataFromAsync('eSamagri_customer_auth_token')
       .then(token => {
         this.props.getTokenFromAsync(token);
       })
@@ -141,10 +141,10 @@ class LoginScreen extends Component {
                       title="Get OTP for phone"
                       titleStyle={{color: variables.mainThemeColor}}
                       type="outline"
+                      raised
                       buttonStyle={mainStyles.outlineBtn}
                       onPress={this._requestOTP.bind(null)}
                       loading={this.state.otpLoading}
-                      loadingStyle={{color: variables.mainThemeColor}}
                       containerStyle={{minWidth: '50%'}}
                     />
                   </View>
@@ -168,6 +168,7 @@ class LoginScreen extends Component {
                       title="Resend OTP to phone"
                       titleStyle={{color: variables.mainThemeColor}}
                       type="outline"
+                      raised
                       buttonStyle={mainStyles.outlineBtn}
                     />
                   </View> */}
@@ -188,6 +189,7 @@ class LoginScreen extends Component {
                   title="Cancel"
                   titleStyle={{color: variables.mainThemeColor}}
                   type="outline"
+                  raised
                   buttonStyle={mainStyles.outlineBtn}
                   onPress={this._resetState.bind(null)}
                 />
@@ -197,10 +199,10 @@ class LoginScreen extends Component {
                   title="Login"
                   titleStyle={{color: variables.mainThemeColor}}
                   type="outline"
+                  raised
                   buttonStyle={mainStyles.outlineBtn}
                   onPress={this._login.bind(null)}
                   loading={this.props.auth.isLoading}
-                  loadingStyle={{color: variables.mainThemeColor}}
                 />
               </View>
             </View>

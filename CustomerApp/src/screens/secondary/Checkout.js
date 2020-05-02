@@ -8,6 +8,8 @@ import {
   View,
   ActivityIndicator,
   Alert,
+  ToastAndroid,
+  BackHandler,
 } from 'react-native';
 import {
   Header,
@@ -18,6 +20,7 @@ import {
   Icon,
   CheckBox,
 } from 'react-native-elements';
+import axios from 'axios';
 
 // * Import all store related stuffs
 import * as CartActions from '../../store/actions/creators/CartActions';
@@ -25,6 +28,7 @@ import * as CartActions from '../../store/actions/creators/CartActions';
 // * Import all screens/components
 
 // * Import utilites
+import {baseUrl} from '../../utils/constant';
 
 // * Import all styling stuffs
 import mainStyles from '../../styles/mainStyle';
@@ -34,13 +38,55 @@ class CheckoutScreen extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      paymentType: 'online',
+      paymentType: 'cod',
     };
   }
 
-  proceed = () => {};
+  proceed = () => {
+    if (this.state.paymentType === 'cod') {
+      let data = {
+        orderedFrom: this.props.cart.cart.storeId,
+        items: this.props.cart.cart.products.map(product => ({
+          productId: product.id,
+          name: product.name,
+          value: product.value,
+          quantity: product.quantity,
+          price: product.price,
+        })),
+        status: 'pending',
+        paymentMode: 'cod',
+        amount: {
+          itemsPrice: this.props.cart.cart.products.reduce(
+            (acc, cur) => acc + cur.quantity * cur.price,
+            0,
+          ),
+          deliveryCharge: this.props.cart.cart.deliveryCharge,
+        },
+      };
+      axios
+        .post(baseUrl + '/order/place-order', data, {
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${this.props.auth.authToken}`,
+          },
+        })
+        .then(res => {
+          this.props.navigation.navigate('order-confirmation-screen');
+        })
+        .catch(err => {
+          ToastAndroid.show(
+            "Sorry your order can't be placed, try  again later ",
+            ToastAndroid.LONG,
+          );
+        });
+    }
+  };
 
   render() {
+    if (this.props.cart.cart.products === 0) {
+      console.log('object');
+      this.props.navigation.navigate('home-screen');
+    }
     return (
       <View style={{flex: 1}}>
         <Header
@@ -73,12 +119,12 @@ class CheckoutScreen extends Component {
                 You cannot checkout with empty cart
               </Text>
               <Button
-                title="Go back"
+                title="Go to Home"
                 type="outline"
                 titleStyle={{color: variables.mainThemeColor}}
                 buttonStyle={mainStyles.outlineBtn}
                 onPress={() => {
-                  this.props.navigation.goBack();
+                  this.props.navigation.navigate('home-screen');
                 }}
               />
             </Card>
@@ -101,14 +147,14 @@ class CheckoutScreen extends Component {
                     Choose your payment method:
                   </Text>
                   <View style={{alignItems: 'flex-start'}}>
-                    {/* <View>
+                    <View>
                       <CheckBox
                         containerStyle={{
                           backgroundColor: 'transparent',
                           borderColor: 'transparent',
                         }}
                         center
-                        title="COD"
+                        title="Cash on Delivery"
                         checkedIcon="dot-circle-o"
                         uncheckedIcon="circle-o"
                         checkedColor={variables.mainThemeColor}
@@ -119,8 +165,8 @@ class CheckoutScreen extends Component {
                           });
                         }}
                       />
-                    </View> */}
-                    <View>
+                    </View>
+                    {/* <View>
                       <CheckBox
                         containerStyle={{
                           backgroundColor: 'transparent',
@@ -138,7 +184,7 @@ class CheckoutScreen extends Component {
                           });
                         }}
                       />
-                    </View>
+                    </View> */}
                   </View>
                 </View>
                 <View style={{alignItems: 'center', marginTop: 15}}>
@@ -175,10 +221,11 @@ const styles = StyleSheet.create({
   },
 });
 
-const mapStateToProps = state => {
+const mapStateToProps = ({auth, cart, orders}) => {
   return {
-    store: state.store,
-    cart: state.cart,
+    auth,
+    cart,
+    orders,
   };
 };
 

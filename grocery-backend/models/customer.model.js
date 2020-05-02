@@ -20,8 +20,8 @@ const customerSchema = new Schema(
         {
           id: { type: mongoose.Schema.Types.ObjectId },
           variantId: { type: mongoose.Schema.Types.ObjectId },
-          name: { type: String, required: true },
-          value: { type: String, required: true },
+          name: { type: String, required: false },
+          value: { type: String, required: false },
           price: { type: Number, required: false },
           quantity: { type: Number, required: false },
         },
@@ -41,6 +41,12 @@ const customerSchema = new Schema(
       city: { type: String, required: false },
       pincode: { type: Number, required: false },
     },
+    orders: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Order",
+      },
+    ],
   },
   {
     timestamps: true,

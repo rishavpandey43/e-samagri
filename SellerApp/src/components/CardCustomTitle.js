@@ -31,11 +31,11 @@ const CardCustomTitle = ({title, detail, type, onPress}) => {
           size={25}
           color={variables.mainThemeColor}
           onPress={() => {
-            if (type !== 'edit') {
-              setCustomIconName(
-                customIconName === 'arrow-right' ? 'arrow-down' : 'arrow-right',
-              );
-            }
+            // if (type !== 'edit') {
+            //   setCustomIconName(
+            //     customIconName === 'arrow-right' ? 'arrow-down' : 'arrow-right',
+            //   );
+            // }
             onPress();
           }}
         />

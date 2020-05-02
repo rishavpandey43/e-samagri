@@ -1,4 +1,4 @@
-export const baseUrl = 'http://192.168.43.240:5555';
+export const baseUrl = 'https://e-samagri-backend.herokuapp.com';
 
 export const storage_key = 'auth_token';
 
@@ -60,5 +60,35 @@ export const addressType = [
     name: 'Other',
     value: 'other',
     icon: 'map-marker',
+  },
+];
+
+export const paymentMode = [
+  {
+    name: 'Cash on Delivery',
+    value: 'cod',
+  },
+  {
+    name: 'Online',
+    value: 'online',
+  },
+];
+
+export const orderStatus = [
+  {
+    name: 'Pending',
+    value: 'pen',
+  },
+  {
+    name: 'Processing',
+    value: 'prc',
+  },
+  {
+    name: 'Out For Delivery',
+    value: 'ofd',
+  },
+  {
+    name: 'Delivered',
+    value: 'del',
   },
 ];

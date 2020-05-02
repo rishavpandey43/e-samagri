@@ -8,6 +8,7 @@ import StoreDetailScreen from '../../screens/secondary/StoreDetail';
 import ProductDetailScreen from '../../screens/secondary/ProductDetail';
 import CartScreen from '../../screens/secondary/Cart';
 import CheckoutScreen from '../../screens/secondary/Checkout';
+import OrderConfirmationScreen from '../../screens/secondary/OrderConfirmation';
 
 const Stack = createStackNavigator();
 
@@ -56,6 +57,13 @@ const HomeStack = () => (
       component={CheckoutScreen}
       options={{
         title: 'Checkout',
+      }}
+    />
+    <Stack.Screen
+      name="order-confirmation-screen"
+      component={OrderConfirmationScreen}
+      options={{
+        title: 'Order Confirmation',
       }}
     />
   </Stack.Navigator>

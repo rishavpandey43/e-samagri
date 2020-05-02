@@ -1,12 +1,17 @@
 exports.alertNotificationForCustomer = [
   {
     title: "Order Update",
-    body: "Your order has been successfully processed by seller.",
+    body: "Your order is under process by seller.",
     value: "prc",
   },
   {
     title: "Order Update",
     body: "Your order has been successfully processed by seller.",
+    value: "prcd",
+  },
+  {
+    title: "Order Update",
+    body: "Your order is out for delivery.",
     value: "ofd",
   },
   {
@@ -25,18 +30,30 @@ exports.alertNotificationForCustomer = [
 exports.alertNotificationForSeller = [
   {
     title: "New Order",
-    body: "Your order has been successfully processed by seller.",
+    body: "You've received a new order.",
     value: "nwo",
   },
   {
     title: "Order Update",
-    body: "Your order has been successfully processed by seller.",
+    body: "Order is out for delivery.",
     value: "ofd",
   },
   {
     title: "Order Update",
-    body:
-      "Your order has been successfully delivered, Thank you for shopping with us.",
+    body: "Order has been successfully delivered to the customer.",
     value: "del",
+  },
+];
+
+exports.alertNotificationForDelivery = [
+  {
+    title: "New Order",
+    body: "New order is waiting to be delivered in your area. ",
+    value: "prc",
+  },
+  {
+    title: "Order Update",
+    body: "Order has been processed by seller",
+    value: "prcd",
   },
 ];

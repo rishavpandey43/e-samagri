@@ -8,6 +8,7 @@ import {
   View,
   ActivityIndicator,
   Alert,
+  ToastAndroid,
 } from 'react-native';
 import {Header, Card, Text, Icon, Button} from 'react-native-elements';
 import axios from 'axios';
@@ -31,6 +32,8 @@ class OrderDetailScreen extends Component {
     super(props);
     this.state = {
       order: null,
+      orderUpdating_No: false,
+      orderUpdating_Yes: false,
     };
   }
 
@@ -64,9 +67,13 @@ class OrderDetailScreen extends Component {
   _proceedOrder = processType => {
     Alert.alert(
       'Confirm your choice',
-      `Do you want to ${
-        processType === 'can' ? 'Cancel' : 'Proceed with'
-      } this order?`,
+      `${
+        processType === 'can'
+          ? 'Do you want to Cancel this order?'
+          : processType === 'prc'
+          ? 'Do you want to process this order?'
+          : 'Have you Processed this order?'
+      }`,
       [
         {
           text: 'Cancel',
@@ -76,8 +83,12 @@ class OrderDetailScreen extends Component {
           style: 'cancel',
         },
         {
-          text: 'OK',
+          text: 'Yes',
           onPress: () => {
+            this.setState({
+              orderUpdating_No: processType === 'can' ? true : false,
+              orderUpdating_Yes: processType !== 'can' ? true : false,
+            });
             axios
               .put(
                 baseUrl + '/order/process-order',
@@ -90,17 +101,20 @@ class OrderDetailScreen extends Component {
                 },
               )
               .then(res => {
-                console.log(res);
+                this.setState({
+                  orderUpdating_No: processType === 'can' ? false : false,
+                  orderUpdating_Yes: processType !== 'can' ? false : false,
+                });
                 this.props.getOrdersFetch(this.props.auth.authToken);
               })
               .catch(err => {
-                console.log(err.response);
-                dispatch(
-                  processOrderFailure({
-                    message: err.response
-                      ? err.response.data.errMessage || 'Internal Server Error'
-                      : 'Internal Server Error',
-                  }),
+                this.setState({
+                  orderUpdating_No: processType === 'can' ? false : false,
+                  orderUpdating_Yes: processType !== 'can' ? false : false,
+                });
+                ToastAndroid.show(
+                  "This order can't be processed right now, please try again.",
+                  ToastAndroid.SHORT,
                 );
               });
           },
@@ -139,6 +153,63 @@ class OrderDetailScreen extends Component {
             <ActivityIndicator />
           ) : (
             <View style={[mainStyles.container, {marginBottom: 100}]}>
+              <Card
+                title="Take your action regarding this order"
+                containerStyle={{
+                  display: `${
+                    this.state.order.status === 'pen' ||
+                    this.state.order.status === 'prc'
+                      ? 'flex'
+                      : 'none'
+                  }`,
+                }}>
+                <Text style={{textAlign: 'center', fontSize: 18}}>
+                  {this.state.order.status === 'pen'
+                    ? 'Do you want to process this order?'
+                    : 'Have you processed this order?'}
+                </Text>
+                {this.state.order.status === 'pen' ? (
+                  <View style={[mainStyles.row, {marginTop: 20}]}>
+                    <View style={mainStyles.col6}>
+                      <Button
+                        title="No"
+                        type="outline"
+                        raised
+                        loading={this.state.orderUpdating_No}
+                        titleStyle={{color: variables.mainThemeColor}}
+                        buttonStyle={mainStyles.outlineBtn}
+                        onPress={this._proceedOrder.bind(null, 'can')}
+                      />
+                    </View>
+                    <View style={mainStyles.col6}>
+                      <Button
+                        title="Yes"
+                        type="outline"
+                        raised
+                        loading={this.state.orderUpdating_Yes}
+                        titleStyle={{color: variables.mainThemeColor}}
+                        buttonStyle={mainStyles.outlineBtn}
+                        onPress={this._proceedOrder.bind(null, 'prc')}
+                      />
+                    </View>
+                  </View>
+                ) : this.state.order.status === 'prc' ? (
+                  <View style={{marginTop: 20, alignItems: 'center'}}>
+                    <View style={mainStyles.col6}>
+                      <Button
+                        title="Yes"
+                        type="outline"
+                        raised
+                        loading={this.state.orderUpdating_Yes}
+                        titleStyle={{color: variables.mainThemeColor}}
+                        buttonStyle={mainStyles.outlineBtn}
+                        onPress={this._proceedOrder.bind(null, 'prcd')}
+                      />
+                    </View>
+                  </View>
+                ) : null}
+              </Card>
+
               <Card>
                 <View style={[mainStyles.row, {marginBottom: 20}]}>
                   <View style={[mainStyles.col5]}>
@@ -146,7 +217,7 @@ class OrderDetailScreen extends Component {
                   </View>
                   <View
                     style={[mainStyles.col7, mainStyles.justifyContentCenter]}>
-                    <Text>
+                    <Text style={{fontSize: 18}}>
                       {this.state.order.orderedBy.personalDetail.firstName +
                         ' ' +
                         this.state.order.orderedBy.personalDetail.lastName}
@@ -156,13 +227,14 @@ class OrderDetailScreen extends Component {
 
                 <View style={[mainStyles.row, {marginBottom: 20}]}>
                   <View style={[mainStyles.col5]}>
-                    <Text style={styles.label}>status:</Text>
+                    <Text style={styles.label}>Status:</Text>
                   </View>
                   <View
                     style={[mainStyles.col7, mainStyles.justifyContentCenter]}>
                     <Text
                       style={{
                         color: getOrderStatus(this.state.order.status).color,
+                        fontSize: 18,
                       }}>
                       {getOrderStatus(this.state.order.status).name}
                     </Text>
@@ -224,39 +296,6 @@ class OrderDetailScreen extends Component {
                         ? 'Pending'
                         : 'Completed'}
                     </Text>
-                  </View>
-                </View>
-              </Card>
-              <Card
-                title="Take your action regarding this order"
-                containerStyle={{
-                  display: `${
-                    this.state.order.status === 'pending' ? 'flex' : 'none'
-                  }`,
-                }}>
-                <Text style={{textAlign: 'center', fontSize: 18}}>
-                  Do you want to process this order?
-                </Text>
-                <View style={[mainStyles.row, {marginTop: 20}]}>
-                  <View style={mainStyles.col6}>
-                    <Button
-                      title="No"
-                      type="outline"
-                      raised
-                      titleStyle={{color: variables.mainThemeColor}}
-                      buttonStyle={mainStyles.outlineBtn}
-                      onPress={this._proceedOrder.bind(null, 'can')}
-                    />
-                  </View>
-                  <View style={mainStyles.col6}>
-                    <Button
-                      title="Yes"
-                      type="outline"
-                      raised
-                      titleStyle={{color: variables.mainThemeColor}}
-                      buttonStyle={mainStyles.outlineBtn}
-                      onPress={this._proceedOrder.bind(null, 'prc')}
-                    />
                   </View>
                 </View>
               </Card>

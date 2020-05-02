@@ -21,7 +21,7 @@ import Item from '../../components/OrderItem';
 
 // * Import utilites
 import {baseUrl} from '../../utils/constant';
-import {getOrderStatus} from '../../utils/helper';
+import {getOrderStatus, getpaymentMode} from '../../utils/helper';
 
 // * Import all styling stuffs
 import mainStyles from '../../styles/mainStyle';
@@ -211,12 +211,11 @@ class OrderDetailScreen extends Component {
               </Card>
 
               <Card>
-                <View style={[mainStyles.row, {marginBottom: 20}]}>
-                  <View style={[mainStyles.col5]}>
-                    <Text style={styles.label}>Ordered by:</Text>
+                <View style={{flex: 1, flexDirection: 'row', marginBottom: 20}}>
+                  <View style={{flex: 1}}>
+                    <Text style={styles.label}>Ordered By:</Text>
                   </View>
-                  <View
-                    style={[mainStyles.col7, mainStyles.justifyContentCenter]}>
+                  <View style={{flex: 1, justifyContent: 'center'}}>
                     <Text style={{fontSize: 18}}>
                       {this.state.order.orderedBy.personalDetail.firstName +
                         ' ' +
@@ -225,16 +224,15 @@ class OrderDetailScreen extends Component {
                   </View>
                 </View>
 
-                <View style={[mainStyles.row, {marginBottom: 20}]}>
-                  <View style={[mainStyles.col5]}>
+                <View style={{flex: 1, flexDirection: 'row', marginBottom: 20}}>
+                  <View style={{flex: 1}}>
                     <Text style={styles.label}>Status:</Text>
                   </View>
-                  <View
-                    style={[mainStyles.col7, mainStyles.justifyContentCenter]}>
+                  <View style={{flex: 1, justifyContent: 'center'}}>
                     <Text
                       style={{
-                        color: getOrderStatus(this.state.order.status).color,
                         fontSize: 18,
+                        color: getOrderStatus(this.state.order.status).color,
                       }}>
                       {getOrderStatus(this.state.order.status).name}
                     </Text>
@@ -254,43 +252,43 @@ class OrderDetailScreen extends Component {
                     price={item.price}
                   />
                 ))}
-                <View style={[mainStyles.row, {marginTop: 20}]}>
-                  <View style={mainStyles.col6}>
+                <View style={{flex: 1, flexDirection: 'row', marginTop: 20}}>
+                  <View style={{flex: 1}}>
                     <Text>Item Total:</Text>
                   </View>
-                  <View style={mainStyles.col6}>
+                  <View style={{flex: 1}}>
                     <Text style={{textAlign: 'right'}}>
                       ₹ {this.state.order.amount.itemsPrice}
                     </Text>
                   </View>
                 </View>
 
-                <View style={[mainStyles.row, {marginTop: 20}]}>
-                  <View style={mainStyles.col6}>
+                <View style={{flex: 1, flexDirection: 'row', marginTop: 20}}>
+                  <View style={{flex: 1}}>
                     <Text>Delivery Charge:</Text>
                   </View>
-                  <View style={mainStyles.col6}>
+                  <View style={{flex: 1}}>
                     <Text style={{textAlign: 'right'}}>
                       ₹ {this.state.order.amount.deliveryCharge}
                     </Text>
                   </View>
                 </View>
 
-                <View style={[mainStyles.row, {marginTop: 20}]}>
-                  <View style={mainStyles.col6}>
+                <View style={{flex: 1, flexDirection: 'row', marginTop: 20}}>
+                  <View style={{flex: 1}}>
                     <Text>Payment Mode:</Text>
                   </View>
-                  <View style={mainStyles.col6}>
+                  <View style={{flex: 1}}>
                     <Text style={{textAlign: 'right'}}>
-                      {this.state.order.paymentMode}
+                      {getpaymentMode(this.state.order.paymentMode)}
                     </Text>
                   </View>
                 </View>
-                <View style={[mainStyles.row, {marginTop: 20}]}>
-                  <View style={mainStyles.col6}>
+                <View style={{flex: 1, flexDirection: 'row', marginTop: 20}}>
+                  <View style={{flex: 1}}>
                     <Text>Payment Status:</Text>
                   </View>
-                  <View style={mainStyles.col6}>
+                  <View style={{flex: 1}}>
                     <Text style={{textAlign: 'right'}}>
                       {this.state.order.paymentMode === 'cod'
                         ? 'Pending'

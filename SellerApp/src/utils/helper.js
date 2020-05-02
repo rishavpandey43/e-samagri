@@ -71,5 +71,9 @@ export const getOrderStatus = type => {
   return orderStatus.filter(status => status.value === type)[0];
 };
 
+export const getpaymentMode = type => {
+  return paymentMode.filter(payment => payment.value === type)[0].name;
+};
+
 // TODO: complete this function
 export const convertToPascalCase = () => {};

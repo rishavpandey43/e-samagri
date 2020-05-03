@@ -185,7 +185,7 @@ class UpdateProfileScreen extends Component {
                 title={
                   <CardCustomTitle
                     title="Update Your Personal Detail"
-                    detail={this.props.profile.profile.personalDetail}
+                    detail
                     onPress={() => {
                       this.toggleEditCardDisplay('personalDetailCardDisplay');
                     }}
@@ -301,7 +301,7 @@ class UpdateProfileScreen extends Component {
                 title={
                   <CardCustomTitle
                     title="Update Your Profile Verification Detail"
-                    detail={this.props.profile.profile.personalDetail}
+                    detail
                     onPress={() => {
                       this.toggleEditCardDisplay(
                         'profileVerificationDetailCardDisplay',
@@ -439,9 +439,9 @@ class UpdateProfileScreen extends Component {
                 title={
                   <CardCustomTitle
                     title="Update Your Vehicle Detail"
-                    detail={this.props.profile.profile.vehicleDetail}
+                    detail
                     onPress={() => {
-                      this.toggleEditCardDisplay('bankDetailCardDisplay');
+                      this.toggleEditCardDisplay('vehicleDetailCardDisplay');
                     }}
                   />
                 }>
@@ -524,7 +524,7 @@ class UpdateProfileScreen extends Component {
                 title={
                   <CardCustomTitle
                     title="Update Your Bank Detail"
-                    detail={this.props.profile.profile.personalDetail}
+                    detail
                     onPress={() => {
                       this.toggleEditCardDisplay('bankDetailCardDisplay');
                     }}

@@ -117,7 +117,7 @@ exports.requestPhoneOTPForLogin = (req, res, next) => {
     .then((deliveryAgent) => {
       if (deliveryAgent) {
         authy.request_sms(
-          DeliveryAgent.personalDetail.authyId,
+          deliveryAgent.personalDetail.authyId,
           (force = true),
           function (otpError, otpResponse) {
             if (otpError) {
@@ -202,7 +202,8 @@ exports.logout = (req, res, next) => {
     .then((deliveryAgent) => {
       if (deliveryAgent) {
         deliveryAgent.fcm.status = false;
-        DeliveryAgent.save()
+        deliveryAgent
+          .save()
           .then((deliveryAgent) => {
             res.statusCode = 200;
             res.statusMessage = "OK";

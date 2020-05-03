@@ -26,6 +26,11 @@ orderRouter
     "/process-order",
     middleWares.verifyUserToken,
     orderRouterController.processOrderSeller
+  )
+  .put(
+    "/process-order-deliveryAgent",
+    middleWares.verifyUserToken,
+    orderRouterController.processOrderDeliveryAgent
   );
 
 module.exports = orderRouter;

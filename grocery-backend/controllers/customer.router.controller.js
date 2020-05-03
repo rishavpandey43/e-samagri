@@ -75,8 +75,8 @@ exports.register = (req, res, next) => {
             let err = new Error(
               `OTP you entered was wrong, please enter correct otp to continue`
             );
-            err.status = 500;
-            err.statusText = "Internal Server Error";
+            err.status = 400;
+            err.statusText = "Bad Request";
             next(err);
           } else {
             Customer.create({
@@ -159,8 +159,8 @@ exports.login = (req, res, next) => {
             let err = new Error(
               `OTP you entered was wrong, please enter correct otp to continue`
             );
-            err.status = 500;
-            err.statusText = "Internal Server Error";
+            err.status = 400;
+            err.statusText = "Bad Request";
             next(err);
           } else {
             // save FCM Device token to DB with on successfull verification
@@ -295,8 +295,8 @@ exports.updateCustomerDetailController = (req, res, next) => {
         });
       } else {
         let err = new Error(`Unable to update, please try again.`);
-        err.status = 500;
-        err.statusText = "Internal Server Error";
+        err.status = 501;
+        err.statusText = "Not Implemented";
         next(err);
       }
     })
@@ -373,8 +373,8 @@ exports.updateCartController = (req, res, next) => {
           .catch((err) => next(err));
       } else {
         let err = new Error(`Unable to update, please try again.`);
-        err.status = 500;
-        err.statusText = "Internal Server Error";
+        err.status = 501;
+        err.statusText = "Not Implemented";
         next(err);
       }
     })

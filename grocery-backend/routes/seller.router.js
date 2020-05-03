@@ -2,7 +2,7 @@ const express = require("express");
 
 const middleWares = require("../middlewares/authenticate");
 
-const sellerRouterController = require("../controllers/sellers.router.controller");
+const sellerRouterController = require("../controllers/seller.router.controller");
 
 const sellerRouter = express.Router(); // initialize express router
 

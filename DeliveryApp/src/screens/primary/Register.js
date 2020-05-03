@@ -303,14 +303,12 @@ class RegisterScreen extends Component {
               )}
             </View>
             <View
-              style={[
-                mainStyles.row,
-                {
-                  marginBottom: 20,
-                  paddingTop: 20,
-                  marginTop: 15,
-                },
-              ]}>
+              style={{
+                flexDirection: 'row',
+                marginBottom: 20,
+                paddingTop: 20,
+                marginTop: 15,
+              }}>
               <View style={mainStyles.col6}>
                 <Button
                   title="Cancel"

@@ -3,6 +3,17 @@ export const baseUrl = 'http://192.168.43.240:5555';
 
 export const authTokenName = 'eSamagri_delivery_auth_token';
 
+export const verificationDocumentType = [
+  {
+    name: 'Aadhar Card',
+    value: 'aadhar-id',
+  },
+  {
+    name: 'Voter ID Card',
+    value: 'voter-id',
+  },
+];
+
 export const categoryList = [
   {
     name: 'All',
@@ -59,16 +70,6 @@ export const paymentMode = [
 
 export const orderStatus = [
   {
-    name: 'Pending',
-    value: 'pen',
-    color: 'orange',
-  },
-  {
-    name: 'Processing',
-    value: 'prc',
-    color: 'blue',
-  },
-  {
     name: 'Processed',
     value: 'prcd',
     color: '#EE82EE',
@@ -82,10 +83,5 @@ export const orderStatus = [
     name: 'Delivered',
     value: 'del',
     color: 'green',
-  },
-  {
-    name: 'Cancelled',
-    value: 'can',
-    color: 'red',
   },
 ];

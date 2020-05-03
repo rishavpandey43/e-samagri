@@ -87,6 +87,7 @@ exports.register = (req, res, next) => {
                 lastName: req.body.lastName,
                 phone: req.body.phone,
                 authyId: req.body.authyId,
+                verified: false,
               },
             })
               .then((deliveryAgent) => {
@@ -242,6 +243,7 @@ exports.getDeliveryAgentProfileController = (req, res, next) => {
 };
 
 exports.updateDeliveryAgentProfileController = (req, res, next) => {
+  console.log(req.body.dataType);
   DeliveryAgent.findOneAndUpdate(
     { _id: req.userId },
     { $set: { [req.body.dataType]: req.body.data } },

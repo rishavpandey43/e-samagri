@@ -84,6 +84,7 @@ export const updateProfileFetch = (token, data, dataType) => dispatch => {
     })
     .then(res => {
       dispatch(updateProfileSuccess({profile: {...res.data.deliveryAgent}}));
+      dispatch(getProfileFetch(token));
       ToastAndroid.show(
         'Your details has been updated succesfully, You can go back to your profile',
         ToastAndroid.LONG,

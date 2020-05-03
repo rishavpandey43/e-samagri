@@ -14,12 +14,15 @@ const deliveryAgentSchema = new Schema(
       phone: { type: String, required: true },
       authyId: { type: String, required: false },
     },
+    profileVerificationDetail: {
+      type: { type: String, require: false },
+      number: { type: Number, require: false },
+      verified: { type: Boolean, required: false },
+    },
     vehicleDetail: {
-      type: { type: String, required: false },
-      street: { type: String, required: false },
-      landmark: { type: String, required: false },
-      city: { type: String, required: false },
-      pincode: { type: Number, required: false },
+      drivingLicence: { type: String, required: false },
+      vehicleModel: { type: String, required: false },
+      verified: { type: Boolean, required: false },
     },
     bankDetail: {
       name: { type: String, required: false },

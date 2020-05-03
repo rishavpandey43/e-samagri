@@ -78,11 +78,11 @@ export const processOrderFetch = (token, processType, orderId) => dispatch => {
   axios
     .put(
       baseUrl + '/order/process-order-deliveryAgent',
-      {processType, orderId: this.state.order._id},
+      {processType, orderId},
       {
         headers: {
           'Content-Type': 'application/json',
-          Authorization: `Bearer ${this.props.auth.authToken}`,
+          Authorization: `Bearer ${token}`,
         },
       },
     )

@@ -32,17 +32,17 @@ const orders = (state = initialState, action) => {
     case actionTypes.PROCESS_ORDER_REQUEST:
       return {
         ...state,
-        [loadingType]: true,
+        [action.loadingType]: true,
       };
     case actionTypes.PROCESS_ORDER_SUCCESS:
       return {
         ...state,
-        [loadingType]: true,
+        [action.loadingType]: false,
       };
     case actionTypes.PROCESS_ORDER_FAILURE:
       return {
         ...state,
-        [loadingType]: false,
+        [action.loadingType]: false,
       };
     default:
       return {

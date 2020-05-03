@@ -14,49 +14,6 @@ export const verificationDocumentType = [
   },
 ];
 
-export const categoryList = [
-  {
-    name: 'All',
-    value: 'all',
-  },
-  {
-    name: 'Kitchen Staples',
-    value: 'ks',
-  },
-  {
-    name: 'Coffee, Tea & Beverages',
-    value: 'bs',
-  },
-  {
-    name: 'Dried Fruits, Nuts & Seeds',
-    value: 'dfns',
-  },
-  {
-    name: 'Packed Foods',
-    value: 'pf',
-  },
-  {
-    name: 'Snacks & Cookies',
-    value: 'sc',
-  },
-  {
-    name: 'Dairy Products',
-    value: 'dp',
-  },
-  {
-    name: 'Bakery & Cakes',
-    value: 'bc',
-  },
-  {
-    name: 'Personal & Homecare',
-    value: 'ph',
-  },
-  {
-    name: 'Health & Wellness',
-    value: 'hw',
-  },
-];
-
 export const paymentMode = [
   {
     name: 'Cash on Delivery',
@@ -69,6 +26,16 @@ export const paymentMode = [
 ];
 
 export const orderStatus = [
+  {
+    name: 'Pending',
+    value: 'pen',
+    color: 'orange',
+  },
+  {
+    name: 'Processing',
+    value: 'prc',
+    color: 'blue',
+  },
   {
     name: 'Processed',
     value: 'prcd',
@@ -83,5 +50,10 @@ export const orderStatus = [
     name: 'Delivered',
     value: 'del',
     color: 'green',
+  },
+  {
+    name: 'Cancelled',
+    value: 'can',
+    color: 'red',
   },
 ];

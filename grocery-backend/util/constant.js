@@ -48,7 +48,7 @@ exports.alertNotificationForSeller = [
 exports.alertNotificationForDelivery = [
   {
     title: "New Order",
-    body: "New order is waiting to be delivered in your area. ",
+    body: "New order is waiting to be delivered in your area.",
     value: "prc",
   },
   {

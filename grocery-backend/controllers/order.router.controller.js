@@ -180,3 +180,140 @@ exports.processOrderSeller = (req, res, next) => {
     })
     .catch((err) => next(err));
 };
+
+exports.processOrderDeliveryAgent = (req, res, next) => {
+  Order.findById(req.body.orderId)
+    .populate([
+      { path: "orderedBy", model: Customer },
+      { path: "orderedFrom", model: Seller },
+    ])
+    .then((order) => {
+      // * Here handle when first time delivery agent is processing the order.
+      if (!order.deliveryAgent) {
+        if (req.body.processType === "no") {
+          // * here, delivery agent has rejected to deliver current order
+          res.statusCode = 200;
+          res.statusText = "OK";
+          res.setHeader("Content-Type", "application/json");
+          res.json({
+            message: "You've successfully rejected to deliver this order.",
+          });
+        } else {
+          // * here, delivery agent has accepted to deliver current order
+          // * NOW ALERT TO CUSTOMER
+          admin.messaging().sendToDevice(
+            order.orderedBy.fcm.token,
+            {
+              data: {
+                orderId: JSON.stringify(order._id),
+              },
+              notification: {
+                title: "Order Update",
+                body:
+                  "Delivery agent has been successfully assigned to the order.",
+              },
+            },
+            {
+              // Required for background/quit data-only messages on iOS
+              contentAvailable: true,
+              // Required for background/quit data-only messages on Android
+              priority: "high",
+            }
+          );
+          // * NOW ALERT TO SELLER
+          admin.messaging().sendToDevice(
+            order.orderedFrom.fcm.token,
+            {
+              data: {
+                orderId: JSON.stringify(order._id),
+              },
+              notification: {
+                title: "Order Update",
+                body:
+                  "Delivery agent has been successfully assigned to the order.",
+              },
+            },
+            {
+              // Required for background/quit data-only messages on iOS
+              contentAvailable: true,
+              // Required for background/quit data-only messages on Android
+              priority: "high",
+            }
+          );
+          res.statusCode = 200;
+          res.statusText = "OK";
+          res.setHeader("Content-Type", "application/json");
+          res.json({
+            order,
+            message:
+              "Current order has been successfully assigned to you for delivery",
+          });
+        }
+      } else {
+        order.status = req.body.processType;
+        order
+          .save()
+          .then((order) => {
+            // * NOW ALERT TO CUSTOMER
+            admin.messaging().sendToDevice(
+              order.orderedBy.fcm.token,
+              {
+                data: {
+                  orderId: JSON.stringify(order._id),
+                },
+                notification: {
+                  title: helpers.getNotificationFromValue(
+                    constants.alertNotificationForCustomer,
+                    req.body.processType
+                  ).title,
+                  body: helpers.getNotificationFromValue(
+                    constants.alertNotificationForCustomer,
+                    req.body.processType
+                  ).body,
+                },
+              },
+              {
+                // Required for background/quit data-only messages on iOS
+                contentAvailable: true,
+                // Required for background/quit data-only messages on Android
+                priority: "high",
+              }
+            );
+            // * NOW ALERT TO SELLER
+            admin.messaging().sendToDevice(
+              order.orderedFrom.fcm.token,
+              {
+                data: {
+                  orderId: JSON.stringify(order._id),
+                },
+                notification: {
+                  title: helpers.getNotificationFromValue(
+                    constants.alertNotificationForSeller,
+                    req.body.processType
+                  ).title,
+                  body: helpers.getNotificationFromValue(
+                    constants.alertNotificationForSeller,
+                    req.body.processType
+                  ).body,
+                },
+              },
+              {
+                // Required for background/quit data-only messages on iOS
+                contentAvailable: true,
+                // Required for background/quit data-only messages on Android
+                priority: "high",
+              }
+            );
+            res.statusCode = 200;
+            res.statusText = "OK";
+            res.setHeader("Content-Type", "application/json");
+            res.json({
+              order,
+              message: "Order updated by seller",
+            });
+          })
+          .catch((err) => next(err));
+      }
+    })
+    .catch((err) => next(err));
+};

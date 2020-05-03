@@ -64,7 +64,7 @@ class OrderDetailScreen extends Component {
     }
   }
 
-  _proceedOrder = processType => {
+  _processOrder = processType => {
     Alert.alert(
       'Confirm your choice',
       `${
@@ -89,34 +89,11 @@ class OrderDetailScreen extends Component {
               orderUpdating_No: processType === 'can' ? true : false,
               orderUpdating_Yes: processType !== 'can' ? true : false,
             });
-            axios
-              .put(
-                baseUrl + '/order/process-order',
-                {processType, orderId: this.state.order._id},
-                {
-                  headers: {
-                    'Content-Type': 'application/json',
-                    Authorization: `Bearer ${this.props.auth.authToken}`,
-                  },
-                },
-              )
-              .then(res => {
-                this.setState({
-                  orderUpdating_No: processType === 'can' ? false : false,
-                  orderUpdating_Yes: processType !== 'can' ? false : false,
-                });
-                this.props.getOrdersFetch(this.props.auth.authToken);
-              })
-              .catch(err => {
-                this.setState({
-                  orderUpdating_No: processType === 'can' ? false : false,
-                  orderUpdating_Yes: processType !== 'can' ? false : false,
-                });
-                ToastAndroid.show(
-                  "This order can't be processed right now, please try again.",
-                  ToastAndroid.SHORT,
-                );
-              });
+            this.props.processOrderFetch(
+              this.props.auth.authToken,
+              processType,
+              this.state.order._id,
+            );
           },
         },
       ],
@@ -157,18 +134,23 @@ class OrderDetailScreen extends Component {
                 title="Take your action regarding this order"
                 containerStyle={{
                   display: `${
-                    this.state.order.status === 'pen' ||
-                    this.state.order.status === 'prc'
+                    this.state.order.status === 'prc' ||
+                    this.state.order.status === 'prcd' ||
+                    this.state.order.status === 'ofd'
                       ? 'flex'
                       : 'none'
                   }`,
                 }}>
                 <Text style={{textAlign: 'center', fontSize: 18}}>
-                  {this.state.order.status === 'pen'
-                    ? 'Do you want to process this order?'
-                    : 'Have you processed this order?'}
+                  {this.state.order.status === 'prc'
+                    ? 'Do you want to deliver this order?'
+                    : `Have you ${
+                        this.state.order.status === 'prcd'
+                          ? 'Picked Up'
+                          : 'Delivered'
+                      }  this order?`}
                 </Text>
-                {this.state.order.status === 'pen' ? (
+                {this.state.order.status === 'prc' ? (
                   <View style={[mainStyles.row, {marginTop: 20}]}>
                     <View style={mainStyles.col6}>
                       <Button
@@ -178,7 +160,7 @@ class OrderDetailScreen extends Component {
                         loading={this.state.orderUpdating_No}
                         titleStyle={{color: variables.mainThemeColor}}
                         buttonStyle={mainStyles.outlineBtn}
-                        onPress={this._proceedOrder.bind(null, 'can')}
+                        onPress={this._processOrder.bind(null, 'no')}
                       />
                     </View>
                     <View style={mainStyles.col6}>
@@ -189,7 +171,7 @@ class OrderDetailScreen extends Component {
                         loading={this.state.orderUpdating_Yes}
                         titleStyle={{color: variables.mainThemeColor}}
                         buttonStyle={mainStyles.outlineBtn}
-                        onPress={this._proceedOrder.bind(null, 'prc')}
+                        onPress={this._processOrder.bind(null, 'yes')}
                       />
                     </View>
                   </View>
@@ -203,11 +185,25 @@ class OrderDetailScreen extends Component {
                         loading={this.state.orderUpdating_Yes}
                         titleStyle={{color: variables.mainThemeColor}}
                         buttonStyle={mainStyles.outlineBtn}
-                        onPress={this._proceedOrder.bind(null, 'prcd')}
+                        onPress={this._processOrder.bind(null, 'ofd')}
                       />
                     </View>
                   </View>
-                ) : null}
+                ) : (
+                  <View style={{marginTop: 20, alignItems: 'center'}}>
+                    <View style={mainStyles.col6}>
+                      <Button
+                        title="Yes"
+                        type="outline"
+                        raised
+                        loading={this.state.orderUpdating_Yes}
+                        titleStyle={{color: variables.mainThemeColor}}
+                        buttonStyle={mainStyles.outlineBtn}
+                        onPress={this._processOrder.bind(null, 'del')}
+                      />
+                    </View>
+                  </View>
+                )}
               </Card>
 
               <Card>

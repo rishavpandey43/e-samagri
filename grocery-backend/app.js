@@ -10,6 +10,7 @@ const admin = require("firebase-admin");
 const sellerRouter = require("./routes/seller.router");
 const customerRouter = require("./routes/customer.router");
 const orderRouter = require("./routes/order.router");
+const deliveryAgentRouter = require("./routes/deliveryAgent.router");
 
 // * configure dotenv to access environment variables
 dotenv.config();
@@ -75,6 +76,7 @@ app.use(cookieParser());
 app.use("/seller", sellerRouter);
 app.use("/customer", customerRouter);
 app.use("/order", orderRouter);
+app.use("/deliveryAgent", deliveryAgentRouter);
 
 // * catch 404 and forward to error handler
 app.use(function (req, res, next) {

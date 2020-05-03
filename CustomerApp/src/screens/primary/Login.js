@@ -84,7 +84,6 @@ class LoginScreen extends Component {
           });
         })
         .catch(err => {
-          console.log(err.response);
           ToastAndroid.show(
             err.response
               ? err.response.data.errMessage || 'Some error occured, try again.'

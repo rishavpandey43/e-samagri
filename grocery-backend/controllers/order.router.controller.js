@@ -13,6 +13,7 @@ const constants = require("../util/constant");
 
 exports.getAllOrdersCustomer = (req, res, next) => {
   Order.find({ orderedBy: req.userId })
+    .sort({ createdAt: -1 })
     .populate([{ path: "orderedFrom", model: Seller }])
     .then((orders) => {
       if (orders) {
@@ -111,6 +112,7 @@ exports.placeOrder = (req, res, next) => {
 
 exports.getAllOrdersSeller = (req, res, next) => {
   Order.find({ orderedFrom: req.userId })
+    .sort({ createdAt: -1 })
     .populate([{ path: "orderedBy", model: Customer }])
     .then((orders) => {
       if (orders) {

@@ -24,7 +24,11 @@ const OrderCard = ({order, navigation}) => {
             <Text>{order.createdAt}</Text>
           </View>
           <View style={styles.marginTop}>
-            <Text style={{color: getOrderStatus(order.status).color}}>
+            <Text
+              style={{
+                color: getOrderStatus(order.status).color,
+                fontSize: 18,
+              }}>
               {getOrderStatus(order.status).name}
             </Text>
           </View>

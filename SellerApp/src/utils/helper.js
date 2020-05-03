@@ -1,6 +1,6 @@
 import AsyncStorage from '@react-native-community/async-storage';
 
-import {categoryList, orderStatus} from './constant';
+import {categoryList, orderStatus, paymentMode} from './constant';
 
 export const storeDataInAsync = async (key, value) => {
   try {
@@ -69,6 +69,10 @@ export const getCategoryName = categoryValue => {
 
 export const getOrderStatus = type => {
   return orderStatus.filter(status => status.value === type)[0];
+};
+
+export const getpaymentMode = type => {
+  return paymentMode.filter(payment => payment.value === type)[0].name;
 };
 
 // TODO: complete this function

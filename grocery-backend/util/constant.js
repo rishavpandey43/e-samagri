@@ -45,7 +45,7 @@ exports.alertNotificationForSeller = [
   },
 ];
 
-exports.alertNotificationForDelivery = [
+exports.alertNotificationForDeliveryAgent = [
   {
     title: "New Order",
     body: "New order is waiting to be delivered in your area.",

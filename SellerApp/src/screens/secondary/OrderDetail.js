@@ -85,7 +85,6 @@ class OrderDetailScreen extends Component {
         {
           text: 'Yes',
           onPress: () => {
-            console.log(this);
             this.props.processOrderFetch(
               this.props.auth.authToken,
               processType,

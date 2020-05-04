@@ -14,6 +14,7 @@ const deliveryAgentSchema = new Schema(
       phone: { type: String, required: true },
       authyId: { type: String, required: false },
     },
+    preferredPinCode: [{ type: Number, require: false }],
     profileVerificationDetail: {
       type: { type: String, require: false },
       number: { type: Number, require: false },

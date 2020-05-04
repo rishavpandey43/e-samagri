@@ -23,7 +23,7 @@ orderRouter
     orderRouterController.getAllOrdersSeller
   )
   .put(
-    "/process-order",
+    "/process-order-seller",
     middleWares.verifyUserToken,
     orderRouterController.processOrderSeller
   )

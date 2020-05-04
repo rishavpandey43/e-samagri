@@ -1,4 +1,5 @@
 import axios from 'axios';
+import {ToastAndroid} from 'react-native';
 import * as actionTypes from '../types/actionTypes';
 
 import {baseUrl} from '../../../utils/constant';
@@ -37,7 +38,7 @@ export const getOrdersFetch = token => dispatch => {
       dispatch(getOrdersSuccess({orders: [...res.data.orders]}));
     })
     .catch(err => {
-      console.log(err);
+      console.log(err.response);
       dispatch(
         getOrdersFailure({
           message: err.response
@@ -93,6 +94,10 @@ export const processOrderFetch = (token, processType, orderId) => dispatch => {
         ),
       );
       dispatch(getOrdersFetch(token));
+      ToastAndroid.show(
+        'This order has been successfully processed.',
+        ToastAndroid.SHORT,
+      );
     })
     .catch(err => {
       dispatch(

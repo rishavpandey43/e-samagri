@@ -45,24 +45,17 @@ class DashBoardScreen extends Component {
         this.props.getOrdersFetch(this.props.auth.authToken);
 
         Alert.alert(
-          'New Order',
-          ` Hello ${
+          message.notification.title,
+          `Hello ${
             this.props.profile.profile
               ? this.props.profile.profile.personalDetail.firstName +
                 ' ' +
                 this.props.profile.profile.personalDetail.lastName
               : ''
-          } You've received new order`,
+          } ${message.notification.body}`,
           [
             {
-              text: 'Not now',
-              onPress: () => {
-                return;
-              },
-              style: 'cancel',
-            },
-            {
-              text: 'Proceed',
+              text: 'View more detail',
               onPress: () => {
                 this.props.navigation.navigate('orders-stack');
                 return;

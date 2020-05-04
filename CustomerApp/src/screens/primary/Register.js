@@ -15,7 +15,7 @@ import * as AuthActions from '../../store/actions/creators/AuthActions';
 // * Import utilites
 import {getDataFromAsync} from '../../utils/helper';
 
-import {baseUrl} from '../../utils/constant';
+import {baseUrl, authTokenName} from '../../utils/constant';
 
 // * Import all styling stuffs
 import mainStyles from '../../styles/mainStyle';
@@ -40,7 +40,7 @@ class RegisterScreen extends Component {
   }
 
   componentDidMount() {
-    getDataFromAsync('eSamagri_customer_auth_token')
+    getDataFromAsync(authTokenName)
       .then(token => {
         this.props.getTokenFromAsync(token);
       })

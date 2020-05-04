@@ -34,6 +34,7 @@ import Store from '../../components/Store';
 
 // * Import utilites
 import {getDataFromAsync} from '../../utils/helper';
+import {authTokenName} from '../../utils/constant';
 
 // * Import all styling stuffs
 import mainStyles from '../../styles/mainStyle';
@@ -49,7 +50,7 @@ class HomeScreen extends Component {
   }
 
   componentDidMount() {
-    getDataFromAsync('eSamagri_customer_auth_token')
+    getDataFromAsync(authTokenName)
       .then(token => {
         this.props.getTokenFromAsync(token);
         if (this.props.profile.profile && !this.props.profile.profile.address) {

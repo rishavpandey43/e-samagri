@@ -95,7 +95,7 @@ exports.register = (req, res, next) => {
                 let userId = customer._id;
                 // Issue JWT Token on validation
                 const token = jwt.sign({ userId }, JWT_SECRET_KEY, {
-                  expiresIn: 90000,
+                  expiresIn: "30d",
                 });
                 res.statusCode = 200;
                 res.statusText = "OK";
@@ -174,7 +174,7 @@ exports.login = (req, res, next) => {
                 let userId = customer._id;
                 // Issue JWT Token on validation
                 const token = jwt.sign({ userId }, process.env.JWT_SECRET_KEY, {
-                  expiresIn: 90000,
+                  expiresIn: "30d",
                 });
                 res.statusCode = 200;
                 res.statusText = "OK";

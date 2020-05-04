@@ -5,7 +5,6 @@ import {createStackNavigator} from '@react-navigation/stack';
 import HomeScreen from '../../screens/primary/Home';
 import UpdateProfileScreen from '../../screens/secondary/UpdateProfile';
 import StoreDetailScreen from '../../screens/secondary/StoreDetail';
-import ProductDetailScreen from '../../screens/secondary/ProductDetail';
 import CartScreen from '../../screens/secondary/Cart';
 import CheckoutScreen from '../../screens/secondary/Checkout';
 import OrderConfirmationScreen from '../../screens/secondary/OrderConfirmation';
@@ -36,13 +35,6 @@ const HomeStack = () => (
       component={StoreDetailScreen}
       options={{
         title: 'Store Detail',
-      }}
-    />
-    <Stack.Screen
-      name="product-detail-screen"
-      component={ProductDetailScreen}
-      options={{
-        title: 'Product Detail',
       }}
     />
     <Stack.Screen

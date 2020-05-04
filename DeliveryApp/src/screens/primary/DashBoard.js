@@ -42,8 +42,6 @@ class DashBoardScreen extends Component {
 
     const messageListener = () => {
       messaging().onMessage(message => {
-        this.props.getOrdersFetch(this.props.auth.authToken);
-
         Alert.alert(
           message.notification.title,
           `Hello ${
@@ -57,7 +55,12 @@ class DashBoardScreen extends Component {
             {
               text: 'View more detail',
               onPress: () => {
-                this.props.navigation.navigate('orders-stack');
+                if (message.notification.title === 'New Order') {
+                  this.props.navigation.navigate('deliver-new-order-stack');
+                } else {
+                  this.props.getOrdersFetch(this.props.auth.authToken);
+                  this.props.navigation.navigate('orders-stack');
+                }
                 return;
               },
             },
@@ -66,13 +69,21 @@ class DashBoardScreen extends Component {
       });
 
       messaging().onNotificationOpenedApp(notification => {
-        this.props.getOrdersFetch(this.props.auth.authToken);
-        this.props.navigation.navigate('orders-stack');
+        if (notification.title === 'New Order') {
+          this.props.navigation.navigate('deliver-new-order-stack');
+        } else {
+          this.props.getOrdersFetch(this.props.auth.authToken);
+          this.props.navigation.navigate('orders-stack');
+        }
       });
 
       messaging().getInitialNotification(notification => {
-        this.props.getOrdersFetch(this.props.auth.authToken);
-        this.props.navigation.navigate('orders-stack');
+        if (notification.title === 'New Order') {
+          this.props.navigation.navigate('deliver-new-order-stack');
+        } else {
+          this.props.getOrdersFetch(this.props.auth.authToken);
+          this.props.navigation.navigate('orders-stack');
+        }
       });
     };
 

@@ -15,6 +15,7 @@ import mainStyles from '../styles/mainStyle';
 import variables from '../styles/variables';
 
 const OrderCard = ({order, navigation}) => {
+  console.log(order);
   return (
     <Card containerStyle={{borderRadius: 10}}>
       <View style={mainStyles.row}>

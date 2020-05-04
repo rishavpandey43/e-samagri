@@ -27,7 +27,7 @@ export const getOrdersFailure = response => {
 export const getOrdersFetch = token => dispatch => {
   dispatch(getOrdersRequest());
   axios
-    .get(baseUrl + '/order/get-all-orders-seller', {
+    .get(baseUrl + '/order/get-all-orders-deliveryAgent', {
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${token}`,

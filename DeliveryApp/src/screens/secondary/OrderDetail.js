@@ -32,8 +32,6 @@ class OrderDetailScreen extends Component {
     super(props);
     this.state = {
       order: null,
-      orderUpdating_No: false,
-      orderUpdating_Yes: false,
     };
   }
 
@@ -138,68 +136,49 @@ class OrderDetailScreen extends Component {
                   }`,
                 }}>
                 <Text style={{textAlign: 'center', fontSize: 18}}>
-                  {this.state.order.status === 'prc'
-                    ? 'Do you want to deliver this order?'
-                    : `Have you ${
-                        this.state.order.status === 'prcd'
-                          ? 'Picked Up'
-                          : 'Delivered'
-                      }  this order?`}
+                  {this.state.order.status === 'prc' ? (
+                    <Text>
+                      Order is still under process by seller, please wait.
+                    </Text>
+                  ) : (
+                    `Have you ${
+                      this.state.order.status === 'prcd'
+                        ? 'Picked Up'
+                        : 'Delivered'
+                    }  this order?`
+                  )}
                 </Text>
-                {this.state.order.status === 'prc' ? (
-                  <View style={[mainStyles.row, {marginTop: 20}]}>
-                    <View style={mainStyles.col6}>
-                      <Button
-                        title="No"
-                        type="outline"
-                        raised
-                        loading={this.props.orders.updatingOrder_can}
-                        titleStyle={{color: variables.mainThemeColor}}
-                        buttonStyle={mainStyles.outlineBtn}
-                        onPress={this._processOrder.bind(null, 'no')}
-                      />
+                {!this.state.order.status === 'prc' ? (
+                  this.state.order.status === 'prcd' ? (
+                    <View style={{marginTop: 20, alignItems: 'center'}}>
+                      <View style={mainStyles.col6}>
+                        <Button
+                          title="Yes"
+                          type="outline"
+                          raised
+                          loading={this.props.orders.updatingOrder_other}
+                          titleStyle={{color: variables.mainThemeColor}}
+                          buttonStyle={mainStyles.outlineBtn}
+                          onPress={this._processOrder.bind(null, 'ofd')}
+                        />
+                      </View>
                     </View>
-                    <View style={mainStyles.col6}>
-                      <Button
-                        title="Yes"
-                        type="outline"
-                        raised
-                        loading={this.props.orders.updatingOrder_other}
-                        titleStyle={{color: variables.mainThemeColor}}
-                        buttonStyle={mainStyles.outlineBtn}
-                        onPress={this._processOrder.bind(null, 'yes')}
-                      />
+                  ) : (
+                    <View style={{marginTop: 20, alignItems: 'center'}}>
+                      <View style={mainStyles.col6}>
+                        <Button
+                          title="Yes"
+                          type="outline"
+                          raised
+                          loading={this.props.orders.updatingOrder_other}
+                          titleStyle={{color: variables.mainThemeColor}}
+                          buttonStyle={mainStyles.outlineBtn}
+                          onPress={this._processOrder.bind(null, 'del')}
+                        />
+                      </View>
                     </View>
-                  </View>
-                ) : this.state.order.status === 'prc' ? (
-                  <View style={{marginTop: 20, alignItems: 'center'}}>
-                    <View style={mainStyles.col6}>
-                      <Button
-                        title="Yes"
-                        type="outline"
-                        raised
-                        loading={this.props.orders.updatingOrder_other}
-                        titleStyle={{color: variables.mainThemeColor}}
-                        buttonStyle={mainStyles.outlineBtn}
-                        onPress={this._processOrder.bind(null, 'ofd')}
-                      />
-                    </View>
-                  </View>
-                ) : (
-                  <View style={{marginTop: 20, alignItems: 'center'}}>
-                    <View style={mainStyles.col6}>
-                      <Button
-                        title="Yes"
-                        type="outline"
-                        raised
-                        loading={this.props.orders.updatingOrder_other}
-                        titleStyle={{color: variables.mainThemeColor}}
-                        buttonStyle={mainStyles.outlineBtn}
-                        onPress={this._processOrder.bind(null, 'del')}
-                      />
-                    </View>
-                  </View>
-                )}
+                  )
+                ) : null}
               </Card>
 
               <Card>
@@ -212,6 +191,17 @@ class OrderDetailScreen extends Component {
                       {this.state.order.orderedBy.personalDetail.firstName +
                         ' ' +
                         this.state.order.orderedBy.personalDetail.lastName}
+                    </Text>
+                  </View>
+                </View>
+
+                <View style={{flex: 1, flexDirection: 'row', marginBottom: 20}}>
+                  <View style={{flex: 1}}>
+                    <Text style={styles.label}>Ordered From:</Text>
+                  </View>
+                  <View style={{flex: 1, justifyContent: 'center'}}>
+                    <Text style={{fontSize: 18}}>
+                      {this.state.order.orderedFrom.storeDetail.name}
                     </Text>
                   </View>
                 </View>

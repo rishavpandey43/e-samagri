@@ -28,24 +28,25 @@ class CartScreen extends Component {
     this.state = {};
   }
 
-  changeProductQuantityinCart = (type, variant) => {
-    console.log(variant);
+  _changeProductQuantityinCart = (type, variant) => {
     let tempCart = {
-      ...this.props.cart.cart,
+      storeId: this.props.cart.cart.storeId,
+      products: [...this.props.cart.cart.products],
+      deliveryCharge: this.props.cart.cart.deliveryCharge,
     };
-    let productIndexInCart = null;
-    this.props.cart.cart.products.forEach((product, index) => {
+    let productIndexInCartProducts = null;
+    tempCart.products.forEach((product, index) => {
       if (
         product.id === variant.productId &&
         product.variantId === variant.variantId
       ) {
-        productIndexInCart = index;
+        productIndexInCartProducts = index;
         return;
       }
     });
     if (type === 'increment') {
-      tempCart.products[productIndexInCart].quantity++;
-      if (tempCart.products[productIndexInCart].quantity > 5) {
+      tempCart.products[productIndexInCartProducts].quantity++;
+      if (tempCart.products[productIndexInCartProducts].quantity > 5) {
         Alert.alert(
           'Product quantity exceeding the limit',
           'You cannot add more than 5 same products for now!',
@@ -53,12 +54,7 @@ class CartScreen extends Component {
             {
               text: 'OK',
               onPress: () => {
-                tempCart.products[productIndexInCart].quantity--;
-                this.props.updateCartToServerFetch(
-                  this.props.auth.authToken,
-                  'change',
-                  tempCart,
-                );
+                tempCart.products[productIndexInCartProducts].quantity--;
                 return;
               },
             },
@@ -68,30 +64,30 @@ class CartScreen extends Component {
       } else {
         this.props.updateCartToServerFetch(
           this.props.auth.authToken,
-          'change',
+          'increment',
           tempCart,
         );
       }
     } else if (type === 'decrement') {
-      tempCart.products[productIndexInCart].quantity--;
-      if (tempCart.products[productIndexInCart].quantity === 0) {
-        tempCart.products.splice(productIndexInCart, 1);
+      tempCart.products[productIndexInCartProducts].quantity--;
+      if (tempCart.products[productIndexInCartProducts].quantity === 0) {
+        tempCart.products.splice(productIndexInCartProducts, 1);
         this.props.updateCartToServerFetch(
           this.props.auth.authToken,
-          'change',
+          'decrement',
           tempCart,
         );
       } else {
         this.props.updateCartToServerFetch(
           this.props.auth.authToken,
-          'change',
+          'decrement',
           tempCart,
         );
       }
     } else return;
   };
 
-  checkout = () => {
+  _checkout = () => {
     let itemTotalPrice = this.props.cart.cart.products.reduce(
       (acc, cur) => acc + cur.quantity * cur.price,
       0,
@@ -156,7 +152,7 @@ class CartScreen extends Component {
                     buttonStyle={styles.btn}
                     title="-"
                     titleStyle={{color: variables.mainThemeColor}}
-                    onPress={this.changeProductQuantityinCart.bind(
+                    onPress={this._changeProductQuantityinCart.bind(
                       null,
                       'decrement',
                       {
@@ -182,7 +178,7 @@ class CartScreen extends Component {
                     buttonStyle={styles.btn}
                     title="+"
                     titleStyle={{color: variables.mainThemeColor}}
-                    onPress={this.changeProductQuantityinCart.bind(
+                    onPress={this._changeProductQuantityinCart.bind(
                       null,
                       'increment',
                       {
@@ -308,7 +304,7 @@ class CartScreen extends Component {
                     borderRadius: 20,
                     backgroundColor: variables.mainThemeColor,
                   }}
-                  onPress={this.checkout.bind(null)}
+                  onPress={this._checkout.bind(null)}
                 />
               </View>
             </View>
@@ -333,11 +329,18 @@ const styles = StyleSheet.create({
   },
 });
 
-const mapStateToProps = state => {
+const mapStateToProps = ({auth, store, cart}) => {
   return {
-    auth: state.auth,
-    store: state.store,
-    cart: state.cart,
+    auth,
+    store,
+    cart: {
+      ...cart,
+      cart: {
+        storeId: cart.cart.storeId,
+        products: [...cart.cart.products],
+        deliveryCharge: cart.cart.deliveryCharge,
+      },
+    },
   };
 };
 

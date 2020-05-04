@@ -95,15 +95,18 @@ class OrderDetailScreen extends Component {
                   Order Summary:
                 </Text>
 
-                {this.state.order.items.map((item, i) => (
-                  <Item
-                    key={i}
-                    name={item.name}
-                    variant={item.value}
-                    quantity={item.quantity}
-                    price={item.price}
-                  />
-                ))}
+                <View>
+                  {this.state.order.items.map((item, i) => (
+                    <Item
+                      key={i}
+                      name={item.name}
+                      variant={item.value}
+                      quantity={item.quantity}
+                      price={item.price}
+                    />
+                  ))}
+                </View>
+
                 <View style={{flex: 1, flexDirection: 'row', marginTop: 20}}>
                   <View style={{flex: 1}}>
                     <Text>Item Total:</Text>

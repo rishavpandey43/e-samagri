@@ -4,7 +4,7 @@ import {ToastAndroid} from 'react-native';
 import * as actionTypes from '../types/actionTypes';
 
 import {storeDataInAsync, removeDataFromAsync} from '../../../utils/helper';
-import {baseUrl} from '../../../utils/constant';
+import {baseUrl, authTokenName} from '../../../utils/constant';
 
 export const getTokenFromAsync = token => {
   return {
@@ -41,7 +41,7 @@ export const registerFetch = (fcmDeviceToken, data) => dispatch => {
       },
     })
     .then(res => {
-      storeDataInAsync('eSamagri_customer_auth_token', res.data.token);
+      storeDataInAsync(authTokenName, res.data.token);
       ToastAndroid.show('Registration Successfull', ToastAndroid.SHORT);
       dispatch(registerSuccess({token: res.data.token}));
     })
@@ -90,7 +90,7 @@ export const loginFetch = (fcmDeviceToken, {phone, otp}) => dispatch => {
       },
     })
     .then(res => {
-      storeDataInAsync('eSamagri_customer_auth_token', res.data.token);
+      storeDataInAsync(authTokenName, res.data.token);
       ToastAndroid.show('Login Successfull', ToastAndroid.LONG);
       dispatch(loginSuccess({token: res.data.token}));
     })
@@ -137,7 +137,7 @@ export const logoutFetch = token => dispatch => {
       },
     })
     .then(res => {
-      removeDataFromAsync('eSamagri_customer_auth_token')
+      removeDataFromAsync(authTokenName)
         .then(response => {
           dispatch(logoutSuccess());
         })

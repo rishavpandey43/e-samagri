@@ -2,8 +2,7 @@ import * as actionTypes from '../actions/types/actionTypes';
 
 const initialState = {
   fetchingCart: false,
-  updatingCart: false,
-  cart: null,
+  cart: {storeId: null, products: [], deliveryCharge: null},
   errMessage: null,
 };
 
@@ -37,10 +36,19 @@ const store = (state = initialState, action) => {
         ...state,
         updatingCart: true,
       };
-    case actionTypes.ADD_NEW_PRODUCT_TO_CART:
+    case actionTypes.UPDATE_CART_TO_SERVER_SUCCESS:
       return {
         ...state,
         updatingCart: false,
+      };
+    case actionTypes.UPDATE_CART_TO_SERVER_FAILURE:
+      return {
+        ...state,
+        updatingCart: false,
+      };
+    case actionTypes.ADD_NEW_PRODUCT_TO_CART:
+      return {
+        ...state,
         cart: {
           storeId: action.storeId,
           products: action.products,
@@ -50,18 +58,11 @@ const store = (state = initialState, action) => {
     case actionTypes.CHANGE_PRODUCT_QUANTITY_IN_CART:
       return {
         ...state,
-        updatingCart: false,
         cart: {
           storeId: action.storeId,
           products: action.products,
           deliveryCharge: action.deliveryCharge,
         },
-      };
-    case actionTypes.UPDATE_CART_TO_SERVER_FAILURE:
-      return {
-        ...state,
-        updatingCart: false,
-        cart: null,
       };
     default:
       return {

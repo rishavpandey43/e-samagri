@@ -78,6 +78,12 @@ export const updateCartToServerRequest = () => {
   };
 };
 
+export const updateCartToServerSuccess = () => {
+  return {
+    type: actionTypes.UPDATE_CART_TO_SERVER_SUCCESS,
+  };
+};
+
 export const updateCartToServerFailure = () => {
   return {
     type: actionTypes.UPDATE_CART_TO_SERVER_FAILURE,
@@ -86,7 +92,6 @@ export const updateCartToServerFailure = () => {
 
 export const updateCartToServerFetch = (token, type, cart) => dispatch => {
   dispatch(updateCartToServerRequest());
-
   axios
     .put(baseUrl + '/customer/update-cart', cart, {
       headers: {
@@ -95,10 +100,11 @@ export const updateCartToServerFetch = (token, type, cart) => dispatch => {
       },
     })
     .then(res => {
+      dispatch(updateCartToServerSuccess());
       if (type == 'new') {
         dispatch(addNewProductToCart(res.data.newCart));
         ToastAndroid.show('Product added to cart', ToastAndroid.SHORT);
-      } else if (type == 'change') {
+      } else if (type == 'increment' || type == 'decrement') {
         dispatch(changeProductQuantityinCart(res.data.newCart));
         ToastAndroid.show(
           'Product quantity updated in cart',

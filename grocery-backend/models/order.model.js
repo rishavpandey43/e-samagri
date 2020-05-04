@@ -27,6 +27,13 @@ const orderSchema = new Schema(
       itemsPrice: { type: Number, required: true },
       deliveryCharge: { type: Number, required: true },
     },
+    deliveryAddress: {
+      type: { type: String, required: false },
+      street: { type: String, required: false },
+      landmark: { type: String, required: false },
+      city: { type: String, required: false },
+      pincode: { type: Number, required: false },
+    },
     deliveryAgent: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "DeliveryAgent",

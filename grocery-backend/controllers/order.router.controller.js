@@ -210,6 +210,7 @@ exports.processOrderSeller = (req, res, next) => {
                 ],
               })
                 .then((deliveryAgents) => {
+                  console.log(deliveryAgents);
                   let allDeliveryAgentsFCMToken = deliveryAgents.map(
                     (deliveryAgent) => deliveryAgent.fcm.token
                   );
@@ -346,8 +347,42 @@ exports.processOrderSeller = (req, res, next) => {
     .catch((err) => next(err));
 };
 
+exports.getDeliveryNotAssignedOrders = (req, res, next) => {
+  Order.find({
+    $and: [
+      {
+        $or: [
+          {
+            status: "prc",
+          },
+          {
+            status: "prcd",
+          },
+        ],
+      },
+      {
+        deliveryAgent: null,
+      },
+    ],
+  })
+    .sort({ createdAt: -1 })
+    .populate([
+      { path: "orderedBy", model: Customer },
+      { path: "orderedFrom", model: Seller },
+    ])
+    .then((orders) => {
+      res.statusCode = 200;
+      res.statusText = "OK";
+      res.setHeader("Content-Type", "application/json");
+      res.json({
+        orders,
+      });
+    })
+    .catch((err) => next(err));
+};
+
 exports.getAllOrdersDeliveryAgent = (req, res, next) => {
-  Order.find({ orderedFrom: req.userId })
+  Order.find({ deliveryAgent: req.userId })
     .sort({ createdAt: -1 })
     .populate([
       { path: "orderedBy", model: Customer },
@@ -391,53 +426,59 @@ exports.processOrderDeliveryAgent = (req, res, next) => {
         } else {
           // * here, delivery agent has accepted to deliver current order
           // * NOW ALERT TO CUSTOMER
-          admin.messaging().sendToDevice(
-            order.orderedBy.fcm.token,
-            {
-              data: {
-                orderId: JSON.stringify(order._id),
-              },
-              notification: {
-                title: "Order Update",
-                body:
-                  "Delivery agent has been successfully assigned to the order.",
-              },
-            },
-            {
-              // Required for background/quit data-only messages on iOS
-              contentAvailable: true,
-              // Required for background/quit data-only messages on Android
-              priority: "high",
-            }
-          );
-          // * NOW ALERT TO SELLER
-          admin.messaging().sendToDevice(
-            order.orderedFrom.fcm.token,
-            {
-              data: {
-                orderId: JSON.stringify(order._id),
-              },
-              notification: {
-                title: "Order Update",
-                body:
-                  "Delivery agent has been successfully assigned to the order.",
-              },
-            },
-            {
-              // Required for background/quit data-only messages on iOS
-              contentAvailable: true,
-              // Required for background/quit data-only messages on Android
-              priority: "high",
-            }
-          );
-          res.statusCode = 200;
-          res.statusText = "OK";
-          res.setHeader("Content-Type", "application/json");
-          res.json({
-            order,
-            message:
-              "Current order has been successfully assigned to you for delivery",
-          });
+          order.deliveryAgent = req.userId;
+          order
+            .save()
+            .then((order) => {
+              admin.messaging().sendToDevice(
+                order.orderedBy.fcm.token,
+                {
+                  data: {
+                    orderId: JSON.stringify(order._id),
+                  },
+                  notification: {
+                    title: "Order Update",
+                    body:
+                      "Delivery agent has been successfully assigned to the order.",
+                  },
+                },
+                {
+                  // Required for background/quit data-only messages on iOS
+                  contentAvailable: true,
+                  // Required for background/quit data-only messages on Android
+                  priority: "high",
+                }
+              );
+              // * NOW ALERT TO SELLER
+              admin.messaging().sendToDevice(
+                order.orderedFrom.fcm.token,
+                {
+                  data: {
+                    orderId: JSON.stringify(order._id),
+                  },
+                  notification: {
+                    title: "Order Update",
+                    body:
+                      "Delivery agent has been successfully assigned to the order.",
+                  },
+                },
+                {
+                  // Required for background/quit data-only messages on iOS
+                  contentAvailable: true,
+                  // Required for background/quit data-only messages on Android
+                  priority: "high",
+                }
+              );
+              res.statusCode = 200;
+              res.statusText = "OK";
+              res.setHeader("Content-Type", "application/json");
+              res.json({
+                order,
+                message:
+                  "Current order has been successfully assigned to you for delivery",
+              });
+            })
+            .catch((err) => next(err));
         }
       } else {
         order.status = req.body.processType;

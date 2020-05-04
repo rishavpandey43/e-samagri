@@ -29,7 +29,7 @@ const orderSchema = new Schema(
     },
     deliveryAgent: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "Seller",
+      ref: "DeliveryAgent",
     },
   },
   {

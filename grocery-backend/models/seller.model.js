@@ -14,6 +14,11 @@ const sellerSchema = new Schema(
       phone: { type: String, required: true },
       authyId: { type: String, required: false },
     },
+    profileVerificationDetail: {
+      type: { type: String, require: false },
+      number: { type: Number, require: false },
+      verified: { type: Boolean, required: false },
+    },
     storeDetail: {
       name: { type: String, required: false },
       address: {

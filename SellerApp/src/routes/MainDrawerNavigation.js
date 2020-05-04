@@ -9,6 +9,7 @@ import ProfileStack from './stacks/ProfileStack';
 import ProductsStack from './stacks/ProductsStack';
 import AddNewProductStack from './stacks/AddNewProductStack';
 import OrdersStack from './stacks/OrdersStack';
+import HelpStack from './stacks/HelpStack';
 import SettingStack from './stacks/SettingStack';
 
 import variable from '../styles/variables.js';
@@ -69,6 +70,16 @@ const MainDrawerNavigation = () => (
           drawerLabel: 'Orders',
           drawerIcon: () => (
             <Icon name="reorder" size={30} color={variable.mainThemeColor} />
+          ),
+        }}
+      />
+      <Drawer.Screen
+        name="help-stack"
+        component={HelpStack}
+        options={{
+          drawerLabel: 'Help',
+          drawerIcon: () => (
+            <Icon name="question" size={30} color={variable.mainThemeColor} />
           ),
         }}
       />

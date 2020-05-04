@@ -85,10 +85,6 @@ class OrderDetailScreen extends Component {
         {
           text: 'Yes',
           onPress: () => {
-            this.setState({
-              orderUpdating_No: processType === 'can' ? true : false,
-              orderUpdating_Yes: processType !== 'can' ? true : false,
-            });
             this.props.processOrderFetch(
               this.props.auth.authToken,
               processType,
@@ -157,7 +153,7 @@ class OrderDetailScreen extends Component {
                         title="No"
                         type="outline"
                         raised
-                        loading={this.state.orderUpdating_No}
+                        loading={this.props.orders.updatingOrder_can}
                         titleStyle={{color: variables.mainThemeColor}}
                         buttonStyle={mainStyles.outlineBtn}
                         onPress={this._processOrder.bind(null, 'no')}
@@ -168,7 +164,7 @@ class OrderDetailScreen extends Component {
                         title="Yes"
                         type="outline"
                         raised
-                        loading={this.state.orderUpdating_Yes}
+                        loading={this.props.orders.updatingOrder_other}
                         titleStyle={{color: variables.mainThemeColor}}
                         buttonStyle={mainStyles.outlineBtn}
                         onPress={this._processOrder.bind(null, 'yes')}
@@ -182,7 +178,7 @@ class OrderDetailScreen extends Component {
                         title="Yes"
                         type="outline"
                         raised
-                        loading={this.state.orderUpdating_Yes}
+                        loading={this.props.orders.updatingOrder_other}
                         titleStyle={{color: variables.mainThemeColor}}
                         buttonStyle={mainStyles.outlineBtn}
                         onPress={this._processOrder.bind(null, 'ofd')}
@@ -196,7 +192,7 @@ class OrderDetailScreen extends Component {
                         title="Yes"
                         type="outline"
                         raised
-                        loading={this.state.orderUpdating_Yes}
+                        loading={this.props.orders.updatingOrder_other}
                         titleStyle={{color: variables.mainThemeColor}}
                         buttonStyle={mainStyles.outlineBtn}
                         onPress={this._processOrder.bind(null, 'del')}
@@ -239,15 +235,18 @@ class OrderDetailScreen extends Component {
                   Order Summary:
                 </Text>
 
-                {this.state.order.items.map((item, i) => (
-                  <Item
-                    key={i}
-                    name={item.name}
-                    variant={item.value}
-                    quantity={item.quantity}
-                    price={item.price}
-                  />
-                ))}
+                <View>
+                  {this.state.order.items.map((item, i) => (
+                    <Item
+                      key={i}
+                      name={item.name}
+                      variant={item.value}
+                      quantity={item.quantity}
+                      price={item.price}
+                    />
+                  ))}
+                </View>
+
                 <View style={{flex: 1, flexDirection: 'row', marginTop: 20}}>
                   <View style={{flex: 1}}>
                     <Text>Item Total:</Text>

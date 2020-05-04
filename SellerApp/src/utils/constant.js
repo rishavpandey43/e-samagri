@@ -1,4 +1,18 @@
 export const baseUrl = 'https://e-samagri-backend.herokuapp.com';
+// export const baseUrl = 'http://192.168.43.240:5555';
+
+export const authTokenName = 'eSamagri_seller_auth_token';
+
+export const verificationDocumentType = [
+  {
+    name: 'Aadhar Card',
+    value: 'aadhar-id',
+  },
+  {
+    name: 'Voter ID Card',
+    value: 'voter-id',
+  },
+];
 
 export const categoryList = [
   {

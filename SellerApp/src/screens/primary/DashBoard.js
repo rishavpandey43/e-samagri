@@ -15,6 +15,7 @@ import * as OrderActions from '../../store/actions/creators/OrdersActions';
 
 // * Import utilites
 import {getDataFromAsync} from '../../utils/helper';
+import {authTokenName} from '../../utils/constant';
 
 // * Import all styling stuffs
 import mainStyles from '../../styles/mainStyle';
@@ -26,7 +27,7 @@ class DashBoardScreen extends Component {
   }
 
   componentDidMount() {
-    getDataFromAsync('eSamagri_seller_auth_token')
+    getDataFromAsync(authTokenName)
       .then(token => {
         this.props.getTokenFromAsync(token);
         this.props.getProfileFetch(this.props.auth.authToken);
@@ -44,24 +45,17 @@ class DashBoardScreen extends Component {
         this.props.getOrdersFetch(this.props.auth.authToken);
 
         Alert.alert(
-          'New Order',
-          ` Hello ${
+          message.notification.title,
+          `Hello ${
             this.props.profile.profile
               ? this.props.profile.profile.personalDetail.firstName +
                 ' ' +
                 this.props.profile.profile.personalDetail.lastName
               : ''
-          } You've received new order`,
+          } ${message.notification.body}`,
           [
             {
-              text: 'Not now',
-              onPress: () => {
-                return;
-              },
-              style: 'cancel',
-            },
-            {
-              text: 'Proceed',
+              text: 'View more detail',
               onPress: () => {
                 this.props.navigation.navigate('orders-stack');
                 return;

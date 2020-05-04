@@ -9,7 +9,15 @@ import {
   Alert,
   ActivityIndicator,
 } from 'react-native';
-import {Header, Card, Button, Text, Input, Icon} from 'react-native-elements';
+import {
+  Header,
+  Card,
+  Button,
+  Text,
+  Input,
+  Icon,
+  CheckBox,
+} from 'react-native-elements';
 
 // * Import all store related stuffs
 import * as AuthActions from '../../store/actions/creators/AuthActions';
@@ -19,6 +27,7 @@ import * as ProfileActions from '../../store/actions/creators/ProfileActions';
 import CardCustomTitle from '../../components/CardCustomTitle';
 
 // * Import utilites
+import {getVerificationDocumentName} from '../../utils/helper';
 
 // * Import all styling stuffs
 import variables from '../../styles/variables';
@@ -29,8 +38,13 @@ class UpdateProfileScreen extends Component {
     super(props);
     this.state = {
       personalDetailCardDisplay: false,
+      profileVerificationDetailCardDisplay: false,
       storeDetailCardDisplay: false,
       bankDetailCardDisplay: false,
+      profileVerificationDetail: {
+        type: 'aadhar-id',
+        number: '',
+      },
       storeDetail: {
         name: '',
         address: {
@@ -55,12 +69,51 @@ class UpdateProfileScreen extends Component {
     };
   }
 
-  toggleEditCardDisplay = target => {
+  componentDidUpdate = prevProps => {
+    if (
+      prevProps.profile.profile.updatedAt !=
+      this.props.profile.profile.updatedAt
+    ) {
+      this.setState({
+        personalDetailCardDisplay: false,
+        profileVerificationDetailCardDisplay: false,
+        storeDetailCardDisplay: false,
+        bankDetailCardDisplay: false,
+        profileVerificationDetail: {
+          type: 'aadhar-id',
+          number: '',
+        },
+        storeDetail: {
+          name: '',
+          address: {
+            street: '',
+            landmark: '',
+            city: '',
+            pincode: '',
+          },
+          panCard: '',
+          gstNumber: '',
+          // document: {
+          //   name: '',
+          //   url: '',
+          // },
+        },
+        bankDetail: {
+          name: '',
+          accountNumber: '',
+          ifscCode: '',
+          branchName: '',
+        },
+      });
+    }
+  };
+
+  _toggleEditCardDisplay = target => {
     this.setState({[target]: !this.state[target]});
   };
 
   // TODO: Implement file upload functionality
-  uploadDocument = async () => {
+  _uploadDocument = async () => {
     // try {
     //   const results = await DocumentPicker.pickMultiple({
     //     type: [DocumentPicker.types.images],
@@ -89,7 +142,7 @@ class UpdateProfileScreen extends Component {
     // }
   };
 
-  updateDetail = detailType => {
+  _updateDetail = detailType => {
     let tempData = this.state[detailType];
     let isEmpty = false;
     for (const item in tempData) {
@@ -182,9 +235,9 @@ class UpdateProfileScreen extends Component {
                 title={
                   <CardCustomTitle
                     title="Update Your Personal Detail"
-                    detail={this.props.profile.profile.personalDetail}
+                    detail
                     onPress={() => {
-                      this.toggleEditCardDisplay('personalDetailCardDisplay');
+                      this._toggleEditCardDisplay('personalDetailCardDisplay');
                     }}
                   />
                 }>
@@ -285,7 +338,7 @@ class UpdateProfileScreen extends Component {
                         type="outline"
                         buttonStyle={mainStyles.outlineBtn}
                         onPress={() => {
-                          this.updateDetail('personalDetail');
+                          this._updateDetail('personalDetail');
                         }}
                         loading={this.props.profile.profileUpdating}
                       />
@@ -297,10 +350,148 @@ class UpdateProfileScreen extends Component {
               <Card
                 title={
                   <CardCustomTitle
-                    title="Update Your Store Detail"
-                    detail={this.props.profile.profile.personalDetail}
+                    title="Update Your Profile Verification Detail"
+                    detail
                     onPress={() => {
-                      this.toggleEditCardDisplay('storeDetailCardDisplay');
+                      this._toggleEditCardDisplay(
+                        'profileVerificationDetailCardDisplay',
+                      );
+                    }}
+                  />
+                }>
+                <View
+                  style={{
+                    display: `${
+                      this.state.profileVerificationDetailCardDisplay
+                        ? 'flex'
+                        : 'none'
+                    }`,
+                  }}>
+                  <View>
+                    <View style={mainStyles.formGroup}>
+                      <Text style={mainStyles.formLabel}>Document type:</Text>
+                      <View style={mainStyles.row}>
+                        <View style={{flex: 1}}>
+                          <CheckBox
+                            containerStyle={{
+                              backgroundColor: 'transparent',
+                              borderColor: 'transparent',
+                            }}
+                            center
+                            title="Aadhar Card"
+                            checkedIcon="dot-circle-o"
+                            uncheckedIcon="circle-o"
+                            checkedColor={variables.mainThemeColor}
+                            checked={
+                              this.state.profileVerificationDetail.type ===
+                              'aadhar-id'
+                            }
+                            onPress={() => {
+                              this.setState({
+                                profileVerificationDetail: {
+                                  ...this.state.profileVerificationDetail,
+                                  type: 'aadhar-id',
+                                },
+                              });
+                            }}
+                          />
+                        </View>
+                        <View style={{flex: 1}}>
+                          <CheckBox
+                            containerStyle={{
+                              backgroundColor: 'transparent',
+                              borderColor: 'transparent',
+                            }}
+                            center
+                            title="Voter ID Card"
+                            checkedIcon="dot-circle-o"
+                            uncheckedIcon="circle-o"
+                            checkedColor={variables.mainThemeColor}
+                            checked={
+                              this.state.profileVerificationDetail.type ===
+                              'voter-id'
+                            }
+                            onPress={() => {
+                              this.setState({
+                                profileVerificationDetail: {
+                                  ...this.state.profileVerificationDetail,
+                                  type: 'voter-id',
+                                },
+                              });
+                            }}
+                          />
+                        </View>
+                      </View>
+                    </View>
+
+                    <View style={mainStyles.formGroup}>
+                      <Input
+                        label={`${getVerificationDocumentName(
+                          this.state.profileVerificationDetail.type,
+                        )} number`}
+                        placeholder={`Enter valid ${getVerificationDocumentName(
+                          this.state.profileVerificationDetail.type,
+                        )} number`}
+                        value={this.state.profileVerificationDetail.number}
+                        onChangeText={number => {
+                          this.setState({
+                            profileVerificationDetail: {
+                              ...this.state.profileVerificationDetail,
+                              number,
+                            },
+                          });
+                        }}
+                      />
+                    </View>
+
+                    <View style={mainStyles.formGroup}>
+                      <View style={[mainStyles.row, {marginBottom: 10}]}>
+                        <View style={mainStyles.col6}>
+                          <Button
+                            title="Cancel"
+                            titleStyle={{color: variables.mainThemeColor}}
+                            type="outline"
+                            buttonStyle={mainStyles.outlineBtn}
+                            onPress={() => {
+                              this.setState({
+                                profileVerificationDetailCardDisplay: false,
+                                profileVerificationDetail: {
+                                  type: 'aadhar-id',
+                                  number: '',
+                                  // document: {
+                                  //   name: '',
+                                  //   url: '',
+                                  // },
+                                },
+                              });
+                            }}
+                          />
+                        </View>
+                        <View style={mainStyles.col6}>
+                          <Button
+                            title="Submit"
+                            titleStyle={{color: variables.mainThemeColor}}
+                            type="outline"
+                            buttonStyle={mainStyles.outlineBtn}
+                            onPress={() => {
+                              this._updateDetail('profileVerificationDetail');
+                            }}
+                            loading={this.props.profile.profileUpdating}
+                          />
+                        </View>
+                      </View>
+                    </View>
+                  </View>
+                </View>
+              </Card>
+
+              <Card
+                title={
+                  <CardCustomTitle
+                    title="Update Your Store Detail"
+                    detail
+                    onPress={() => {
+                      this._toggleEditCardDisplay('storeDetailCardDisplay');
                     }}
                   />
                 }>
@@ -467,7 +658,7 @@ class UpdateProfileScreen extends Component {
                           type="outline"
                           buttonStyle={mainStyles.outlineBtn}
                           onPress={() => {
-                            this.updateDetail('storeDetail');
+                            this._updateDetail('storeDetail');
                           }}
                           loading={this.props.profile.profileUpdating}
                         />
@@ -481,9 +672,9 @@ class UpdateProfileScreen extends Component {
                 title={
                   <CardCustomTitle
                     title="Update Your Bank Detail"
-                    detail={this.props.profile.profile.personalDetail}
+                    detail
                     onPress={() => {
-                      this.toggleEditCardDisplay('bankDetailCardDisplay');
+                      this._toggleEditCardDisplay('bankDetailCardDisplay');
                     }}
                   />
                 }>
@@ -587,7 +778,7 @@ class UpdateProfileScreen extends Component {
                           type="outline"
                           buttonStyle={mainStyles.outlineBtn}
                           onPress={() => {
-                            this.updateDetail('bankDetail');
+                            this._updateDetail('bankDetail');
                           }}
                           loading={this.props.profile.profileUpdating}
                         />

@@ -2,6 +2,8 @@ import * as actionTypes from '../actions/types/actionTypes';
 
 const initialState = {
   fetchingOrders: false,
+  updatingOrder_can: false,
+  updatingOrder_other: false,
   orders: [],
   errMessage: null,
 };
@@ -26,6 +28,21 @@ const orders = (state = initialState, action) => {
         fetchingOrders: false,
         orders: null,
         errMessage: action.message,
+      };
+    case actionTypes.PROCESS_ORDER_REQUEST:
+      return {
+        ...state,
+        [action.loadingType]: true,
+      };
+    case actionTypes.PROCESS_ORDER_SUCCESS:
+      return {
+        ...state,
+        [action.loadingType]: false,
+      };
+    case actionTypes.PROCESS_ORDER_FAILURE:
+      return {
+        ...state,
+        [action.loadingType]: false,
       };
     default:
       return {

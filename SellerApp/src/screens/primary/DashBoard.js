@@ -15,6 +15,7 @@ import * as OrderActions from '../../store/actions/creators/OrdersActions';
 
 // * Import utilites
 import {getDataFromAsync} from '../../utils/helper';
+import {authTokenName} from '../../utils/constant';
 
 // * Import all styling stuffs
 import mainStyles from '../../styles/mainStyle';
@@ -26,7 +27,7 @@ class DashBoardScreen extends Component {
   }
 
   componentDidMount() {
-    getDataFromAsync('eSamagri_seller_auth_token')
+    getDataFromAsync(authTokenName)
       .then(token => {
         this.props.getTokenFromAsync(token);
         this.props.getProfileFetch(this.props.auth.authToken);

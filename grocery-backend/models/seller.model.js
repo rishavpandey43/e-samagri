@@ -44,12 +44,6 @@ const sellerSchema = new Schema(
       branchName: { type: String, required: false },
       verified: { type: Boolean, required: false },
     },
-    orders: [
-      {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Order",
-      },
-    ],
     products: [
       {
         root: {

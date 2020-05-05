@@ -39,7 +39,7 @@ export const orderStatus = [
   {
     name: 'Out For Delivery',
     value: 'ofd',
-    color: 'yellow',
+    color: '#FF1493',
   },
   {
     name: 'Delivered',

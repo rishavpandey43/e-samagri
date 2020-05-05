@@ -41,70 +41,54 @@ exports.placeOrder = (req, res, next) => {
     if (order) {
       Customer.findById(order.orderedBy)
         .then((customer) => {
-          customer.orders.push(order);
+          // * When order is placed, then also delete the cart from customer account.
+          customer.cart = {
+            storeId: null,
+            products: [],
+            deliveryCharge: null,
+          };
           customer
             .save()
             .then((customer) => {
-              Seller.findById(order.orderedFrom)
-                .then((seller) => {
-                  seller.orders.push(order);
-                  seller
-                    .save()
-                    .then((seller) => {
-                      // * When order is placed, then also delete the cart from customer account.
-                      customer.cart = {
-                        storeId: null,
-                        products: [],
-                        deliveryCharge: null,
-                      };
-                      customer
-                        .save()
-                        .then((customer) => {
-                          // * NOW ALERT TO SELLER
-                          admin.messaging().sendToDevice(
-                            seller.fcm.token,
-                            {
-                              data: {
-                                orderId: JSON.stringify(order._id),
-                              },
-                              notification: {
-                                title: helpers.getNotificationFromValue(
-                                  constants.alertNotificationForSeller,
-                                  "nwo"
-                                ).title,
-                                body: helpers.getNotificationFromValue(
-                                  constants.alertNotificationForSeller,
-                                  "nwo"
-                                ).body,
-                              },
-                            },
-                            {
-                              // Required for background/quit data-only messages on iOS
-                              contentAvailable: true,
-                              // Required for background/quit data-only messages on Android
-                              priority: "high",
-                            }
-                          );
-                          res.statusCode = 200;
-                          res.statusText = "OK";
-                          res.setHeader("Content-Type", "application/json");
-                          res.json({
-                            order,
-                            message: "Order placed successfully",
-                          });
-                        })
-                        .catch((err) => next(err));
-                    })
-                    .catch((err) => next(err));
-                })
-                .catch((err) => next(err));
+              // * NOW ALERT TO SELLER
+              admin.messaging().sendToDevice(
+                seller.fcm.token,
+                {
+                  data: {
+                    orderId: JSON.stringify(order._id),
+                  },
+                  notification: {
+                    title: helpers.getNotificationFromValue(
+                      constants.alertNotificationForSeller,
+                      "nwo"
+                    ).title,
+                    body: helpers.getNotificationFromValue(
+                      constants.alertNotificationForSeller,
+                      "nwo"
+                    ).body,
+                  },
+                },
+                {
+                  // Required for background/quit data-only messages on iOS
+                  contentAvailable: true,
+                  // Required for background/quit data-only messages on Android
+                  priority: "high",
+                }
+              );
+              res.statusCode = 200;
+              res.statusText = "OK";
+              res.setHeader("Content-Type", "application/json");
+              res.json({
+                order,
+                message: "Order placed successfully",
+              });
             })
             .catch((err) => next(err));
         })
         .catch((err) => next(err));
     } else {
       let err = new Error(`Internal Server Error`);
-      err.status = 400;
+      err.status = 500;
       err.statusText = "Internal Server Error";
       next(err);
     }
@@ -188,7 +172,7 @@ exports.processOrderSeller = (req, res, next) => {
           order
             .save()
             .then((order) => {
-              // * Find the deliveryAgents available nereby
+              // * Find the verified deliveryAgents available nereby
               DeliveryAgent.find({
                 $and: [
                   {
@@ -347,6 +331,31 @@ exports.processOrderSeller = (req, res, next) => {
     .catch((err) => next(err));
 };
 
+exports.getAllOrdersDeliveryAgent = (req, res, next) => {
+  Order.find({ deliveryAgent: req.userId })
+    .sort({ createdAt: -1 })
+    .populate([
+      { path: "orderedBy", model: Customer },
+      { path: "orderedFrom", model: Seller },
+    ])
+    .then((orders) => {
+      if (orders) {
+        res.statusCode = 200;
+        res.statusText = "OK";
+        res.setHeader("Content-Type", "application/json");
+        res.json({
+          orders,
+        });
+      } else {
+        let err = new Error(`Internal Server Error`);
+        err.status = 500;
+        err.statusText = "Internal Server Error";
+        next(err);
+      }
+    })
+    .catch((err) => next(err));
+};
+
 exports.getDeliveryNotAssignedOrders = (req, res, next) => {
   Order.find({
     $and: [
@@ -381,31 +390,6 @@ exports.getDeliveryNotAssignedOrders = (req, res, next) => {
     .catch((err) => next(err));
 };
 
-exports.getAllOrdersDeliveryAgent = (req, res, next) => {
-  Order.find({ deliveryAgent: req.userId })
-    .sort({ createdAt: -1 })
-    .populate([
-      { path: "orderedBy", model: Customer },
-      { path: "orderedFrom", model: Seller },
-    ])
-    .then((orders) => {
-      if (orders) {
-        res.statusCode = 200;
-        res.statusText = "OK";
-        res.setHeader("Content-Type", "application/json");
-        res.json({
-          orders,
-        });
-      } else {
-        let err = new Error(`Internal Server Error`);
-        err.status = 500;
-        err.statusText = "Internal Server Error";
-        next(err);
-      }
-    })
-    .catch((err) => next(err));
-};
-
 exports.processOrderDeliveryAgent = (req, res, next) => {
   Order.findById(req.body.orderId)
     .populate([
@@ -413,8 +397,8 @@ exports.processOrderDeliveryAgent = (req, res, next) => {
       { path: "orderedFrom", model: Seller },
     ])
     .then((order) => {
-      // * handle when first time delivery agent is processing the order.
       if (!order.deliveryAgent) {
+        // * handle when first time delivery agent is processing the order.
         if (req.body.processType === "no") {
           // * here, delivery agent has rejected to deliver current order
           res.statusCode = 200;
@@ -423,60 +407,97 @@ exports.processOrderDeliveryAgent = (req, res, next) => {
           res.json({
             message: "You've successfully rejected to deliver this order.",
           });
-        } else {
-          // * here, delivery agent has accepted to deliver current order
-          // * NOW ALERT TO CUSTOMER
-          order.deliveryAgent = req.userId;
-          order
-            .save()
-            .then((order) => {
-              admin.messaging().sendToDevice(
-                order.orderedBy.fcm.token,
-                {
-                  data: {
-                    orderId: JSON.stringify(order._id),
+        } else if (req.body.processType === "yes") {
+          // * we'll check if already more than 2 orders are pending with particular delivery agent
+          Order.find({
+            $and: [
+              {
+                $or: [
+                  {
+                    status: "prc",
                   },
-                  notification: {
-                    title: "Order Update",
-                    body:
-                      "Delivery agent has been successfully assigned to the order.",
+                  {
+                    status: "prcd",
                   },
-                },
-                {
-                  // Required for background/quit data-only messages on iOS
-                  contentAvailable: true,
-                  // Required for background/quit data-only messages on Android
-                  priority: "high",
-                }
+                  {
+                    status: "ofd",
+                  },
+                ],
+              },
+              {
+                deliveryAgent: req.userId,
+              },
+            ],
+          })
+            .then((orders) => {
+              let totalUndeliveredOrders = orders.filter(
+                (order) => order.status !== "del"
               );
-              // * NOW ALERT TO SELLER
-              admin.messaging().sendToDevice(
-                order.orderedFrom.fcm.token,
-                {
-                  data: {
-                    orderId: JSON.stringify(order._id),
-                  },
-                  notification: {
-                    title: "Order Update",
-                    body:
-                      "Delivery agent has been successfully assigned to the order.",
-                  },
-                },
-                {
-                  // Required for background/quit data-only messages on iOS
-                  contentAvailable: true,
-                  // Required for background/quit data-only messages on Android
-                  priority: "high",
-                }
-              );
-              res.statusCode = 200;
-              res.statusText = "OK";
-              res.setHeader("Content-Type", "application/json");
-              res.json({
-                order,
-                message:
-                  "Current order has been successfully assigned to you for delivery",
-              });
+              if (totalUndeliveredOrders.length >= 2) {
+                // * here, rejects the request of delivery agent to delivert the order
+                let err = new Error(
+                  `You cannot accept more orders to deliver for now. You already have 2 pending orders for delivery`
+                );
+                err.status = 400;
+                err.statusText = "Bad Request";
+                next(err);
+              } else {
+                // * here, delivery agent has accepted to deliver current order
+                order.deliveryAgent = req.userId;
+                order
+                  .save()
+                  .then((order) => {
+                    // * NOW ALERT TO CUSTOMER
+                    admin.messaging().sendToDevice(
+                      order.orderedBy.fcm.token,
+                      {
+                        data: {
+                          orderId: JSON.stringify(order._id),
+                        },
+                        notification: {
+                          title: "Order Update",
+                          body:
+                            "Delivery agent has been successfully assigned to the order.",
+                        },
+                      },
+                      {
+                        // Required for background/quit data-only messages on iOS
+                        contentAvailable: true,
+                        // Required for background/quit data-only messages on Android
+                        priority: "high",
+                      }
+                    );
+                    // * NOW ALERT TO SELLER
+                    admin.messaging().sendToDevice(
+                      order.orderedFrom.fcm.token,
+                      {
+                        data: {
+                          orderId: JSON.stringify(order._id),
+                        },
+                        notification: {
+                          title: "Order Update",
+                          body:
+                            "Delivery agent has been successfully assigned to the order.",
+                        },
+                      },
+                      {
+                        // Required for background/quit data-only messages on iOS
+                        contentAvailable: true,
+                        // Required for background/quit data-only messages on Android
+                        priority: "high",
+                      }
+                    );
+                    res.statusCode = 200;
+                    res.statusText = "OK";
+                    res.setHeader("Content-Type", "application/json");
+                    res.json({
+                      order,
+                      message:
+                        "Current order has been successfully assigned to you for delivery",
+                    });
+                  })
+                  .catch((err) => next(err));
+              }
             })
             .catch((err) => next(err));
         }

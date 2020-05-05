@@ -60,7 +60,9 @@ export const obtainItemsInString = (items, i) => {
 export const obtainAddressInString = address => {
   let addressString = '';
   for (const key in address) {
-    addressString += address[key] + ', ';
+    if (key != 'type') {
+      addressString += address[key] + ', ';
+    }
   }
   return addressString;
 };

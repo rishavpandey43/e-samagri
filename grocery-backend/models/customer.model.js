@@ -41,12 +41,6 @@ const customerSchema = new Schema(
       city: { type: String, required: false },
       pincode: { type: Number, required: false },
     },
-    orders: [
-      {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Order",
-      },
-    ],
   },
   {
     timestamps: true,

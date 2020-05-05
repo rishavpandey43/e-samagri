@@ -1,6 +1,7 @@
 import axios from 'axios';
-import * as actionTypes from '../types/actionTypes';
+import {ToastAndroid} from 'react-native';
 
+import * as actionTypes from '../types/actionTypes';
 import {baseUrl} from '../../../utils/constant';
 
 export const getOrdersRequest = () => {
@@ -93,16 +94,25 @@ export const processOrderFetch = (token, processType, orderId) => dispatch => {
         ),
       );
       dispatch(getOrdersFetch(token));
+      ToastAndroid.show(
+        'This order has been processed succcessfully.',
+        ToastAndroid.LONG,
+      );
     })
     .catch(err => {
+      console.log(err.response);
       dispatch(
         processOrderFailure(
           processType === 'can' ? 'updatingOrder_can' : 'updatingOrder_other',
         ),
       );
       ToastAndroid.show(
-        "This order can't be processed right now, please try again.",
-        ToastAndroid.SHORT,
+        err.response
+          ? err.response.status != 500
+            ? err.response.data.errMessage
+            : "This order can't be processed right now, please try again."
+          : "This order can't be processed right now, please try again.",
+        ToastAndroid.LONG,
       );
     });
 };

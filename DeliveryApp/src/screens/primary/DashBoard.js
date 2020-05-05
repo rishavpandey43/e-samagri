@@ -46,9 +46,9 @@ class DashBoardScreen extends Component {
           message.notification.title,
           `Hello ${
             this.props.profile.profile
-              ? this.props.profile.profile.personalDetail.firstName +
-                ' ' +
-                this.props.profile.profile.personalDetail.lastName
+              ? `${this.props.profile.profile.personalDetail.firstName} ${
+                  this.props.profile.profile.personalDetail.lastName
+                }, `
               : ''
           } ${message.notification.body}`,
           [

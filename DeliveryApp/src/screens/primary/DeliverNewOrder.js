@@ -33,7 +33,12 @@ class DeliverNewOrderScreen extends Component {
   }
 
   componentDidUpdate(prevProps) {
-    console.log(prevProps.orders.orders, this.props.orders.orders);
+    if (
+      prevProps.orders.orders &&
+      prevProps.orders.orders.length !== this.props.orders.orders.length
+    ) {
+      this._refreshList();
+    }
   }
 
   _refreshList = () => {
@@ -150,30 +155,50 @@ class DeliverNewOrderScreen extends Component {
           }}
         />
         <ScrollView>
-          <View
-            style={(mainStyles.container, {padding: 15, marginBottom: 100})}>
+          {!this.props.profile.profile.profileVerificationDetail.verified ||
+          !this.props.profile.profile.vehicleDetail.verified ||
+          !this.props.profile.profile.bankDetail.verified ? (
             <View>
-              <Text h4>
-                You can search for new orders waiting for delivery around you.
+              <Text style={{padding: 10, fontSize: 18}}>
+                Your profile verification is still pending. You can enjoy the
+                services, once your profile is verified by us.
               </Text>
-              <View style={{margin: 25}}>
-                <Button
-                  title="Refresh the page"
-                  titleStyle={{color: variables.mainThemeColor}}
-                  type="outline"
-                  raised
-                  buttonStyle={mainStyles.outlineBtn}
-                  onPress={this._refreshList.bind(null)}
-                />
-              </View>
+              <Text style={{padding: 10, fontSize: 18}}>
+                Thank you for your patience.
+              </Text>
+            </View>
+          ) : (
+            <View
+              style={(mainStyles.container, {padding: 15, marginBottom: 100})}>
               <View>
-                {this.state.refreshing ? <ActivityIndicator /> : null}
-                {this.state.orderList.map(order => (
-                  <OrderCard key={order._id} order={order} />
-                ))}
+                <Text h4>
+                  You can search for new orders waiting for delivery around you.
+                </Text>
+                <View style={{margin: 25}}>
+                  <Button
+                    title="Refresh the page"
+                    titleStyle={{color: variables.mainThemeColor}}
+                    type="outline"
+                    raised
+                    buttonStyle={mainStyles.outlineBtn}
+                    onPress={this._refreshList.bind(null)}
+                  />
+                </View>
+                <View>
+                  {this.state.refreshing ? <ActivityIndicator /> : null}
+                  {this.state.orderList.length === 0 ? (
+                    <Text style={{padding: 10, fontSize: 18}}>
+                      Currently, there are no new orders to be delivered in your
+                      area. Try again later.
+                    </Text>
+                  ) : null}
+                  {this.state.orderList.map(order => (
+                    <OrderCard key={order._id} order={order} />
+                  ))}
+                </View>
               </View>
             </View>
-          </View>
+          )}
         </ScrollView>
       </View>
     );
@@ -196,6 +221,7 @@ const styles = StyleSheet.create({
 
 const mapStateToProps = state => {
   return {
+    profile: state.profile,
     auth: state.auth,
     orders: state.orders,
   };

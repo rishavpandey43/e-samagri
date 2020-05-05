@@ -190,6 +190,18 @@ class AddNewProductScreen extends Component {
                 }}
               />
             </Card>
+          ) : !this.props.profile.profile.profileVerificationDetail.verified ||
+            !this.props.profile.profile.storeDetail.verified ||
+            !this.props.profile.profile.bankDetail.verified ? (
+            <View>
+              <Text style={{padding: 10, fontSize: 18}}>
+                Your profile verification is still pending. You can enjoy the
+                services, once your profile is verified by us.
+              </Text>
+              <Text style={{padding: 10, fontSize: 18}}>
+                Thank you for your patience.
+              </Text>
+            </View>
           ) : (
             <View style={[mainStyles.container, {marginBottom: 100}]}>
               <View style={mainStyles.formGroup}>

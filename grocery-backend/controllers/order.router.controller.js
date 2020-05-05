@@ -98,7 +98,10 @@ exports.placeOrder = (req, res, next) => {
 exports.getAllOrdersSeller = (req, res, next) => {
   Order.find({ orderedFrom: req.userId })
     .sort({ createdAt: -1 })
-    .populate([{ path: "orderedBy", model: Customer }])
+    .populate([
+      { path: "orderedBy", model: Customer },
+      { path: "deliveryAgent", model: DeliveryAgent },
+    ])
     .then((orders) => {
       if (orders) {
         res.statusCode = 200;

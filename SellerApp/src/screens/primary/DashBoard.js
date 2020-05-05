@@ -118,8 +118,16 @@ class DashBoardScreen extends Component {
           }}
         />
         <ScrollView>
-          <View style={mainStyles.container}>
-            <View style={mainStyles.row}>
+          <View style={[mainStyles.container, {marginBottom: 100}]}>
+            <Card title="Notification">
+              <Text style={{margin: 20, padding: 10, fontSize: 18}}>
+                Your Dashboard is under construction, You'll be updated soon.
+              </Text>
+              <Text style={{margin: 20, padding: 10, fontSize: 18}}>
+                Thank you for your patience.
+              </Text>
+            </Card>
+            {/* <View style={mainStyles.row}>
               <View style={mainStyles.col6}>
                 <Card title="Total Orders">
                   <Text>50</Text>
@@ -154,7 +162,7 @@ class DashBoardScreen extends Component {
                   <Text>50</Text>
                 </Card>
               </View>
-            </View>
+            </View> */}
           </View>
         </ScrollView>
       </View>

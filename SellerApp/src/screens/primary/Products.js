@@ -93,6 +93,18 @@ class ProductsScreen extends Component {
                 }}
               />
             </Card>
+          ) : !this.props.profile.profile.profileVerificationDetail.verified ||
+            !this.props.profile.profile.storeDetail.verified ||
+            !this.props.profile.profile.bankDetail.verified ? (
+            <View>
+              <Text style={{padding: 10, fontSize: 18}}>
+                Your profile verification is still pending. You can enjoy the
+                services, once your profile is verified by us.
+              </Text>
+              <Text style={{padding: 10, fontSize: 18}}>
+                Thank you for your patience.
+              </Text>
+            </View>
           ) : this.props.products.products.length == 0 ? (
             <View
               style={{
@@ -143,6 +155,7 @@ const styles = StyleSheet.create({});
 
 const mapStateToProps = state => {
   return {
+    profile: state.profile,
     auth: state.auth,
     products: state.products,
   };

@@ -27,7 +27,7 @@ import Address from '../../components/Address';
 import CardCustomTitle from '../../components/CardCustomTitle';
 
 // * Import utilites
-import {addressInString} from '../../utils/helper';
+import {obtainAddressInString} from '../../utils/helper';
 
 // * Import all styling stuffs
 import mainStyles from '../../styles/mainStyle';
@@ -200,7 +200,7 @@ class ProfileScreen extends Component {
                   <View>
                     <Address
                       type={this.props.profile.profile.address.type}
-                      value={addressInString(
+                      value={obtainAddressInString(
                         this.props.profile.profile.address,
                       )}
                     />

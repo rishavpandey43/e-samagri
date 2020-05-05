@@ -26,24 +26,6 @@ const orders = (state = initialState, action) => {
         fetchingOrders: false,
         errMessage: action.message,
       };
-    // case actionTypes.PLACE_ORDER_REQUEST:
-    //   return {
-    //     ...state,
-    //     fetchingOrders: true,
-    //   };
-    // case actionTypes.PLACE_ORDER_SUCCESS:
-    //   return {
-    //     ...state,
-    //     fetchingOrders: false,
-    //     orders: action.orders,
-    //     errMessage: '',
-    //   };
-    // case actionTypes.PLACE_ORDER_FAILURE:
-    //   return {
-    //     ...state,
-    //     fetchingOrders: false,
-    //     errMessage: action.message,
-    //   };
     default:
       return {
         ...state,

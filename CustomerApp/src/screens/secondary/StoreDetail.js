@@ -30,7 +30,7 @@ import * as CartActions from '../../store/actions/creators/CartActions';
 // * Import all screens/components
 
 // * Import utilites
-import {addressInString, getStoreCategory} from '../../utils/helper';
+import {obtainAddressInString, getStoreCategory} from '../../utils/helper';
 
 // * Import all styling stuffs
 import mainStyles from '../../styles/mainStyle';
@@ -456,7 +456,7 @@ class StoreDetailScreen extends Component {
                 </View>
                 <View style={mainStyles.col8}>
                   <Text style={{fontSize: 20}}>
-                    {addressInString(
+                    {obtainAddressInString(
                       this.props.store.store.storeDetail.address,
                     )}
                   </Text>

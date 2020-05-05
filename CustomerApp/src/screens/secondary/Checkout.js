@@ -66,7 +66,11 @@ class CheckoutScreen extends Component {
         })
         .catch(err => {
           ToastAndroid.show(
-            "Sorry your order can't be placed, try  again later ",
+            err.response
+              ? err.response.status != 500
+                ? err.response.data.errMessage
+                : "This order can't be processed right now, please try again."
+              : "This order can't be processed right now, please try again.",
             ToastAndroid.LONG,
           );
         });

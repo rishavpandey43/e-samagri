@@ -11,7 +11,7 @@ import * as StoreActions from '../store/actions/creators/StoreActions';
 // * Import all screens/components
 
 // * Import utilites
-import {addressInString} from '../utils/helper';
+import {obtainAddressInString} from '../utils/helper';
 
 // * Import all styling stuffs
 import mainStyles from '../styles/mainStyle';
@@ -38,7 +38,7 @@ const Store = ({selectStore, sellers, currentStore, navigation}) => {
         <View style={mainStyles.col8}>
           <Text style={{fontSize: 18}}>{currentStore.storeDetail.name}</Text>
           <Text style={{color: '#555'}}>
-            {addressInString(currentStore.storeDetail.address)}
+            {obtainAddressInString(currentStore.storeDetail.address)}
           </Text>
         </View>
       </View>

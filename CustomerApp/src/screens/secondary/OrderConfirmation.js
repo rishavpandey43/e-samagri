@@ -28,9 +28,6 @@ class OrderConfirmationScreen extends Component {
   componentDidMount() {
     this.props.getCartDetailFetch(this.props.auth.authToken);
     this.props.getOrdersFetch(this.props.auth.authToken);
-    setTimeout(() => {
-      this.props.navigation.navigate('home-screen');
-    }, 5000);
   }
 
   render() {
@@ -54,11 +51,6 @@ class OrderConfirmationScreen extends Component {
                   ' ' +
                   this.props.profile.profile.personalDetail
                     .lastName}, You're order has been placed successfully. You'll be updated once it's processed.`}
-              </Text>
-              <Text style={{marginBottom: 20, fontSize: 20, color: 'green'}}>
-                {`Now, you'll be automatically redirected to Home in ${
-                  this.state.timeRemaining
-                } ${this.state.timeRemaining === 1 ? 'second' : 'seconds'}`}
               </Text>
               <Button
                 title="Go to Home"

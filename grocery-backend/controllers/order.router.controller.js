@@ -15,7 +15,10 @@ const constants = require("../util/constant");
 exports.getAllOrdersCustomer = (req, res, next) => {
   Order.find({ orderedBy: req.userId })
     .sort({ createdAt: -1 })
-    .populate([{ path: "orderedFrom", model: Seller }])
+    .populate([
+      { path: "orderedFrom", model: Seller },
+      { path: "deliveryAgent", model: DeliveryAgent },
+    ])
     .then((orders) => {
       if (orders) {
         res.statusCode = 200;
@@ -34,63 +37,97 @@ exports.getAllOrdersCustomer = (req, res, next) => {
     .catch((err) => next(err));
 };
 
+// TODO: Needs to improve this
 exports.placeOrder = (req, res, next) => {
   let newOrder = req.body;
   newOrder.orderedBy = req.userId;
-  Order.create(newOrder).then((order) => {
-    if (order) {
-      Customer.findById(order.orderedBy)
-        .then((customer) => {
-          // * When order is placed, then also delete the cart from customer account.
-          customer.cart = {
-            storeId: null,
-            products: [],
-            deliveryCharge: null,
-          };
-          customer
-            .save()
-            .then((customer) => {
-              // * NOW ALERT TO SELLER
-              admin.messaging().sendToDevice(
-                seller.fcm.token,
-                {
-                  data: {
-                    orderId: JSON.stringify(order._id),
-                  },
-                  notification: {
-                    title: helpers.getNotificationFromValue(
-                      constants.alertNotificationForSeller,
-                      "nwo"
-                    ).title,
-                    body: helpers.getNotificationFromValue(
-                      constants.alertNotificationForSeller,
-                      "nwo"
-                    ).body,
-                  },
-                },
-                {
-                  // Required for background/quit data-only messages on iOS
-                  contentAvailable: true,
-                  // Required for background/quit data-only messages on Android
-                  priority: "high",
-                }
-              );
-              res.statusCode = 200;
-              res.statusText = "OK";
-              res.setHeader("Content-Type", "application/json");
-              res.json({
-                order,
-                message: "Order placed successfully",
-              });
-            })
-            .catch((err) => next(err));
-        })
-        .catch((err) => next(err));
-    } else {
-      let err = new Error(`Internal Server Error`);
-      err.status = 500;
-      err.statusText = "Internal Server Error";
+  // * First check, if there's already 2 pending orders of the customer.
+  Order.find({
+    $and: [
+      {
+        orderedBy: req.userId,
+      },
+      {
+        status: { $ne: "del" },
+      },
+      {
+        status: { $ne: "can" },
+      },
+    ],
+  }).then((orders) => {
+    if (orders.length >= 2) {
+      // * here, rejects the request placing new order by customer
+      let err = new Error(
+        `This order can't be placed right now, since you've already 2 undelivered orders. Please try again`
+      );
+      err.status = 400;
+      err.statusText = "Bad Request";
       next(err);
+    } else {
+      Order.create(newOrder).then((order) => {
+        Order.findById(order._id)
+          .populate([
+            { path: "orderedBy", model: Customer },
+            { path: "orderedFrom", model: Seller },
+            { path: "deliveryAgent", model: DeliveryAgent },
+          ])
+          .then((order) => {
+            if (order) {
+              Customer.findById(order.orderedBy._id)
+                .then((customer) => {
+                  // * When order is placed, then delete the cart from customer DB.
+                  customer.cart = {
+                    storeId: null,
+                    products: [],
+                    deliveryCharge: null,
+                  };
+                  customer
+                    .save()
+                    .then((customer) => {
+                      // * NOW ALERT TO SELLER
+                      admin.messaging().sendToDevice(
+                        order.orderedFrom.fcm.token,
+                        {
+                          data: {
+                            orderId: JSON.stringify(order._id),
+                          },
+                          notification: {
+                            title: helpers.getNotificationFromValue(
+                              constants.alertNotificationForSeller,
+                              "nwo"
+                            ).title,
+                            body: helpers.getNotificationFromValue(
+                              constants.alertNotificationForSeller,
+                              "nwo"
+                            ).body,
+                          },
+                        },
+                        {
+                          // Required for background/quit data-only messages on iOS
+                          contentAvailable: true,
+                          // Required for background/quit data-only messages on Android
+                          priority: "high",
+                        }
+                      );
+                      res.statusCode = 200;
+                      res.statusText = "OK";
+                      res.setHeader("Content-Type", "application/json");
+                      res.json({
+                        order,
+                        message: "Order placed successfully",
+                      });
+                    })
+                    .catch((err) => next(err));
+                })
+                .catch((err) => next(err));
+            } else {
+              let err = new Error(`Internal Server Error`);
+              err.status = 500;
+              err.statusText = "Internal Server Error";
+              next(err);
+            }
+          });
+      });
     }
   });
 };
@@ -437,7 +474,7 @@ exports.processOrderDeliveryAgent = (req, res, next) => {
                 (order) => order.status !== "del"
               );
               if (totalUndeliveredOrders.length >= 2) {
-                // * here, rejects the request of delivery agent to delivert the order
+                // * here, rejects the request of delivery agent to deliver the order
                 let err = new Error(
                   `You cannot accept more orders to deliver for now. You already have 2 pending orders for delivery`
                 );

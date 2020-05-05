@@ -101,7 +101,6 @@ class OrderDetailScreen extends Component {
   };
 
   render() {
-    console.log(this.state.order);
     return (
       <View>
         <Header

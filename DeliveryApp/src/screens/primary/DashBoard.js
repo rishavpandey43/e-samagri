@@ -42,22 +42,25 @@ class DashBoardScreen extends Component {
 
     const messageListener = () => {
       messaging().onMessage(message => {
-        this.props.getOrdersFetch(this.props.auth.authToken);
-
         Alert.alert(
           message.notification.title,
           `Hello ${
             this.props.profile.profile
-              ? this.props.profile.profile.personalDetail.firstName +
-                ' ' +
-                this.props.profile.profile.personalDetail.lastName
+              ? `${this.props.profile.profile.personalDetail.firstName} ${
+                  this.props.profile.profile.personalDetail.lastName
+                }, `
               : ''
           } ${message.notification.body}`,
           [
             {
               text: 'View more detail',
               onPress: () => {
-                this.props.navigation.navigate('orders-stack');
+                if (message.notification.title === 'New Order') {
+                  this.props.navigation.navigate('deliver-new-order-stack');
+                } else {
+                  this.props.getOrdersFetch(this.props.auth.authToken);
+                  this.props.navigation.navigate('orders-stack');
+                }
                 return;
               },
             },
@@ -66,13 +69,21 @@ class DashBoardScreen extends Component {
       });
 
       messaging().onNotificationOpenedApp(notification => {
-        this.props.getOrdersFetch(this.props.auth.authToken);
-        this.props.navigation.navigate('orders-stack');
+        if (notification.title === 'New Order') {
+          this.props.navigation.navigate('deliver-new-order-stack');
+        } else {
+          this.props.getOrdersFetch(this.props.auth.authToken);
+          this.props.navigation.navigate('orders-stack');
+        }
       });
 
       messaging().getInitialNotification(notification => {
-        this.props.getOrdersFetch(this.props.auth.authToken);
-        this.props.navigation.navigate('orders-stack');
+        if (notification.title === 'New Order') {
+          this.props.navigation.navigate('deliver-new-order-stack');
+        } else {
+          this.props.getOrdersFetch(this.props.auth.authToken);
+          this.props.navigation.navigate('orders-stack');
+        }
       });
     };
 
@@ -118,8 +129,16 @@ class DashBoardScreen extends Component {
           }}
         />
         <ScrollView>
-          <View style={mainStyles.container}>
-            <View style={mainStyles.row}>
+          <View style={[mainStyles.container, {marginBottom: 100}]}>
+            <Card title="Notification">
+              <Text style={{margin: 20, padding: 10, fontSize: 18}}>
+                Your Dashboard is under construction, You'll be updated soon.
+              </Text>
+              <Text style={{margin: 20, padding: 10, fontSize: 18}}>
+                Thank you for your patience.
+              </Text>
+            </Card>
+            {/* <View style={mainStyles.row}>
               <View style={mainStyles.col6}>
                 <Card title="Total Orders">
                   <Text>50</Text>
@@ -154,7 +173,7 @@ class DashBoardScreen extends Component {
                   <Text>50</Text>
                 </Card>
               </View>
-            </View>
+            </View> */}
           </View>
         </ScrollView>
       </View>

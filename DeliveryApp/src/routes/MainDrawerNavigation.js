@@ -6,6 +6,7 @@ import {createDrawerNavigator} from '@react-navigation/drawer';
 
 import DashBoardStack from './stacks/DashBoardStack';
 import ProfileStack from './stacks/ProfileStack';
+import DeliverNewOrderStack from './stacks/DeliverNewOrderStack';
 import OrdersStack from './stacks/OrdersStack';
 import HelpStack from './stacks/HelpStack';
 import SettingStack from './stacks/SettingStack';
@@ -34,6 +35,20 @@ const MainDrawerNavigation = () => (
           drawerLabel: 'Profile',
           drawerIcon: () => (
             <Icon name="user" size={30} color={variable.mainThemeColor} />
+          ),
+        }}
+      />
+      <Drawer.Screen
+        name="deliver-new-order-stack"
+        component={DeliverNewOrderStack}
+        options={{
+          drawerLabel: 'Deliver New Order',
+          drawerIcon: () => (
+            <Icon
+              name="shopping-bag"
+              size={30}
+              color={variable.mainThemeColor}
+            />
           ),
         }}
       />

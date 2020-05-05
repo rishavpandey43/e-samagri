@@ -10,7 +10,6 @@ const mainStyles = StyleSheet.create({
     justifyContent: 'center',
   },
   alignCenter: {
-    flex: 1,
     alignItems: 'center',
   },
   row: {

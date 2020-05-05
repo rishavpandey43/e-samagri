@@ -58,12 +58,40 @@ class UpdateProfileScreen extends Component {
     };
   }
 
-  toggleEditCardDisplay = target => {
+  componentDidUpdate = prevProps => {
+    if (
+      prevProps.profile.profile.updatedAt !=
+      this.props.profile.profile.updatedAt
+    ) {
+      this.setState({
+        personalDetailCardDisplay: false,
+        profileVerificationDetailCardDisplay: false,
+        vehicleDetailCardDisplay: false,
+        bankDetailCardDisplay: false,
+        profileVerificationDetail: {
+          type: 'aadhar-id',
+          number: '',
+        },
+        vehicleDetail: {
+          drivingLicence: '',
+          vehicleModel: '',
+        },
+        bankDetail: {
+          name: '',
+          accountNumber: '',
+          ifscCode: '',
+          branchName: '',
+        },
+      });
+    }
+  };
+
+  _toggleEditCardDisplay = target => {
     this.setState({[target]: !this.state[target]});
   };
 
   // TODO: Implement file upload functionality
-  uploadDocument = async () => {
+  _uploadDocument = async () => {
     // try {
     //   const results = await DocumentPicker.pickMultiple({
     //     type: [DocumentPicker.types.images],
@@ -187,7 +215,7 @@ class UpdateProfileScreen extends Component {
                     title="Update Your Personal Detail"
                     detail
                     onPress={() => {
-                      this.toggleEditCardDisplay('personalDetailCardDisplay');
+                      this._toggleEditCardDisplay('personalDetailCardDisplay');
                     }}
                   />
                 }>
@@ -303,7 +331,7 @@ class UpdateProfileScreen extends Component {
                     title="Update Your Profile Verification Detail"
                     detail
                     onPress={() => {
-                      this.toggleEditCardDisplay(
+                      this._toggleEditCardDisplay(
                         'profileVerificationDetailCardDisplay',
                       );
                     }}
@@ -441,7 +469,7 @@ class UpdateProfileScreen extends Component {
                     title="Update Your Vehicle Detail"
                     detail
                     onPress={() => {
-                      this.toggleEditCardDisplay('vehicleDetailCardDisplay');
+                      this._toggleEditCardDisplay('vehicleDetailCardDisplay');
                     }}
                   />
                 }>
@@ -526,7 +554,7 @@ class UpdateProfileScreen extends Component {
                     title="Update Your Bank Detail"
                     detail
                     onPress={() => {
-                      this.toggleEditCardDisplay('bankDetailCardDisplay');
+                      this._toggleEditCardDisplay('bankDetailCardDisplay');
                     }}
                   />
                 }>

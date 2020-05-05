@@ -8,7 +8,7 @@ import {
   View,
   ActivityIndicator,
   Alert,
-  ToastAndroid,
+  Linking,
 } from 'react-native';
 import {Header, Card, Text, Icon, Button} from 'react-native-elements';
 import axios from 'axios';
@@ -21,7 +21,11 @@ import Item from '../../components/OrderItem';
 
 // * Import utilites
 import {baseUrl} from '../../utils/constant';
-import {getOrderStatus, getpaymentMode} from '../../utils/helper';
+import {
+  getOrderStatus,
+  getpaymentMode,
+  obtainAddressInString,
+} from '../../utils/helper';
 
 // * Import all styling stuffs
 import mainStyles from '../../styles/mainStyle';
@@ -32,8 +36,6 @@ class OrderDetailScreen extends Component {
     super(props);
     this.state = {
       order: null,
-      orderUpdating_No: false,
-      orderUpdating_Yes: false,
     };
   }
 
@@ -67,13 +69,9 @@ class OrderDetailScreen extends Component {
   _processOrder = processType => {
     Alert.alert(
       'Confirm your choice',
-      `${
-        processType === 'can'
-          ? 'Do you want to Cancel this order?'
-          : processType === 'prc'
-          ? 'Do you want to process this order?'
-          : 'Have you Processed this order?'
-      }`,
+      `Have you ${
+        processType === 'ofd' ? 'Picked Up' : 'Delivered'
+      }  this order?`,
       [
         {
           text: 'Cancel',
@@ -138,40 +136,19 @@ class OrderDetailScreen extends Component {
                   }`,
                 }}>
                 <Text style={{textAlign: 'center', fontSize: 18}}>
-                  {this.state.order.status === 'prc'
-                    ? 'Do you want to deliver this order?'
-                    : `Have you ${
-                        this.state.order.status === 'prcd'
-                          ? 'Picked Up'
-                          : 'Delivered'
-                      }  this order?`}
+                  {this.state.order.status === 'prc' ? (
+                    <Text>
+                      Order is still under process by seller, please wait.
+                    </Text>
+                  ) : (
+                    `Have you ${
+                      this.state.order.status === 'prcd'
+                        ? 'Picked up'
+                        : 'Delivered'
+                    }  this order?`
+                  )}
                 </Text>
-                {this.state.order.status === 'prc' ? (
-                  <View style={[mainStyles.row, {marginTop: 20}]}>
-                    <View style={mainStyles.col6}>
-                      <Button
-                        title="No"
-                        type="outline"
-                        raised
-                        loading={this.props.orders.updatingOrder_can}
-                        titleStyle={{color: variables.mainThemeColor}}
-                        buttonStyle={mainStyles.outlineBtn}
-                        onPress={this._processOrder.bind(null, 'no')}
-                      />
-                    </View>
-                    <View style={mainStyles.col6}>
-                      <Button
-                        title="Yes"
-                        type="outline"
-                        raised
-                        loading={this.props.orders.updatingOrder_other}
-                        titleStyle={{color: variables.mainThemeColor}}
-                        buttonStyle={mainStyles.outlineBtn}
-                        onPress={this._processOrder.bind(null, 'yes')}
-                      />
-                    </View>
-                  </View>
-                ) : this.state.order.status === 'prc' ? (
+                {this.state.order.status === 'prcd' ? (
                   <View style={{marginTop: 20, alignItems: 'center'}}>
                     <View style={mainStyles.col6}>
                       <Button
@@ -185,7 +162,8 @@ class OrderDetailScreen extends Component {
                       />
                     </View>
                   </View>
-                ) : (
+                ) : null}
+                {this.state.order.status === 'ofd' ? (
                   <View style={{marginTop: 20, alignItems: 'center'}}>
                     <View style={mainStyles.col6}>
                       <Button
@@ -199,23 +177,10 @@ class OrderDetailScreen extends Component {
                       />
                     </View>
                   </View>
-                )}
+                ) : null}
               </Card>
 
-              <Card>
-                <View style={{flex: 1, flexDirection: 'row', marginBottom: 20}}>
-                  <View style={{flex: 1}}>
-                    <Text style={styles.label}>Ordered By:</Text>
-                  </View>
-                  <View style={{flex: 1, justifyContent: 'center'}}>
-                    <Text style={{fontSize: 18}}>
-                      {this.state.order.orderedBy.personalDetail.firstName +
-                        ' ' +
-                        this.state.order.orderedBy.personalDetail.lastName}
-                    </Text>
-                  </View>
-                </View>
-
+              <Card title="Order Summary">
                 <View style={{flex: 1, flexDirection: 'row', marginBottom: 20}}>
                   <View style={{flex: 1}}>
                     <Text style={styles.label}>Status:</Text>
@@ -232,7 +197,7 @@ class OrderDetailScreen extends Component {
                 </View>
 
                 <Text style={{fontSize: 20, marginBottom: 20}}>
-                  Order Summary:
+                  Items in order:
                 </Text>
 
                 <View>
@@ -285,9 +250,122 @@ class OrderDetailScreen extends Component {
                   </View>
                   <View style={{flex: 1}}>
                     <Text style={{textAlign: 'right'}}>
-                      {this.state.order.paymentMode === 'cod'
+                      {this.state.order.status === 'del'
+                        ? 'Completed'
+                        : this.state.order.paymentMode === 'cod'
                         ? 'Pending'
                         : 'Completed'}
+                    </Text>
+                  </View>
+                </View>
+              </Card>
+
+              <Card title="Customer Detail">
+                <View style={{flex: 1, flexDirection: 'row', marginBottom: 20}}>
+                  <View style={{flex: 1}}>
+                    <Text style={styles.label}>Name:</Text>
+                  </View>
+                  <View style={{flex: 1, justifyContent: 'center'}}>
+                    <Text style={{fontSize: 18}}>
+                      {this.state.order.orderedBy.personalDetail.firstName +
+                        ' ' +
+                        this.state.order.orderedBy.personalDetail.lastName}
+                    </Text>
+                  </View>
+                </View>
+
+                <View style={{flex: 1, flexDirection: 'row', marginBottom: 20}}>
+                  <View style={{flex: 1}}>
+                    <Text style={styles.label}>Contact number:</Text>
+                  </View>
+                  <View style={{flex: 1, justifyContent: 'center'}}>
+                    <Text
+                      style={{
+                        fontSize: 18,
+                        textDecorationLine: 'underline',
+                      }}
+                      onPress={() => {
+                        Linking.openURL(
+                          `tel:${
+                            this.state.order.orderedBy.personalDetail.phone
+                          }`,
+                        );
+                      }}>
+                      {this.state.order.orderedBy.personalDetail.phone}
+                    </Text>
+                  </View>
+                </View>
+
+                <View style={{flex: 1, flexDirection: 'row', marginBottom: 20}}>
+                  <View style={{flex: 1}}>
+                    <Text style={styles.label}>Address:</Text>
+                  </View>
+                  <View style={{flex: 1, justifyContent: 'center'}}>
+                    <Text style={{fontSize: 18}}>
+                      {obtainAddressInString(
+                        this.state.order.orderedBy.address,
+                      )}
+                    </Text>
+                  </View>
+                </View>
+              </Card>
+
+              <Card title="Seller Detail">
+                <View style={{flex: 1, flexDirection: 'row', marginBottom: 20}}>
+                  <View style={{flex: 1}}>
+                    <Text style={styles.label}>Store name:</Text>
+                  </View>
+                  <View style={{flex: 1, justifyContent: 'center'}}>
+                    <Text style={{fontSize: 18}}>
+                      {this.state.order.orderedFrom.storeDetail.name}
+                    </Text>
+                  </View>
+                </View>
+
+                <View style={{flex: 1, flexDirection: 'row', marginBottom: 20}}>
+                  <View style={{flex: 1}}>
+                    <Text style={styles.label}>Seller name:</Text>
+                  </View>
+                  <View style={{flex: 1, justifyContent: 'center'}}>
+                    <Text style={{fontSize: 18}}>
+                      {this.state.order.orderedFrom.personalDetail.firstName +
+                        ' ' +
+                        this.state.order.orderedFrom.personalDetail.lastName}
+                    </Text>
+                  </View>
+                </View>
+
+                <View style={{flex: 1, flexDirection: 'row', marginBottom: 20}}>
+                  <View style={{flex: 1}}>
+                    <Text style={styles.label}>Seller contact number:</Text>
+                  </View>
+                  <View style={{flex: 1, justifyContent: 'center'}}>
+                    <Text
+                      style={{
+                        fontSize: 18,
+                        textDecorationLine: 'underline',
+                      }}
+                      onPress={() => {
+                        Linking.openURL(
+                          `tel:${
+                            this.state.order.orderedFrom.personalDetail.phone
+                          }`,
+                        );
+                      }}>
+                      {this.state.order.orderedFrom.personalDetail.phone}
+                    </Text>
+                  </View>
+                </View>
+
+                <View style={{flex: 1, flexDirection: 'row', marginBottom: 20}}>
+                  <View style={{flex: 1}}>
+                    <Text style={styles.label}>Address:</Text>
+                  </View>
+                  <View style={{flex: 1, justifyContent: 'center'}}>
+                    <Text style={{fontSize: 18}}>
+                      {obtainAddressInString(
+                        this.state.order.orderedFrom.storeDetail.address,
+                      )}
                     </Text>
                   </View>
                 </View>

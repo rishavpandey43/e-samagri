@@ -27,6 +27,16 @@ orderRouter
     middleWares.verifyUserToken,
     orderRouterController.processOrderSeller
   )
+  .get(
+    "/get-delivery-not-assigned-orders-deliveryAgent",
+    middleWares.verifyUserToken,
+    orderRouterController.getDeliveryNotAssignedOrders
+  )
+  .get(
+    "/get-all-orders-deliveryAgent",
+    middleWares.verifyUserToken,
+    orderRouterController.getAllOrdersDeliveryAgent
+  )
   .put(
     "/process-order-deliveryAgent",
     middleWares.verifyUserToken,

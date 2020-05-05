@@ -1,31 +1,95 @@
-// * Import required modules/dependencies
 import React, {Component} from 'react';
 import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
 import {ScrollView, StyleSheet, View, ActivityIndicator} from 'react-native';
-import {Header, Card, Text, Button, Icon} from 'react-native-elements';
+import {
+  Header,
+  Card,
+  ListItem,
+  Button,
+  Text,
+  Icon,
+} from 'react-native-elements';
+import {Picker} from '@react-native-community/picker';
 
 // * Import all store related stuffs
 import * as OrderActions from '../../store/actions/creators/OrderActions';
 
-// * Import all screens/components
 import OrderCard from '../../components/OrderCard';
 
-// * Import utilites
+import {orderStatus} from '../../utils/constant';
 
-// * Import all styling stuffs
-import mainStyles from '../../styles/mainStyle';
 import variables from '../../styles/variables';
+import mainStyles from '../../styles/mainStyle';
+
+import * as helper from '../../utils/helper';
 
 class OrdersScreen extends Component {
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = {
+      filteredOrders: [],
+      selectedStatus: 'all',
+    };
   }
 
   componentDidMount() {
     this.props.getOrdersFetch(this.props.auth.authToken);
+    this.setState({filteredOrders: this.props.orders.orders});
   }
+
+  componentDidUpdate(prevProps) {
+    if (
+      prevProps.orders.orders &&
+      prevProps.orders.orders.length !== this.props.orders.orders.length
+    ) {
+      this.setState({filteredOrders: this.props.orders.orders});
+    }
+    if (
+      prevProps.orders.orders &&
+      prevProps.orders.orders.length === this.props.orders.orders.length
+    ) {
+      for (let i = 0; i < prevProps.orders.orders.length; i++) {
+        if (
+          prevProps.orders.orders[i].status !==
+          this.props.orders.orders[i].status
+        ) {
+          this.setState({filteredOrders: this.props.orders.orders});
+        }
+      }
+    }
+  }
+
+  _filterByStatus = status => {
+    if (status === 'all') {
+      this.setState({filteredOrders: this.props.orders.orders});
+    } else {
+      this.setState({
+        filteredOrders: this.props.orders.orders.filter(
+          order => order.status === status,
+        ),
+      });
+    }
+  };
+
+  renderOrderList = ({item, index}) => {
+    return (
+      <View>
+        <ListItem
+          key={index}
+          title={helper.obtainItemsInString(item.items)}
+          subtitle={`Status- ${item.status}`}
+          chevron
+          onPress={() =>
+            this.props.navigation.navigate('order-detail-screen', {
+              orderId: item._id,
+            })
+          }>
+          <Text />
+        </ListItem>
+      </View>
+    );
+  };
 
   render() {
     return (
@@ -79,15 +143,40 @@ class OrdersScreen extends Component {
             </Card>
           ) : (
             <View style={[mainStyles.container, {marginBottom: 100}]}>
-              {this.props.orders.orders.length === 0 ? (
-                <View style={{margin: 15, marginTop: 30}}>
-                  <Text style={{fontSize: 18}}>
-                    You haven't placed any order yet, place an order from your
-                    desired store and come back.
-                  </Text>
+              <View style={mainStyles.formGroup}>
+                <Text style={mainStyles.formLabel}>
+                  Filter by order status:
+                </Text>
+                <View>
+                  <Picker
+                    selectedValue={this.state.selectedStatus}
+                    style={{
+                      height: 30,
+                      width: '50%',
+                    }}
+                    onValueChange={(itemValue, itemIndex) => {
+                      this.setState({selectedStatus: itemValue});
+                      this._filterByStatus(itemValue);
+                    }}>
+                    <Picker.Item label={'All'} value={'all'} />
+                    {orderStatus.map(category => (
+                      <Picker.Item
+                        key={category.value}
+                        label={category.name}
+                        value={category.value}
+                      />
+                    ))}
+                  </Picker>
                 </View>
+              </View>
+              {this.state.filteredOrders &&
+              this.state.filteredOrders.length === 0 ? (
+                <Text style={{padding: 10, fontSize: 18}}>
+                  You don't have any orders of selected category for now. Try to
+                  change your category or try again later.
+                </Text>
               ) : null}
-              {this.props.orders.orders.map(order => (
+              {this.state.filteredOrders.map(order => (
                 <OrderCard
                   key={order._id}
                   order={order}

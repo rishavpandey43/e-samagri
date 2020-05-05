@@ -74,7 +74,7 @@ export const placeOrderFailure = response => {
 export const placeOrderFetch = token => dispatch => {
   dispatch(placeOrderRequest());
   axios
-    .post(baseUrl + '/orders/get-orders', {
+    .post(baseUrl + '/order/place-order', {
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${token}`,

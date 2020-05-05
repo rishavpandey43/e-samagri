@@ -4,11 +4,13 @@ import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
 import {
   ScrollView,
+  SafeAreaView,
   StyleSheet,
   View,
   TouchableOpacity,
   ActivityIndicator,
   Alert,
+  VirtualizedList,
 } from 'react-native';
 import {
   Header,
@@ -30,7 +32,7 @@ import * as CartActions from '../../store/actions/creators/CartActions';
 // * Import all screens/components
 
 // * Import utilites
-import {addressInString, getStoreCategory} from '../../utils/helper';
+import {obtainAddressInString, getStoreCategory} from '../../utils/helper';
 
 // * Import all styling stuffs
 import mainStyles from '../../styles/mainStyle';
@@ -204,164 +206,159 @@ class StoreDetailScreen extends Component {
   };
 
   render() {
-    const Product = ({product}) => {
-      return (
+    const Product = ({product}) => (
+      <View
+        style={{
+          flex: 1,
+          flexDirection: 'row',
+          marginTop: 10,
+          marginBottom: 10,
+        }}>
         <View
-          style={[
-            mainStyles.row,
-            {
-              flex: 1,
-              marginBottom: 10,
-            },
-          ]}>
-          <View
-            style={[
-              {
-                flex: 2,
-                justifyContent: 'center',
-                marginTop: 10,
-                marginRight: 25,
-              },
-            ]}>
-            <View>
-              <Text style={{fontSize: 20}}>{product.root.name}</Text>
-            </View>
-            <Picker
-              selectedValue={
+          style={{
+            flex: 2,
+            justifyContent: 'center',
+            marginTop: 10,
+            marginRight: 25,
+          }}>
+          <View>
+            <Text style={{fontSize: 20}}>{product.root.name}</Text>
+          </View>
+          <Picker
+            selectedValue={
+              this.state.productVariantForPicker.filter(
+                variant => variant.productId === product._id,
+              )[0].value
+            }
+            style={{height: 40, width: 'auto', marginTop: 10}}
+            onValueChange={(itemValue, itemIndex) => {
+              // * AWESOME LOGIC TO CHANGE THE VARIANT PICKER ;)
+              let productIndex = null;
+              this.state.productVariantForPicker.forEach((variant, i) => {
+                if (product._id === variant.productId) {
+                  productIndex = i;
+                }
+              });
+              let tempProductVariantForPicker = this.state
+                .productVariantForPicker;
+              tempProductVariantForPicker[productIndex].value = itemValue;
+              tempProductVariantForPicker[productIndex].variantId =
+                product.variants[itemIndex]._id;
+              this.setState({
+                productVariantForPicker: tempProductVariantForPicker,
+              });
+            }}>
+            {product.variants.map((variant, index) => (
+              <Picker.Item
+                key={index}
+                label={`${variant.value}/₹ ${variant.price}`}
+                value={variant.value}
+              />
+            ))}
+          </Picker>
+        </View>
+        <View style={{flex: 1, justifyContent: 'center', marginLeft: 5}}>
+          {this.props.cart.cart ? (
+            // * AWESOME LOGIC OF DISPLAYING BUTTONS BASED ON VARIANTS ADDED IN CART
+            !this.props.cart.cart.products.filter(
+              cartProduct =>
+                cartProduct.variantId ===
                 this.state.productVariantForPicker.filter(
                   variant => variant.productId === product._id,
-                )[0].value
-              }
-              style={{height: 40, width: 'auto', marginTop: 10}}
-              onValueChange={(itemValue, itemIndex) => {
-                // * AWESOME LOGIC TO CHANGE THE VARIANT PICKER ;)
-                let productIndex = null;
-                this.state.productVariantForPicker.forEach((variant, i) => {
-                  if (product._id === variant.productId) {
-                    productIndex = i;
-                  }
-                });
-                let tempProductVariantForPicker = this.state
-                  .productVariantForPicker;
-                tempProductVariantForPicker[productIndex].value = itemValue;
-                tempProductVariantForPicker[productIndex].variantId =
-                  product.variants[itemIndex]._id;
-                this.setState({
-                  productVariantForPicker: tempProductVariantForPicker,
-                });
-              }}>
-              {product.variants.map((variant, index) => (
-                <Picker.Item
-                  key={index}
-                  label={`${variant.value}/₹ ${variant.price}`}
-                  value={variant.value}
-                />
-              ))}
-            </Picker>
-          </View>
-          <View style={[{flex: 1, justifyContent: 'center', marginLeft: 5}]}>
-            {this.props.cart.cart ? (
-              // * AWESOME LOGIC OF DISPLAYING BUTTONS BASED ON VARIANTS ADDED IN CART
-              !this.props.cart.cart.products.filter(
-                cartProduct =>
-                  cartProduct.variantId ===
-                  this.state.productVariantForPicker.filter(
-                    variant => variant.productId === product._id,
-                  )[0].variantId,
-              )[0] ? (
-                <View style={{justifyContent: 'center'}}>
-                  <Button
-                    title="Add to cart"
-                    titleStyle={{color: variables.mainThemeColor}}
-                    type="outline"
-                    buttonStyle={[styles.btn, mainStyles.outlineBtn]}
-                    onPress={this._addToCart.bind(null, product._id)}
-                  />
-                </View>
-              ) : (
-                <View style={[mainStyles.row]}>
-                  <View style={{flex: 1, justifyContent: 'center'}}>
-                    <Button
-                      title="-"
-                      titleStyle={{
-                        fontSize: 20,
-                        fontWeight: 'bold',
-                        color: variables.mainThemeColor,
-                      }}
-                      type="outline"
-                      buttonStyle={[
-                        styles.btn,
-                        mainStyles.outlineBtn,
-                        {padding: 2, width: '100%', minHeight: 35},
-                      ]}
-                      onPress={this._changeProductQuantityinCart.bind(
-                        null,
-                        'decrement',
-                        this.state.productVariantForPicker.filter(
-                          variant => variant.productId === product._id,
-                        )[0],
-                      )}
-                    />
-                  </View>
-                  <View
-                    style={{
-                      flex: 1,
-                      justifyContent: 'center',
-                      alignItems: 'center',
-                    }}>
-                    <Text style={{fontSize: 18}}>
-                      {
-                        this.props.cart.cart.products.filter(
-                          cartProduct =>
-                            cartProduct.variantId ===
-                            this.state.productVariantForPicker.filter(
-                              variant => variant.productId === product._id,
-                            )[0].variantId,
-                        )[0].quantity
-                      }
-                    </Text>
-                  </View>
-                  <View style={{flex: 1}}>
-                    <Button
-                      title="+"
-                      titleStyle={{
-                        fontSize: 20,
-                        fontWeight: 'bold',
-                        color: variables.mainThemeColor,
-                      }}
-                      type="outline"
-                      buttonStyle={[
-                        styles.btn,
-                        mainStyles.outlineBtn,
-                        {padding: 2, width: '100%', minHeight: 35},
-                      ]}
-                      onPress={this._changeProductQuantityinCart.bind(
-                        null,
-                        'increment',
-                        this.state.productVariantForPicker.filter(
-                          variant => variant.productId === product._id,
-                        )[0],
-                      )}
-                    />
-                  </View>
-                </View>
-              )
-            ) : (
-              // * Display this at initial, if cart is empty
-              <View style={{alignItems: 'center'}}>
+                )[0].variantId,
+            )[0] ? (
+              <View style={{justifyContent: 'center'}}>
                 <Button
-                  type="outline"
-                  buttonStyle={styles.btn}
                   title="Add to cart"
-                  onPress={this._addToCart.bind(null, product._id)}
                   titleStyle={{color: variables.mainThemeColor}}
+                  type="outline"
+                  buttonStyle={[styles.btn, mainStyles.outlineBtn]}
+                  onPress={this._addToCart.bind(null, product._id)}
                 />
               </View>
-            )}
-          </View>
+            ) : (
+              <View style={{flexDirection: 'row'}}>
+                <View style={{flex: 1, justifyContent: 'center'}}>
+                  <Button
+                    title="-"
+                    titleStyle={{
+                      fontSize: 20,
+                      fontWeight: 'bold',
+                      color: variables.mainThemeColor,
+                    }}
+                    type="outline"
+                    buttonStyle={[
+                      styles.btn,
+                      mainStyles.outlineBtn,
+                      {padding: 2, width: '100%', minHeight: 35},
+                    ]}
+                    onPress={this._changeProductQuantityinCart.bind(
+                      null,
+                      'decrement',
+                      this.state.productVariantForPicker.filter(
+                        variant => variant.productId === product._id,
+                      )[0],
+                    )}
+                  />
+                </View>
+                <View
+                  style={{
+                    flex: 1,
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                  }}>
+                  <Text style={{fontSize: 18}}>
+                    {
+                      this.props.cart.cart.products.filter(
+                        cartProduct =>
+                          cartProduct.variantId ===
+                          this.state.productVariantForPicker.filter(
+                            variant => variant.productId === product._id,
+                          )[0].variantId,
+                      )[0].quantity
+                    }
+                  </Text>
+                </View>
+                <View style={{flex: 1}}>
+                  <Button
+                    title="+"
+                    titleStyle={{
+                      fontSize: 20,
+                      fontWeight: 'bold',
+                      color: variables.mainThemeColor,
+                    }}
+                    type="outline"
+                    buttonStyle={[
+                      styles.btn,
+                      mainStyles.outlineBtn,
+                      {padding: 2, width: '100%', minHeight: 35},
+                    ]}
+                    onPress={this._changeProductQuantityinCart.bind(
+                      null,
+                      'increment',
+                      this.state.productVariantForPicker.filter(
+                        variant => variant.productId === product._id,
+                      )[0],
+                    )}
+                  />
+                </View>
+              </View>
+            )
+          ) : (
+            // * Display this at initial, if cart is empty
+            <View style={{alignItems: 'center'}}>
+              <Button
+                type="outline"
+                buttonStyle={styles.btn}
+                title="Add to cart"
+                onPress={this._addToCart.bind(null, product._id)}
+                titleStyle={{color: variables.mainThemeColor}}
+              />
+            </View>
+          )}
         </View>
-      );
-    };
+      </View>
+    );
 
     return (
       <View>
@@ -456,11 +453,11 @@ class StoreDetailScreen extends Component {
                 </View>
                 <View style={mainStyles.col8}>
                   <Text style={{fontSize: 20}}>
-                    {addressInString(
+                    {obtainAddressInString(
                       this.props.store.store.storeDetail.address,
                     )}
                   </Text>
-                  <View style={[mainStyles.row, {marginTop: 10}]}>
+                  {/* <View style={[mainStyles.row, {marginTop: 10}]}>
                     <Text style={{fontSize: 18, fontWeight: 'bold'}}>
                       Status:
                     </Text>
@@ -472,7 +469,7 @@ class StoreDetailScreen extends Component {
                       }}>
                       Open
                     </Text>
-                  </View>
+                  </View> */}
                 </View>
               </View>
 
@@ -547,9 +544,21 @@ class StoreDetailScreen extends Component {
                       No Product found
                     </Text>
                   ) : (
-                    this.state.filteredProduct.map(product => (
-                      <Product key={product._id} product={product} />
-                    ))
+                    <SafeAreaView style={{flex: 1}}>
+                      <VirtualizedList
+                        data={this.state.filteredProduct}
+                        renderItem={({item, index}) => (
+                          <Product key={index} product={item} />
+                        )}
+                        keyExtractor={(item, index) => index.toString()}
+                        getItemCount={data => {
+                          return data.length;
+                        }}
+                        getItem={(data, index) => {
+                          return data[index];
+                        }}
+                      />
+                    </SafeAreaView>
                   )}
                 </View>
               </View>

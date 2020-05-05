@@ -1,5 +1,5 @@
-export const baseUrl = 'https://e-samagri-backend.herokuapp.com';
 // export const baseUrl = 'http://192.168.43.240:5555';
+export const baseUrl = 'https://e-samagri-backend.herokuapp.com';
 
 export const authTokenName = 'eSamagri_customer_auth_token';
 

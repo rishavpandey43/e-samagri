@@ -18,7 +18,7 @@ const OrderCard = ({order, navigation}) => {
   return (
     <Card containerStyle={{borderRadius: 10}}>
       <View style={mainStyles.row}>
-        <View style={[mainStyles.col6, {justifyContent: 'center'}]}>
+        <View style={mainStyles.col6}>
           <View>
             <Text style={styles.title}>Order Date</Text>
             <Text>{order.createdAt}</Text>

@@ -64,7 +64,7 @@ export const getAddress = type => {
   return address;
 };
 
-export const addressInString = address => {
+export const obtainAddressInString = address => {
   let addressString = '';
   for (const key in address) {
     if (key != 'type') {

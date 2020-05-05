@@ -1,4 +1,37 @@
-import {addressType, categoryList} from './constant';
+import AsyncStorage from '@react-native-community/async-storage';
+
+import {addressType, categoryList, orderStatus, paymentMode} from './constant';
+
+export const storeDataInAsync = async (key, value) => {
+  try {
+    await AsyncStorage.setItem(key, value);
+  } catch (error) {
+    // Error retrieving data
+    console.log(error.message);
+  }
+};
+
+export const getDataFromAsync = async key => {
+  let value = '';
+  try {
+    value = (await AsyncStorage.getItem(key)) || null;
+    if (value !== null) {
+      // value previously stored
+      return value;
+    }
+  } catch (e) {
+    // error reading value
+  }
+};
+
+export const removeDataFromAsync = async key => {
+  try {
+    await AsyncStorage.removeItem(key);
+  } catch (error) {
+    // Error retrieving data
+    console.log(error.message);
+  }
+};
 
 export const filterProductBySeller = (sellerId, products) => {
   products = products.filter(product => product.seller === sellerId);
@@ -31,7 +64,7 @@ export const getAddress = type => {
   return address;
 };
 
-export const addressInString = address => {
+export const obtainAddressInString = address => {
   let addressString = '';
   for (const key in address) {
     if (key != 'type') {
@@ -50,6 +83,14 @@ export const getStoreCategory = products => {
   });
 
   return categoryList.map(category => getCategoryName(category));
+};
+
+export const getOrderStatus = type => {
+  return orderStatus.filter(status => status.value === type)[0];
+};
+
+export const getpaymentMode = type => {
+  return paymentMode.filter(payment => payment.value === type)[0].name;
 };
 
 // TODO: complete this function

@@ -1,3 +1,4 @@
+// * Import required modules/dependencies
 import React, {Component} from 'react';
 import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
@@ -7,17 +8,20 @@ import {
   View,
   FlatList,
   ActivityIndicator,
-  SafeAreaView,
 } from 'react-native';
-import {Header, Card, ListItem, Button, Text} from 'react-native-elements';
-import Icon from 'react-native-vector-icons/FontAwesome';
+import {Header, Card, Button, Text, Icon} from 'react-native-elements';
 
+// * Import all store related stuffs
 import * as ProductsActions from '../../store/actions/creators/ProductsActions';
 
+// * Import all screens/components
+
+// * Import utilites
+import {getCategoryName} from '../../utils/helper';
+
+// * Import all styling stuffs
 import variables from '../../styles/variables';
 import mainStyles from '../../styles/mainStyle';
-
-import {getCategoryName} from '../../utils/helper';
 
 class ProductDetailScreen extends Component {
   constructor(props) {
@@ -29,6 +33,7 @@ class ProductDetailScreen extends Component {
 
   componentDidMount() {
     if (this.props.route.params.productId) {
+      console.log(this.props.route.params.productId);
       this.setState({
         product: this.props.products.products.filter(
           product => product._id === this.props.route.params.productId,
@@ -44,8 +49,10 @@ class ProductDetailScreen extends Component {
           leftComponent={
             <Icon
               name="arrow-left"
+              type="font-awesome"
               size={20}
               color="#FFF"
+              underlayColor="transparent"
               onPress={() => {
                 this.props.navigation.goBack();
               }}

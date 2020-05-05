@@ -1,3 +1,4 @@
+// * Import required modules/dependencies
 import React, {Component} from 'react';
 import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
@@ -18,12 +19,16 @@ import {
   CheckBox,
   Icon,
 } from 'react-native-elements';
-// import Icon from 'react-native-vector-icons/FontAwesome'
 import {Picker} from '@react-native-community/picker';
 import axios from 'axios';
 
-import CardCustomTitle from '../../components/CardCustomTitle';
+// * Import all store related stuffs
 
+// * Import all screens/components
+
+// * Import utilites
+
+// * Import all styling stuffs
 import mainStyles from '../../styles/mainStyle';
 import variables from '../../styles/variables';
 
@@ -43,6 +48,7 @@ class AddNewProductScreen extends Component {
     this.state = {
       product: {
         name: '',
+        desc: '',
         category: '',
         type: 'packet',
         brand: '',
@@ -80,6 +86,7 @@ class AddNewProductScreen extends Component {
       let data = {
         general: {
           name: tempData.name.toLowerCase(),
+          desc: tempData.desc.toLowerCase(),
           category: tempData.category.toLowerCase(),
           type: tempData.type.toLowerCase(),
           brand: tempData.brand.toLowerCase(),
@@ -95,8 +102,9 @@ class AddNewProductScreen extends Component {
 
       axios
         .post(baseUrl + '/seller/add-new-product', data, {
-          params: {
-            id: sellerId1,
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${this.props.auth.authToken}`,
           },
         })
         .then(res => {
@@ -115,7 +123,7 @@ class AddNewProductScreen extends Component {
               ],
             },
           });
-          this.props.getProductsFetch();
+          this.props.getProductsFetch(this.props.auth.authToken);
           ToastAndroid.show(
             res.data.successMessage || 'Product has been added successfull',
             ToastAndroid.LONG,
@@ -138,9 +146,11 @@ class AddNewProductScreen extends Component {
           leftComponent={
             <Icon
               name="arrow-left"
+              type="font-awesome"
               size={20}
               color="#FFF"
               type="font-awesome"
+              underlayColor="transparent"
               onPress={() => {
                 this.props.navigation.goBack();
               }}
@@ -176,10 +186,22 @@ class AddNewProductScreen extends Component {
                 titleStyle={{color: variables.mainThemeColor}}
                 buttonStyle={mainStyles.outlineBtn}
                 onPress={() => {
-                  this.props.getProfileFetch();
+                  this.props.getProfileFetch(this.props.auth.authToken);
                 }}
               />
             </Card>
+          ) : !this.props.profile.profile.profileVerificationDetail.verified ||
+            !this.props.profile.profile.storeDetail.verified ||
+            !this.props.profile.profile.bankDetail.verified ? (
+            <View>
+              <Text style={{padding: 10, fontSize: 18}}>
+                Your profile verification is still pending. You can enjoy the
+                services, once your profile is verified by us.
+              </Text>
+              <Text style={{padding: 10, fontSize: 18}}>
+                Thank you for your patience.
+              </Text>
+            </View>
           ) : (
             <View style={[mainStyles.container, {marginBottom: 100}]}>
               <View style={mainStyles.formGroup}>
@@ -200,88 +222,102 @@ class AddNewProductScreen extends Component {
 
               <View style={mainStyles.formGroup}>
                 <Input
-                  label="Type:"
-                  inputContainerStyle={{borderBottomColor: 'transparent'}}
-                  inputComponent={() => (
-                    <Picker
-                      selectedValue={this.state.product.category}
-                      style={{
-                        height: 50,
-                        width: '100%',
-                      }}
-                      onValueChange={(itemValue, itemIndex) =>
-                        this.setState({
-                          product: {
-                            ...this.state.product,
-                            category: itemValue,
-                          },
-                        })
-                      }>
-                      {categoryList.map(category => (
-                        <Picker.Item
-                          key={category.value}
-                          label={category.name}
-                          value={category.value}
-                        />
-                      ))}
-                    </Picker>
-                  )}
+                  label="Product Description:"
+                  multiline
+                  maxLength={200}
+                  placeholder="Description can't be in more than 200 characters."
+                  value={this.state.product.desc}
+                  onChangeText={desc => {
+                    this.setState({
+                      product: {
+                        ...this.state.product,
+                        desc,
+                      },
+                    });
+                  }}
                 />
               </View>
 
               <View style={mainStyles.formGroup}>
-                <Input
-                  label="Type:"
-                  inputContainerStyle={{borderBottomColor: 'transparent'}}
-                  inputComponent={() => (
-                    <View style={{flexDirection: 'row'}}>
-                      <View style={mainStyles.col6}>
-                        <CheckBox
-                          containerStyle={{
-                            backgroundColor: 'transparent',
-                            borderColor: 'transparent',
-                          }}
-                          center
-                          title="Loose"
-                          checkedIcon="dot-circle-o"
-                          uncheckedIcon="circle-o"
-                          checkedColor={variables.mainThemeColor}
-                          checked={this.state.product.type === 'loose'}
-                          onPress={() => {
-                            this.setState({
-                              product: {
-                                ...this.state.product,
-                                type: 'loose',
-                              },
-                            });
-                          }}
-                        />
-                      </View>
-                      <View style={mainStyles.col6}>
-                        <CheckBox
-                          containerStyle={{
-                            backgroundColor: 'transparent',
-                            borderColor: 'transparent',
-                          }}
-                          center
-                          title="Packet"
-                          checkedIcon="dot-circle-o"
-                          uncheckedIcon="circle-o"
-                          checkedColor={variables.mainThemeColor}
-                          checked={this.state.product.type === 'packet'}
-                          onPress={() => {
-                            this.setState({
-                              product: {
-                                ...this.state.product,
-                                type: 'packet',
-                              },
-                            });
-                          }}
-                        />
-                      </View>
-                    </View>
-                  )}
-                />
+                <Text style={mainStyles.formLabel}>Category:</Text>
+                <View>
+                  <Picker
+                    selectedValue={this.state.product.category}
+                    style={{
+                      height: 50,
+                      width: '100%',
+                    }}
+                    onValueChange={(itemValue, itemIndex) =>
+                      this.setState({
+                        product: {
+                          ...this.state.product,
+                          category: itemValue,
+                        },
+                      })
+                    }>
+                    <Picker.Item
+                      label="Choose the appropriate category"
+                      value="-"
+                    />
+                    {categoryList.map(category => (
+                      <Picker.Item
+                        key={category.value}
+                        label={category.name}
+                        value={category.value}
+                      />
+                    ))}
+                  </Picker>
+                </View>
+              </View>
+
+              <View style={mainStyles.formGroup}>
+                <Text style={mainStyles.formLabel}>Category:</Text>
+                <View style={{flexDirection: 'row'}}>
+                  <View style={mainStyles.col6}>
+                    <CheckBox
+                      containerStyle={{
+                        backgroundColor: 'transparent',
+                        borderColor: 'transparent',
+                      }}
+                      center
+                      title="Loose"
+                      checkedIcon="dot-circle-o"
+                      uncheckedIcon="circle-o"
+                      checkedColor={variables.mainThemeColor}
+                      checked={this.state.product.type === 'loose'}
+                      onPress={() => {
+                        this.setState({
+                          product: {
+                            ...this.state.product,
+                            type: 'loose',
+                          },
+                        });
+                      }}
+                    />
+                  </View>
+                  <View style={mainStyles.col6}>
+                    <CheckBox
+                      containerStyle={{
+                        backgroundColor: 'transparent',
+                        borderColor: 'transparent',
+                      }}
+                      center
+                      title="Packet"
+                      checkedIcon="dot-circle-o"
+                      uncheckedIcon="circle-o"
+                      checkedColor={variables.mainThemeColor}
+                      checked={this.state.product.type === 'packet'}
+                      onPress={() => {
+                        this.setState({
+                          product: {
+                            ...this.state.product,
+                            type: 'packet',
+                          },
+                        });
+                      }}
+                    />
+                  </View>
+                </View>
               </View>
 
               <View style={mainStyles.formGroup}>
@@ -303,14 +339,7 @@ class AddNewProductScreen extends Component {
               <View style={mainStyles.formGroup}>
                 <View style={[mainStyles.row, {marginLeft: 5}]}>
                   <View style={mainStyles.col6}>
-                    <Text
-                      style={{
-                        color: '#83909A',
-                        fontSize: 16,
-                        fontWeight: 'bold',
-                      }}>
-                      Variants:
-                    </Text>
+                    <Text style={mainStyles.formLabel}>Variants:</Text>
                   </View>
                   <View style={[mainStyles.col6, {alignItems: 'center'}]}>
                     <Icon
@@ -335,102 +364,66 @@ class AddNewProductScreen extends Component {
                   </View>
                 </View>
 
-                <Input
-                  inputContainerStyle={{borderBottomColor: 'transparent'}}
-                  inputComponent={() => (
-                    <View>
-                      {this.state.product.variants.map((item, index) => (
-                        <View key={index}>
-                          <View style={[mainStyles.row, {marginTop: 10}]}>
-                            <View style={mainStyles.col11}>
-                              <View style={mainStyles.row}>
-                                <View style={mainStyles.col7}>
-                                  <Input
-                                    label="Value"
-                                    placeholder="500 gm or 1 pc"
-                                    value={
-                                      this.state.product.variants[index].value
-                                    }
-                                    onChangeText={value => {
-                                      let variants = [
-                                        ...this.state.product.variants,
-                                      ];
-                                      variants[index].value = value;
-                                      this.setState({
-                                        product: {
-                                          ...this.state.product,
-                                          variants,
-                                        },
-                                      });
-                                    }}
-                                  />
-                                </View>
-                                <View style={mainStyles.col5}>
-                                  <Input
-                                    label="Price"
-                                    keyboardType="numeric"
-                                    placeholder="45"
-                                    value={
-                                      this.state.product.variants[index].price
-                                    }
-                                    onChangeText={price => {
-                                      let variants = [
-                                        ...this.state.product.variants,
-                                      ];
-                                      variants[index].price = price;
-                                      this.setState({
-                                        product: {
-                                          ...this.state.product,
-                                          variants,
-                                        },
-                                      });
-                                    }}
-                                  />
-                                </View>
-                                <View style={mainStyles.col6}>
-                                  <Input
-                                    label="Stock"
-                                    keyboardType="numeric"
-                                    placeholder="20"
-                                    value={
-                                      this.state.product.variants[index].stock
-                                    }
-                                    onChangeText={stock => {
-                                      let variants = [
-                                        ...this.state.product.variants,
-                                      ];
-                                      variants[index].stock = stock;
-                                      this.setState({
-                                        product: {
-                                          ...this.state.product,
-                                          variants,
-                                        },
-                                      });
-                                    }}
-                                  />
-                                </View>
-                              </View>
-                            </View>
-                            <View
-                              style={[
-                                mainStyles.col1,
-                                {justifyContent: 'center'},
-                              ]}>
-                              <Icon
-                                name="times"
-                                size={25}
-                                color="red"
-                                type="font-awesome"
-                                containerStyle={{
-                                  display: `${
-                                    this.state.product.variants.length > 1
-                                      ? 'flex'
-                                      : 'none'
-                                  }`,
+                <View style={{marginBottom: 20}}>
+                  {this.state.product.variants.map((item, index) => (
+                    <View key={index}>
+                      <View
+                        style={[
+                          mainStyles.row,
+                          {marginTop: 10, marginRight: 5},
+                        ]}>
+                        <View style={mainStyles.col11}>
+                          <View style={mainStyles.row}>
+                            <View style={mainStyles.col7}>
+                              <Input
+                                label="Value"
+                                placeholder="500 gm or 1 pc"
+                                value={this.state.product.variants[index].value}
+                                onChangeText={value => {
+                                  let variants = [
+                                    ...this.state.product.variants,
+                                  ];
+                                  variants[index].value = value;
+                                  this.setState({
+                                    product: {
+                                      ...this.state.product,
+                                      variants,
+                                    },
+                                  });
                                 }}
-                                onPress={() => {
-                                  let variants = this.state.product.variants;
-                                  variants.splice(index, 1);
+                              />
+                            </View>
+                            <View style={mainStyles.col5}>
+                              <Input
+                                label="Price"
+                                keyboardType="numeric"
+                                placeholder="45"
+                                value={this.state.product.variants[index].price}
+                                onChangeText={price => {
+                                  let variants = [
+                                    ...this.state.product.variants,
+                                  ];
+                                  variants[index].price = price;
+                                  this.setState({
+                                    product: {
+                                      ...this.state.product,
+                                      variants,
+                                    },
+                                  });
+                                }}
+                              />
+                            </View>
+                            <View style={mainStyles.col6}>
+                              <Input
+                                label="Stock"
+                                keyboardType="numeric"
+                                placeholder="20"
+                                value={this.state.product.variants[index].stock}
+                                onChangeText={stock => {
+                                  let variants = [
+                                    ...this.state.product.variants,
+                                  ];
+                                  variants[index].stock = stock;
                                   this.setState({
                                     product: {
                                       ...this.state.product,
@@ -442,18 +435,45 @@ class AddNewProductScreen extends Component {
                             </View>
                           </View>
                         </View>
-                      ))}
+                        <View
+                          style={[mainStyles.col1, {justifyContent: 'center'}]}>
+                          <Icon
+                            name="times"
+                            size={25}
+                            color="red"
+                            type="font-awesome"
+                            containerStyle={{
+                              display: `${
+                                this.state.product.variants.length > 1
+                                  ? 'flex'
+                                  : 'none'
+                              }`,
+                            }}
+                            onPress={() => {
+                              let variants = this.state.product.variants;
+                              variants.splice(index, 1);
+                              this.setState({
+                                product: {
+                                  ...this.state.product,
+                                  variants,
+                                },
+                              });
+                            }}
+                          />
+                        </View>
+                      </View>
                     </View>
-                  )}
-                />
+                  ))}
+                </View>
               </View>
 
               <View style={[mainStyles.row, {marginBottom: 20}]}>
                 <View style={mainStyles.col6}>
                   <Button
                     title="Cancel"
-                    titleStyle={{color: variables.mainThemeColor}}
                     type="outline"
+                    raised
+                    titleStyle={{color: variables.mainThemeColor}}
                     buttonStyle={mainStyles.outlineBtn}
                     onPress={() => {
                       this.setState({
@@ -471,8 +491,9 @@ class AddNewProductScreen extends Component {
                 <View style={mainStyles.col6}>
                   <Button
                     title="Submit"
-                    titleStyle={{color: variables.mainThemeColor}}
                     type="outline"
+                    raised
+                    titleStyle={{color: variables.mainThemeColor}}
                     buttonStyle={mainStyles.outlineBtn}
                     onPress={this.addProduct.bind(null)}
                     loading={this.props.profile.profileUpdating}
@@ -491,6 +512,7 @@ const styles = StyleSheet.create({});
 
 const mapStateToProps = state => {
   return {
+    auth: state.auth,
     profile: state.profile,
   };
 };

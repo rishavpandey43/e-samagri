@@ -44,8 +44,8 @@ def flipper_post_install(installer)
   end
 end
 
-target 'SellerApp' do
-  # Pods for SellerApp
+target 'ESamagriSeller' do
+  # Pods for ESamagriSeller
   pod 'FBLazyVector', :path => "../node_modules/react-native/Libraries/FBLazyVector"
   pod 'FBReactNativeSpec', :path => "../node_modules/react-native/Libraries/FBReactNativeSpec"
   pod 'RCTRequired', :path => "../node_modules/react-native/Libraries/RCTRequired"
@@ -81,7 +81,9 @@ target 'SellerApp' do
 
   pod 'RNCPicker', :path => '../node_modules/@react-native-community/picker'
 
-  target 'SellerAppTests' do
+  pod 'RNCAsyncStorage', :path => '../node_modules/@react-native-community/async-storage'
+
+  target 'ESamagriSellerTests' do
     inherit! :complete
     # Pods for testing
   end
@@ -98,10 +100,10 @@ target 'SellerApp' do
   end
 end
 
-target 'SellerApp-tvOS' do
-  # Pods for SellerApp-tvOS
+target 'ESamagriSeller-tvOS' do
+  # Pods for ESamagriSeller-tvOS
 
-  target 'SellerApp-tvOSTests' do
+  target 'ESamagriSeller-tvOSTests' do
     inherit! :search_paths
     # Pods for testing
   end

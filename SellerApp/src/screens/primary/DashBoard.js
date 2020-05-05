@@ -1,13 +1,24 @@
+// * Import required modules/dependencies
 import React, {Component} from 'react';
 import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
-import {ScrollView, StyleSheet, View, Text, Button} from 'react-native';
-import {Header, Card} from 'react-native-elements';
-import Icon from 'react-native-vector-icons/FontAwesome';
+import {ScrollView, StyleSheet, View, Text, Button, Alert} from 'react-native';
+import {Header, Card, Icon} from 'react-native-elements';
+import messaging from '@react-native-firebase/messaging';
 
-import mainStyles from '../../styles/mainStyle';
-
+// * Import all store related stuffs
 import * as ProfileActions from '../../store/actions/creators/ProfileActions';
+import * as AuthActions from '../../store/actions/creators/AuthActions';
+import * as OrderActions from '../../store/actions/creators/OrdersActions';
+
+// * Import all screens/components
+
+// * Import utilites
+import {getDataFromAsync} from '../../utils/helper';
+import {authTokenName} from '../../utils/constant';
+
+// * Import all styling stuffs
+import mainStyles from '../../styles/mainStyle';
 
 class DashBoardScreen extends Component {
   constructor(props) {
@@ -16,7 +27,66 @@ class DashBoardScreen extends Component {
   }
 
   componentDidMount() {
-    this.props.getProfileFetch();
+    getDataFromAsync(authTokenName)
+      .then(token => {
+        this.props.getTokenFromAsync(token);
+        this.props.getProfileFetch(this.props.auth.authToken);
+        this.props.getOrdersFetch(this.props.auth.authToken);
+      })
+      .catch(err => {
+        console.log(err);
+      });
+
+    const permissionStatus = messaging().hasPermission();
+    const permissionGranted = messaging().requestPermission();
+
+    const messageListener = () => {
+      messaging().onMessage(message => {
+        this.props.getOrdersFetch(this.props.auth.authToken);
+
+        Alert.alert(
+          message.notification.title,
+          `Hello ${
+            this.props.profile.profile
+              ? this.props.profile.profile.personalDetail.firstName +
+                ' ' +
+                this.props.profile.profile.personalDetail.lastName
+              : ''
+          } ${message.notification.body}`,
+          [
+            {
+              text: 'View more detail',
+              onPress: () => {
+                this.props.navigation.navigate('orders-stack');
+                return;
+              },
+            },
+          ],
+        );
+      });
+
+      messaging().onNotificationOpenedApp(notification => {
+        this.props.getOrdersFetch(this.props.auth.authToken);
+        this.props.navigation.navigate('orders-stack');
+      });
+
+      messaging().getInitialNotification(notification => {
+        this.props.getOrdersFetch(this.props.auth.authToken);
+        this.props.navigation.navigate('orders-stack');
+      });
+    };
+
+    permissionStatus
+      .then(res => {
+        messageListener();
+      })
+      .catch(err => {
+        permissionGranted
+          .then(res => {})
+          .catch(err => {
+            console.log('User canceled the permission');
+          });
+      });
   }
 
   render() {
@@ -26,8 +96,10 @@ class DashBoardScreen extends Component {
           leftComponent={
             <Icon
               name="bars"
+              type="font-awesome"
               size={20}
               color="#FFF"
+              underlayColor="transparent"
               onPress={() => {
                 this.props.navigation.toggleDrawer();
               }}
@@ -37,15 +109,25 @@ class DashBoardScreen extends Component {
             text: 'YOUR DASHBOARD',
             style: {color: '#fff'},
           }}
-          rightComponent={<Icon name="dashboard" color="#FFF" size={30} />}
+          rightComponent={
+            <Icon name="dashboard" type="font-awesome" color="#FFF" size={30} />
+          }
           containerStyle={{
             backgroundColor: '#933dd4',
             justifyContent: 'space-around',
           }}
         />
         <ScrollView>
-          <View style={mainStyles.container}>
-            <View style={mainStyles.row}>
+          <View style={[mainStyles.container, {marginBottom: 100}]}>
+            <Card title="Notification">
+              <Text style={{margin: 20, padding: 10, fontSize: 18}}>
+                Your Dashboard is under construction, You'll be updated soon.
+              </Text>
+              <Text style={{margin: 20, padding: 10, fontSize: 18}}>
+                Thank you for your patience.
+              </Text>
+            </Card>
+            {/* <View style={mainStyles.row}>
               <View style={mainStyles.col6}>
                 <Card title="Total Orders">
                   <Text>50</Text>
@@ -80,7 +162,7 @@ class DashBoardScreen extends Component {
                   <Text>50</Text>
                 </Card>
               </View>
-            </View>
+            </View> */}
           </View>
         </ScrollView>
       </View>
@@ -92,12 +174,16 @@ const styles = StyleSheet.create({});
 
 const mapStateToProps = state => {
   return {
+    auth: state.auth,
     profile: state.profile,
   };
 };
 
 const mapDispatchToProps = dispatch => {
-  return bindActionCreators({...ProfileActions}, dispatch);
+  return bindActionCreators(
+    {...AuthActions, ...ProfileActions, ...OrderActions},
+    dispatch,
+  );
 };
 
 export default connect(

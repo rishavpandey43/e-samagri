@@ -3,9 +3,11 @@ import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
 
 import HomeScreen from '../../screens/primary/Home';
+import UpdateProfileScreen from '../../screens/secondary/UpdateProfile';
 import StoreDetailScreen from '../../screens/secondary/StoreDetail';
 import CartScreen from '../../screens/secondary/Cart';
-import ProductDetailScreen from '../../screens/secondary/ProductDetail';
+import CheckoutScreen from '../../screens/secondary/Checkout';
+import OrderConfirmationScreen from '../../screens/secondary/OrderConfirmation';
 
 const Stack = createStackNavigator();
 
@@ -19,6 +21,13 @@ const HomeStack = () => (
       component={HomeScreen}
       options={{
         title: 'Home',
+      }}
+    />
+    <Stack.Screen
+      name="update-profile-screen"
+      component={UpdateProfileScreen}
+      options={{
+        title: 'Update Profile',
       }}
     />
     <Stack.Screen
@@ -36,10 +45,17 @@ const HomeStack = () => (
       }}
     />
     <Stack.Screen
-      name="product-detail-screen"
-      component={ProductDetailScreen}
+      name="checkout-screen"
+      component={CheckoutScreen}
       options={{
-        title: 'Product Detail',
+        title: 'Checkout',
+      }}
+    />
+    <Stack.Screen
+      name="order-confirmation-screen"
+      component={OrderConfirmationScreen}
+      options={{
+        title: 'Order Confirmation',
       }}
     />
   </Stack.Navigator>

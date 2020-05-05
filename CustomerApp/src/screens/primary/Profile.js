@@ -2,8 +2,22 @@
 import React, {Component} from 'react';
 import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
-import {ScrollView, StyleSheet, View, ActivityIndicator} from 'react-native';
-import {Header, Card, Text, Button, Avatar, Icon} from 'react-native-elements';
+import {
+  ScrollView,
+  StyleSheet,
+  View,
+  ActivityIndicator,
+  TouchableOpacity,
+} from 'react-native';
+import {
+  Header,
+  Card,
+  Text,
+  Button,
+  Avatar,
+  Badge,
+  Icon,
+} from 'react-native-elements';
 
 // * Import all store related stuffs
 import * as ProfileActions from '../../store/actions/creators/ProfileActions';
@@ -13,7 +27,7 @@ import Address from '../../components/Address';
 import CardCustomTitle from '../../components/CardCustomTitle';
 
 // * Import utilites
-import {addressInString} from '../../utils/helper';
+import {obtainAddressInString} from '../../utils/helper';
 
 // * Import all styling stuffs
 import mainStyles from '../../styles/mainStyle';
@@ -35,6 +49,7 @@ class ProfileScreen extends Component {
               name="bars"
               size={20}
               color="#FFF"
+              underlayColor="transparent"
               onPress={() => {
                 this.props.navigation.toggleDrawer();
               }}
@@ -45,7 +60,41 @@ class ProfileScreen extends Component {
             style: {color: '#fff'},
           }}
           rightComponent={
-            <Icon type="font-awesome" name="home" color="#FFF" size={30} />
+            <View
+              style={{
+                flex: 1,
+                justifyContent: 'center',
+                alignItems: 'center',
+              }}>
+              <TouchableOpacity
+                onPress={() => {
+                  this.props.navigation.navigate('cart-screen');
+                }}
+                style={mainStyles.row}>
+                <Icon
+                  type="font-awesome"
+                  name="shopping-basket"
+                  color="#FFF"
+                  size={25}
+                />
+                <Badge
+                  value={
+                    this.props.cart.cart
+                      ? this.props.cart.cart.products.reduce(
+                          (acc, cur) => acc + cur.quantity,
+                          0,
+                        )
+                      : 0
+                  }
+                  badgeStyle={{backgroundColor: variables.mainThemeColor}}
+                  containerStyle={{
+                    position: 'absolute',
+                    top: -4,
+                    right: -4,
+                  }}
+                />
+              </TouchableOpacity>
+            </View>
           }
           containerStyle={{
             backgroundColor: '#933dd4',
@@ -73,14 +122,14 @@ class ProfileScreen extends Component {
                 titleStyle={{color: variables.mainThemeColor}}
                 buttonStyle={mainStyles.outlineBtn}
                 onPress={() => {
-                  this.props.getProfileFetch();
+                  this.props.getProfileFetch(this.props.auth.authToken);
                 }}
               />
             </Card>
           ) : (
             <View style={[mainStyles.container, {marginBottom: 100}]}>
               <Card containerStyle={{borderRadius: 10}}>
-                <View style={{alignItems: 'flex-end'}}>
+                <View style={{alignItems: 'flex-end', display: 'none'}}>
                   <Icon
                     type="font-awesome"
                     name="pencil"
@@ -88,7 +137,7 @@ class ProfileScreen extends Component {
                     color={variables.mainThemeColor}
                     containerStyle={{padding: 10}}
                     onPress={() => {
-                      this.props.navigation.navigate('edit-profile-screen');
+                      this.props.navigation.navigate('update-profile-screen');
                     }}
                   />
                 </View>
@@ -100,7 +149,7 @@ class ProfileScreen extends Component {
                     source={require('../../assets/images/boy.png')}
                   />
                 </View>
-                <View style={{marginTop: 20}}>
+                <View style={{marginTop: 20, alignItems: 'center'}}>
                   <Text style={styles.title}>
                     {this.props.profile.profile.personalDetail.firstName +
                       ' ' +
@@ -109,9 +158,9 @@ class ProfileScreen extends Component {
                   <Text style={styles.subTitle}>
                     {this.props.profile.profile.personalDetail.phone}
                   </Text>
-                  <Text style={styles.subTitle}>
+                  {/* <Text style={styles.subTitle}>
                     {this.props.profile.profile.personalDetail.email}
-                  </Text>
+                  </Text> */}
                 </View>
               </Card>
 
@@ -123,7 +172,7 @@ class ProfileScreen extends Component {
                     type="edit"
                     detail={this.props.profile.profile.personalDetail}
                     onPress={() => {
-                      this.props.navigation.navigate('edit-profile-screen');
+                      this.props.navigation.navigate('update-profile-screen');
                     }}
                   />
                 }>
@@ -143,7 +192,7 @@ class ProfileScreen extends Component {
                       titleStyle={{color: variables.mainThemeColor}}
                       buttonStyle={mainStyles.outlineBtn}
                       onPress={() => {
-                        this.props.navigation.navigate('edit-profile-screen');
+                        this.props.navigation.navigate('update-profile-screen');
                       }}
                     />
                   </View>
@@ -151,7 +200,7 @@ class ProfileScreen extends Component {
                   <View>
                     <Address
                       type={this.props.profile.profile.address.type}
-                      value={addressInString(
+                      value={obtainAddressInString(
                         this.props.profile.profile.address,
                       )}
                     />
@@ -181,6 +230,8 @@ const styles = StyleSheet.create({
 
 const mapStateToProps = state => {
   return {
+    auth: state.auth,
+    cart: state.cart,
     profile: state.profile,
   };
 };

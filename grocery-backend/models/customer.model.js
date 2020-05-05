@@ -4,17 +4,30 @@ const Schema = mongoose.Schema;
 
 const customerSchema = new Schema(
   {
+    fcm: {
+      token: { type: String, required: false },
+      status: { type: Boolean, required: false },
+    },
     personalDetail: {
       firstName: { type: String, required: true },
       lastName: { type: String, required: true },
-      email: { type: String, required: true },
       phone: { type: String, required: true },
+      authyId: { type: String, required: false },
     },
-    cart: [
-      {
-        type: mongoose.Schema.Types.ObjectId,
-      },
-    ],
+    cart: {
+      storeId: { type: mongoose.Schema.Types.ObjectId },
+      products: [
+        {
+          id: { type: mongoose.Schema.Types.ObjectId },
+          variantId: { type: mongoose.Schema.Types.ObjectId },
+          name: { type: String, required: false },
+          value: { type: String, required: false },
+          price: { type: Number, required: false },
+          quantity: { type: Number, required: false },
+        },
+      ],
+      deliveryCharge: { type: Number, required: false },
+    },
     favorite: [
       {
         type: mongoose.Schema.Types.ObjectId,

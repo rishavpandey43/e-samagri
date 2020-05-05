@@ -4,11 +4,20 @@ const Schema = mongoose.Schema;
 
 const sellerSchema = new Schema(
   {
+    fcm: {
+      token: { type: String, required: false },
+      status: { type: Boolean, required: false },
+    },
     personalDetail: {
       firstName: { type: String, required: true },
       lastName: { type: String, required: true },
-      email: { type: String, required: true },
       phone: { type: String, required: true },
+      authyId: { type: String, required: false },
+    },
+    profileVerificationDetail: {
+      type: { type: String, require: false },
+      number: { type: Number, require: false },
+      verified: { type: Boolean, required: false },
     },
     storeDetail: {
       name: { type: String, required: false },
@@ -35,12 +44,6 @@ const sellerSchema = new Schema(
       branchName: { type: String, required: false },
       verified: { type: Boolean, required: false },
     },
-    orders: [
-      {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Order",
-      },
-    ],
     products: [
       {
         root: {

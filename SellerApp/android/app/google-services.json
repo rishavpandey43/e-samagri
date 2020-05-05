@@ -1,0 +1,69 @@
+{
+  "project_info": {
+    "project_number": "422650731364",
+    "firebase_url": "https://online-grocery-store-1e940.firebaseio.com",
+    "project_id": "online-grocery-store-1e940",
+    "storage_bucket": "online-grocery-store-1e940.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:422650731364:android:0342aeae9bfc885f413871",
+        "android_client_info": {
+          "package_name": "com.esamagri"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "422650731364-hsgice3tc9d0hepj778cduc40njeg019.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAbnySWgb8ZslBU3IyzOLXffF51QzZ9ZLU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "422650731364-hsgice3tc9d0hepj778cduc40njeg019.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:422650731364:android:c7f082154f48a734413871",
+        "android_client_info": {
+          "package_name": "com.esamagriseller"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "422650731364-hsgice3tc9d0hepj778cduc40njeg019.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAbnySWgb8ZslBU3IyzOLXffF51QzZ9ZLU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "422650731364-hsgice3tc9d0hepj778cduc40njeg019.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

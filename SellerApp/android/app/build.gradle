@@ -1,5 +1,9 @@
 apply plugin: "com.android.application"
 
+apply plugin: 'com.android.application'
+
+apply plugin: 'com.google.gms.google-services'
+
 import com.android.build.OutputFile
 
 /**
@@ -129,7 +133,7 @@ android {
     }
 
     defaultConfig {
-        applicationId "com.sellerapp"
+        applicationId "com.esamagriseller"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1
@@ -144,12 +148,14 @@ android {
         }
     }
     signingConfigs {
-        debug {
-            storeFile file('debug.keystore')
-            storePassword 'android'
-            keyAlias 'androiddebugkey'
-            keyPassword 'android'
+        release {
+        if (project.hasProperty('MYAPP_RELEASE_STORE_FILE')) {
+            storeFile file(MYAPP_RELEASE_STORE_FILE)
+            storePassword MYAPP_RELEASE_STORE_PASSWORD
+            keyAlias MYAPP_RELEASE_KEY_ALIAS
+            keyPassword MYAPP_RELEASE_KEY_PASSWORD
         }
+    }
     }
     buildTypes {
         debug {
@@ -193,6 +199,11 @@ dependencies {
     implementation "com.facebook.react:react-native:+"  // From node_modules
 
     implementation "androidx.swiperefreshlayout:swiperefreshlayout:1.0.0"
+
+    // add the Firebase SDK for Firebase Cloud Messaging
+    implementation 'com.google.firebase:firebase-messaging:20.1.6'
+    // add SDKs for any other desired Firebase products
+    // https://firebase.google.com/docs/android/setup#available-libraries
 
     debugImplementation("com.facebook.flipper:flipper:${FLIPPER_VERSION}") {
       exclude group:'com.facebook.fbjni'

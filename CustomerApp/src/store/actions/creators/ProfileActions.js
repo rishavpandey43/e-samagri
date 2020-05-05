@@ -2,12 +2,9 @@ import axios from 'axios';
 import {ToastAndroid} from 'react-native';
 import * as actionTypes from '../types/actionTypes';
 
-import * as helper from '../../../utils/helper';
-import {baseUrl} from '../../../utils/constant';
+import {getSellersFetch} from './HomeActions';
 
-const customerId1 = '5ea249c95c80eb0b619658f7';
-const customerId2 = '5ea249dc5c80eb0b619658f8';
-const customerId3 = '5ea249e75c80eb0b619658f9';
+import {baseUrl} from '../../../utils/constant';
 
 export const getProfileRequest = () => {
   return {
@@ -30,12 +27,13 @@ export const getProfileFailure = response => {
   };
 };
 
-export const getProfileFetch = () => dispatch => {
+export const getProfileFetch = token => dispatch => {
   dispatch(getProfileRequest());
   axios
     .get(baseUrl + '/customer/get-customer', {
-      params: {
-        id: customerId2,
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
       },
     })
     .then(res => {
@@ -72,7 +70,7 @@ export const updateProfileFailure = response => {
   };
 };
 
-export const updateProfileFetch = (data, dataType) => dispatch => {
+export const updateProfileFetch = (token, data, dataType) => dispatch => {
   let newData = {
     data,
     dataType,
@@ -80,8 +78,9 @@ export const updateProfileFetch = (data, dataType) => dispatch => {
   dispatch(updateProfileRequest());
   axios
     .put(baseUrl + '/customer/update-customer', newData, {
-      params: {
-        id: customerId2,
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
       },
     })
     .then(res => {
@@ -90,6 +89,7 @@ export const updateProfileFetch = (data, dataType) => dispatch => {
         'Your profile detail has been updated succesfully, please back to your profile',
         ToastAndroid.LONG,
       );
+      dispatch(getSellersFetch(token));
     })
     .catch(err => {
       dispatch(

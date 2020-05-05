@@ -44,7 +44,11 @@ const MainDrawerNavigation = () => (
         options={{
           drawerLabel: 'Deliver New Order',
           drawerIcon: () => (
-            <Icon name="user" size={30} color={variable.mainThemeColor} />
+            <Icon
+              name="shopping-bag"
+              size={30}
+              color={variable.mainThemeColor}
+            />
           ),
         }}
       />

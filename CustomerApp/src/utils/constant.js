@@ -77,32 +77,37 @@ export const paymentMode = [
 
 export const orderStatus = [
   {
-    name: 'Pending',
+    label: 'All',
+    value: 'all',
+    color: '-',
+  },
+  {
+    label: 'Pending',
     value: 'pen',
     color: 'orange',
   },
   {
-    name: 'Processing',
+    label: 'Processing',
     value: 'prc',
     color: 'blue',
   },
   {
-    name: 'Processed',
+    label: 'Processed',
     value: 'prcd',
     color: '#EE82EE',
   },
   {
-    name: 'Out For Delivery',
+    label: 'Out For Delivery',
     value: 'ofd',
-    color: 'yellow',
+    color: '#FF1493',
   },
   {
-    name: 'Delivered',
+    label: 'Delivered',
     value: 'del',
     color: 'green',
   },
   {
-    name: 'Cancelled',
+    label: 'Cancelled',
     value: 'can',
     color: 'red',
   },

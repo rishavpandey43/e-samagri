@@ -79,7 +79,7 @@ target 'ESamagri' do
 
   pod 'RNVectorIcons', :path => '../node_modules/react-native-vector-icons'
 
-  pod 'RNCPicker', :path => '../node_modules/@react-native-community/picker'
+  # pod 'RNCPicker', :path => '../node_modules/@react-native-community/picker'
 
   pod 'RNCAsyncStorage', :path => '../node_modules/@react-native-community/async-storage'
 

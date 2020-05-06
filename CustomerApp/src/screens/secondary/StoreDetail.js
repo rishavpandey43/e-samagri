@@ -98,11 +98,7 @@ class StoreDetailScreen extends Component {
     };
     // * Check if the cart is empty to add first product
     if (!this.props.cart.cart.storeId) {
-      this.props.updateCartToServerFetch(
-        this.props.auth.authToken,
-        'new',
-        cart,
-      );
+      this.props.updateCartToAsyncStorageFetch('new', cart);
     }
     // * Confirm to user, if he tries to add product from another store to cart
     else if (this.props.cart.cart.storeId !== this.props.store.store._id) {
@@ -120,11 +116,7 @@ class StoreDetailScreen extends Component {
           {
             text: 'OK',
             onPress: () =>
-              this.props.updateCartToServerFetch(
-                this.props.auth.authToken,
-                'new',
-                cart,
-              ),
+              this.props.updateCartToAsyncStorageFetch('new', cart),
           },
         ],
       );
@@ -137,11 +129,7 @@ class StoreDetailScreen extends Component {
         deliveryCharge: this.props.cart.cart.deliveryCharge,
       };
       tempCart.products.push(cart.products[0]);
-      this.props.updateCartToServerFetch(
-        this.props.auth.authToken,
-        'new',
-        tempCart,
-      );
+      this.props.updateCartToAsyncStorageFetch('new', tempCart);
       return;
     }
   };
@@ -180,27 +168,15 @@ class StoreDetailScreen extends Component {
         );
         return;
       } else {
-        this.props.updateCartToServerFetch(
-          this.props.auth.authToken,
-          'increment',
-          tempCart,
-        );
+        this.props.updateCartToAsyncStorageFetch('increment', tempCart);
       }
     } else if (type === 'decrement') {
       tempCart.products[productIndexInCartProducts].quantity--;
       if (tempCart.products[productIndexInCartProducts].quantity === 0) {
         tempCart.products.splice(productIndexInCartProducts, 1);
-        this.props.updateCartToServerFetch(
-          this.props.auth.authToken,
-          'decrement',
-          tempCart,
-        );
+        this.props.updateCartToAsyncStorageFetch('decrement', tempCart);
       } else {
-        this.props.updateCartToServerFetch(
-          this.props.auth.authToken,
-          'decrement',
-          tempCart,
-        );
+        this.props.updateCartToAsyncStorageFetch('decrement', tempCart);
       }
     } else return;
   };

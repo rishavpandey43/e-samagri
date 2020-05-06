@@ -10,7 +10,7 @@ import {
   Text,
   Icon,
 } from 'react-native-elements';
-import {Picker} from '@react-native-community/picker';
+import RNPickerSelect from 'react-native-picker-select';
 
 // * Import all store related stuffs
 import * as OrderActions from '../../store/actions/creators/OrderActions';
@@ -148,7 +148,16 @@ class OrdersScreen extends Component {
                   Filter by order status:
                 </Text>
                 <View>
-                  <Picker
+                  <RNPickerSelect
+                    value={this.state.selectedStatus}
+                    onValueChange={(itemValue, itemIndex) => {
+                      this.setState({selectedStatus: itemValue});
+                      this._filterByStatus(itemValue);
+                    }}
+                    items={orderStatus}
+                    placeholder={{}}
+                  />
+                  {/* <Picker
                     selectedValue={this.state.selectedStatus}
                     style={{
                       height: 30,
@@ -166,7 +175,7 @@ class OrdersScreen extends Component {
                         value={category.value}
                       />
                     ))}
-                  </Picker>
+                  </Picker> */}
                 </View>
               </View>
               {this.state.filteredOrders &&

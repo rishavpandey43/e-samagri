@@ -22,7 +22,7 @@ import {
   SearchBar,
   Badge,
 } from 'react-native-elements';
-import {Picker} from '@react-native-community/picker';
+import RNPickerSelect from 'react-native-picker-select';
 
 // * Import all store related stuffs
 import * as HomeActions from '../../store/actions/creators/HomeActions';
@@ -200,7 +200,37 @@ class StoreDetailScreen extends Component {
           <View>
             <Text style={{fontSize: 20}}>{product.root.name}</Text>
           </View>
-          <Picker
+          <RNPickerSelect
+            value={
+              this.state.productVariantForPicker.filter(
+                variant => variant.productId === product._id,
+              )[0].value
+            }
+            onValueChange={(itemValue, itemIndex) => {
+              let tempProductVariantForPicker = [
+                ...this.state.productVariantForPicker,
+              ];
+              let productIndex = null;
+              this.state.productVariantForPicker.forEach((variant, i) => {
+                if (product._id === variant.productId) {
+                  productIndex = i;
+                }
+              });
+              tempProductVariantForPicker[productIndex].value = itemValue;
+              tempProductVariantForPicker[productIndex].variantId =
+                product.variants[itemIndex]._id;
+              this.setState({
+                productVariantForPicker: [...tempProductVariantForPicker],
+              });
+            }}
+            items={product.variants.map((variant, index) => ({
+              ...variant,
+              label: `${variant.value}/₹ ${variant.price}`,
+              value: variant.value,
+            }))}
+            placeholder={{}}
+          />
+          {/* <Picker
             selectedValue={
               this.state.productVariantForPicker.filter(
                 variant => variant.productId === product._id,
@@ -231,7 +261,7 @@ class StoreDetailScreen extends Component {
                 value={variant.value}
               />
             ))}
-          </Picker>
+          </Picker> */}
         </View>
         <View style={{flex: 1, justifyContent: 'center', marginLeft: 5}}>
           {this.props.cart.cart ? (

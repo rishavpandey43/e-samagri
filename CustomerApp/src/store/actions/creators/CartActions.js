@@ -2,7 +2,11 @@ import axios from 'axios';
 import {ToastAndroid} from 'react-native';
 import * as actionTypes from '../types/actionTypes';
 
-import * as helper from '../../../utils/helper';
+import {
+  storeDataInAsync,
+  getDataFromAsync,
+  removeDataFromAsync,
+} from '../../../utils/helper';
 import {baseUrl} from '../../../utils/constant';
 
 export const addNewProductToCart = ({storeId, products, deliveryCharge}) => {
@@ -72,15 +76,71 @@ export const getCartDetailFetch = token => dispatch => {
     });
 };
 
+export const updateCartToAsyncStorageRequest = () => {
+  return {
+    type: actionTypes.UPDATE_CART_TO_ASYNC_STORAGE_REQUEST,
+  };
+};
+
+export const updateCartToAsyncStorageSuccess = () => {
+  return {
+    type: actionTypes.UPDATE_CART_TO_ASYNC_STORAGE_SUCCESS,
+  };
+};
+
+export const updateCartToAsyncStorageFailure = () => {
+  return {
+    type: actionTypes.UPDATE_CART_TO_ASYNC_STORAGE_FAILURE,
+  };
+};
+
+export const updateCartToAsyncStorageFetch = (type, cart) => dispatch => {
+  dispatch(updateCartToAsyncStorageRequest());
+  storeDataInAsync('eSamagri_customer_cart', JSON.stringify(cart))
+    .then(response => {
+      getDataFromAsync('eSamagri_customer_cart')
+        .then(updatedCart => {
+          dispatch(updateCartToAsyncStorageSuccess());
+          if (type == 'new') {
+            dispatch(addNewProductToCart(JSON.parse(updatedCart)));
+            ToastAndroid.show('Product added to cart', ToastAndroid.SHORT);
+          } else if (type == 'increment' || type == 'decrement') {
+            dispatch(changeProductQuantityinCart(JSON.parse(updatedCart)));
+            ToastAndroid.show(
+              'Product quantity updated in cart',
+              ToastAndroid.SHORT,
+            );
+          }
+        })
+        .catch(err => {
+          console.log(err);
+        });
+    })
+    .catch(err => {
+      dispatch(updateCartToServerFailure);
+      ToastAndroid.show(
+        "Sorry, product can't be added to cart, try again.",
+        ToastAndroid.LONG,
+      );
+    });
+};
+
 export const updateCartToServerRequest = () => {
   return {
     type: actionTypes.UPDATE_CART_TO_SERVER_REQUEST,
   };
 };
 
-export const updateCartToServerSuccess = () => {
+export const updateCartToServerSuccess = ({
+  storeId,
+  products,
+  deliveryCharge,
+}) => {
   return {
     type: actionTypes.UPDATE_CART_TO_SERVER_SUCCESS,
+    storeId,
+    products,
+    deliveryCharge,
   };
 };
 
@@ -90,39 +150,50 @@ export const updateCartToServerFailure = () => {
   };
 };
 
-export const updateCartToServerFetch = (token, type, cart) => dispatch => {
+export const updateCartToServerFetch = token => dispatch => {
   dispatch(updateCartToServerRequest());
-  axios
-    .put(baseUrl + '/customer/update-cart', cart, {
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${token}`,
-      },
-    })
-    .then(res => {
-      dispatch(updateCartToServerSuccess());
-      if (type == 'new') {
-        dispatch(addNewProductToCart(res.data.newCart));
-        ToastAndroid.show('Product added to cart', ToastAndroid.SHORT);
-      } else if (type == 'increment' || type == 'decrement') {
-        dispatch(changeProductQuantityinCart(res.data.newCart));
-        ToastAndroid.show(
-          'Product quantity updated in cart',
-          ToastAndroid.SHORT,
-        );
-      }
+  getDataFromAsync('eSamagri_customer_cart')
+    .then(cart => {
+      axios
+        .put(baseUrl + '/customer/update-cart', cart, {
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
+          },
+        })
+        .then(res => {
+          storeDataInAsync(
+            'eSamagri_customer_cart',
+            JSON.stringify(res.data.newCart),
+          )
+            .then(response => {
+              getDataFromAsync('eSamagri_customer_cart')
+                .then(updatedCart => {
+                  dispatch(updateCartToServerSuccess(JSON.parse(updatedCart)));
+                })
+                .catch(err => {
+                  console.log(err);
+                });
+            })
+            .catch(err => {
+              dispatch(updateCartToServerFailure);
+              ToastAndroid.show(
+                "Sorry, product can't be added to cart, try again.",
+                ToastAndroid.LONG,
+              );
+            });
+        })
+        .catch(err => {
+          dispatch(
+            updateCartToServerFailure({
+              message: err.response
+                ? err.response.data.errMessage || 'Internal Server Error'
+                : 'Internal Server Error',
+            }),
+          );
+        });
     })
     .catch(err => {
-      dispatch(
-        updateCartToServerFailure({
-          message: err.response
-            ? err.response.data.errMessage || 'Internal Server Error'
-            : 'Internal Server Error',
-        }),
-      );
-      ToastAndroid.show(
-        "Sorry, product can't be added to cart, try again.",
-        ToastAndroid.LONG,
-      );
+      console.log(err);
     });
 };

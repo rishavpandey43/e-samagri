@@ -28,6 +28,10 @@ class CartScreen extends Component {
     this.state = {};
   }
 
+  componentDidMount() {
+    this.props.updateCartToServerFetch(this.props.auth.authToken);
+  }
+
   _changeProductQuantityinCart = (type, variant) => {
     let tempCart = {
       storeId: this.props.cart.cart.storeId,
@@ -62,23 +66,15 @@ class CartScreen extends Component {
         );
         return;
       } else {
-        this.props.updateCartToServerFetch(
-          this.props.auth.authToken,
-          'increment',
-          tempCart,
-        );
+        this.props.updateCartToAsyncStorageFetch('increment', tempCart);
       }
     } else if (type === 'decrement') {
       tempCart.products[productIndexInCartProducts].quantity--;
       if (tempCart.products[productIndexInCartProducts].quantity === 0) {
         tempCart.products.splice(productIndexInCartProducts, 1);
-        this.props.updateCartToServerFetch(
-          this.props.auth.authToken,
-          'decrement',
-          tempCart,
-        );
+        this.props.updateCartToAsyncStorageFetch('decrement', tempCart);
       } else {
-        this.props.updateCartToServerFetch(
+        this.props.updateCartToAsyncStorageFetch(
           this.props.auth.authToken,
           'decrement',
           tempCart,
@@ -219,7 +215,10 @@ class CartScreen extends Component {
             justifyContent: 'space-around',
           }}
         />
-        {!this.props.cart.cart || this.props.cart.cart.products.length === 0 ? (
+        {this.props.cart.updatingCart ? (
+          <ActivityIndicator size="large" />
+        ) : !this.props.cart.cart ||
+          this.props.cart.cart.products.length === 0 ? (
           <View
             style={{
               flex: 1,
@@ -243,8 +242,8 @@ class CartScreen extends Component {
             <View style={{flex: 2}}>
               <ScrollView>
                 <View style={mainStyles.row}>
-                  {this.props.cart.cart.products.map(product => (
-                    <ItemCard key={product._id} product={product} />
+                  {this.props.cart.cart.products.map((product, i) => (
+                    <ItemCard key={i} product={product} />
                   ))}
                 </View>
               </ScrollView>

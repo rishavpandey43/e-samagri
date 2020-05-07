@@ -60,7 +60,9 @@ export const obtainItemsInString = (items, i) => {
 export const obtainAddressInString = address => {
   let addressString = '';
   for (const key in address) {
-    addressString += address[key] + ', ';
+    if (key != 'type') {
+      addressString += address[key] + ', ';
+    }
   }
   return addressString;
 };
@@ -75,8 +77,8 @@ export const getVerificationDocumentName = documentValue => {
 
 export const getCategoryName = categoryValue => {
   return (
-    categoryList.filter(category => category.value === categoryValue)[0].name ||
-    '-'
+    categoryList.filter(category => category.value === categoryValue)[0]
+      .label || '-'
   );
 };
 

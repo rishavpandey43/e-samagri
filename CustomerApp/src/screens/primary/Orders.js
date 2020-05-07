@@ -157,25 +157,6 @@ class OrdersScreen extends Component {
                     items={orderStatus}
                     placeholder={{}}
                   />
-                  {/* <Picker
-                    selectedValue={this.state.selectedStatus}
-                    style={{
-                      height: 30,
-                      width: '50%',
-                    }}
-                    onValueChange={(itemValue, itemIndex) => {
-                      this.setState({selectedStatus: itemValue});
-                      this._filterByStatus(itemValue);
-                    }}>
-                    <Picker.Item label={'All'} value={'all'} />
-                    {orderStatus.map(category => (
-                      <Picker.Item
-                        key={category.value}
-                        label={category.name}
-                        value={category.value}
-                      />
-                    ))}
-                  </Picker> */}
                 </View>
               </View>
               {this.state.filteredOrders &&

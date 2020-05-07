@@ -10,7 +10,7 @@ import {
   Text,
   Icon,
 } from 'react-native-elements';
-import {Picker} from '@react-native-community/picker';
+import RNPickerSelect from 'react-native-picker-select';
 
 // * Import all store related stuffs
 import * as OrderActions from '../../store/actions/creators/OrdersActions';
@@ -168,25 +168,15 @@ class OrdersScreen extends Component {
                   Filter by order status:
                 </Text>
                 <View>
-                  <Picker
-                    selectedValue={this.state.selectedStatus}
-                    style={{
-                      height: 30,
-                      width: '50%',
-                    }}
+                  <RNPickerSelect
+                    value={this.state.selectedStatus}
                     onValueChange={(itemValue, itemIndex) => {
                       this.setState({selectedStatus: itemValue});
                       this._filterByStatus(itemValue);
-                    }}>
-                    <Picker.Item label={'All'} value={'all'} />
-                    {orderStatus.map(category => (
-                      <Picker.Item
-                        key={category.value}
-                        label={category.name}
-                        value={category.value}
-                      />
-                    ))}
-                  </Picker>
+                    }}
+                    items={orderStatus}
+                    placeholder={{}}
+                  />
                 </View>
               </View>
               {this.state.filteredOrders &&

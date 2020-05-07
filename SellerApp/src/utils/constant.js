@@ -16,43 +16,43 @@ export const verificationDocumentType = [
 
 export const categoryList = [
   {
-    name: 'All',
-    value: 'all',
+    label: '-',
+    value: '',
   },
   {
-    name: 'Kitchen Staples',
+    label: 'Kitchen Staples',
     value: 'ks',
   },
   {
-    name: 'Coffee, Tea & Beverages',
+    label: 'Coffee, Tea & Beverages',
     value: 'bs',
   },
   {
-    name: 'Dried Fruits, Nuts & Seeds',
+    label: 'Dried Fruits, Nuts & Seeds',
     value: 'dfns',
   },
   {
-    name: 'Packed Foods',
+    label: 'Packed Foods',
     value: 'pf',
   },
   {
-    name: 'Snacks & Cookies',
+    label: 'Snacks & Cookies',
     value: 'sc',
   },
   {
-    name: 'Dairy Products',
+    label: 'Dairy Products',
     value: 'dp',
   },
   {
-    name: 'Bakery & Cakes',
+    label: 'Bakery & Cakes',
     value: 'bc',
   },
   {
-    name: 'Personal & Homecare',
+    label: 'Personal & Homecare',
     value: 'ph',
   },
   {
-    name: 'Health & Wellness',
+    label: 'Health & Wellness',
     value: 'hw',
   },
 ];
@@ -70,32 +70,37 @@ export const paymentMode = [
 
 export const orderStatus = [
   {
-    name: 'Pending',
+    label: 'All',
+    value: 'all',
+    color: '-',
+  },
+  {
+    label: 'Pending',
     value: 'pen',
     color: 'orange',
   },
   {
-    name: 'Processing',
+    label: 'Processing',
     value: 'prc',
     color: 'blue',
   },
   {
-    name: 'Processed',
+    label: 'Processed',
     value: 'prcd',
     color: '#EE82EE',
   },
   {
-    name: 'Out For Delivery',
+    label: 'Out For Delivery',
     value: 'ofd',
     color: '#FF1493',
   },
   {
-    name: 'Delivered',
+    label: 'Delivered',
     value: 'del',
     color: 'green',
   },
   {
-    name: 'Cancelled',
+    label: 'Cancelled',
     value: 'can',
     color: 'red',
   },

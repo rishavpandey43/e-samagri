@@ -123,17 +123,6 @@ class ProductDetailScreen extends Component {
 
                 <View style={mainStyles.infoGroup}>
                   <View style={mainStyles.labelGroup}>
-                    <Text style={mainStyles.labelText}>Description:</Text>
-                  </View>
-                  <View>
-                    <Text style={mainStyles.value}>
-                      {this.state.product.root.desc}
-                    </Text>
-                  </View>
-                </View>
-
-                <View style={mainStyles.infoGroup}>
-                  <View style={mainStyles.labelGroup}>
                     <Text style={mainStyles.labelText}>Category:</Text>
                   </View>
                   <View>

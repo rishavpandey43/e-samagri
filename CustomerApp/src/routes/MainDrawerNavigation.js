@@ -4,11 +4,11 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import {NavigationContainer} from '@react-navigation/native';
 import {createDrawerNavigator} from '@react-navigation/drawer';
 
+// * Import all screens/components
 import HomeStack from './stacks/HomeStack';
 import ProfileStack from './stacks/ProfileStack';
 import FavoriteStack from './stacks/FavoriteStack';
 import OrdersStack from './stacks/OrdersStack';
-zzzzzz; // * Import all screens/components
 import HelpStack from './stacks/HelpStack';
 import SettingStack from './stacks/SettingStack';
 

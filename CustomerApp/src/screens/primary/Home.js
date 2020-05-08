@@ -25,7 +25,6 @@ import messaging from '@react-native-firebase/messaging';
 import * as AuthActions from '../../store/actions/creators/AuthActions';
 import * as HomeActions from '../../store/actions/creators/HomeActions';
 import * as ProfileActions from '../../store/actions/creators/ProfileActions';
-import * as StoreActions from '../../store/actions/creators/StoreActions';
 import * as CartActions from '../../store/actions/creators/CartActions';
 import * as OrderActions from '../../store/actions/creators/OrderActions';
 
@@ -303,12 +302,12 @@ class HomeScreen extends Component {
 
 const styles = StyleSheet.create({});
 
-const mapStateToProps = state => {
+const mapStateToProps = ({auth, profile, cart, sellers}) => {
   return {
-    auth: state.auth,
-    profile: state.profile,
-    cart: state.cart,
-    sellers: state.sellers,
+    auth,
+    profile,
+    cart,
+    sellers,
   };
 };
 
@@ -318,7 +317,6 @@ const mapDispatchToProps = dispatch => {
       ...AuthActions,
       ...HomeActions,
       ...ProfileActions,
-      ...StoreActions,
       ...CartActions,
       ...OrderActions,
     },

@@ -2,7 +2,7 @@
 import React, {Component} from 'react';
 import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
-import {View, Alert, ToastAndroid, ScrollView} from 'react-native';
+import {View, ScrollView} from 'react-native';
 import {
   Text,
   Header,

@@ -1,9 +1,12 @@
+// * Import required modules/dependencies
 import axios from 'axios';
 import {ToastAndroid} from 'react-native';
+
+// * Import all store related stuffs
 import * as actionTypes from '../types/actionTypes';
 
+// * Import utilites
 import {getSellersFetch} from './HomeActions';
-
 import {baseUrl} from '../../../utils/constant';
 
 export const getProfileRequest = () => {

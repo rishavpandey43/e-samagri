@@ -1,5 +1,7 @@
+// * Import required modules/dependencies
 import AsyncStorage from '@react-native-community/async-storage';
 
+// * Import utilites
 import {addressType, categoryList, orderStatus, paymentMode} from './constant';
 
 export const storeDataInAsync = async (key, value) => {

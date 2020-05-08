@@ -2,7 +2,13 @@
 import React, {Component} from 'react';
 import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
-import {ScrollView, StyleSheet, View, ActivityIndicator} from 'react-native';
+import {
+  ScrollView,
+  StyleSheet,
+  View,
+  ActivityIndicator,
+  RefreshControl,
+} from 'react-native';
 import {Text, Header, Card, Button, Icon} from 'react-native-elements';
 import axios from 'axios';
 
@@ -154,10 +160,43 @@ class DeliverNewOrderScreen extends Component {
             justifyContent: 'space-around',
           }}
         />
-        <ScrollView>
-          {!this.props.profile.profile.profileVerificationDetail.verified ||
-          !this.props.profile.profile.vehicleDetail.verified ||
-          !this.props.profile.profile.bankDetail.verified ? (
+        <ScrollView
+          refreshControl={
+            <RefreshControl
+              refreshing={false}
+              colors={[variables.mainThemeColor]}
+              onRefresh={() => {
+                this._refreshList();
+              }}
+            />
+          }>
+          {this.props.profile.fetchingProfile ? (
+            <View
+              style={{
+                marginTop: 50,
+                justifyContent: 'center',
+                alignItems: 'center',
+              }}>
+              <ActivityIndicator size="large" />
+            </View>
+          ) : this.props.profile.errMessage || !this.props.profile.profile ? (
+            <Card title="Error Message" containerStyle={{alignItems: 'center'}}>
+              <Text style={{marginBottom: 20, fontSize: 20, color: 'red'}}>
+                {this.props.profile.errMessage || 'Internal Server Error'}
+              </Text>
+              <Button
+                title="Retry"
+                type="outline"
+                titleStyle={{color: variables.mainThemeColor}}
+                buttonStyle={mainStyles.outlineBtn}
+                onPress={() => {
+                  this.props.getProfileFetch();
+                }}
+              />
+            </Card>
+          ) : !this.props.profile.profile.profileVerificationDetail.verified ||
+            !this.props.profile.profile.vehicleDetail.verified ||
+            !this.props.profile.profile.bankDetail.verified ? (
             <View>
               <Text style={{padding: 10, fontSize: 18}}>
                 Your profile verification is still pending. You can enjoy the
@@ -172,18 +211,9 @@ class DeliverNewOrderScreen extends Component {
               style={(mainStyles.container, {padding: 15, marginBottom: 100})}>
               <View>
                 <Text h4>
-                  You can search for new orders waiting for delivery around you.
+                  You can search new orders waiting for delivery around you.
                 </Text>
-                <View style={{margin: 25}}>
-                  <Button
-                    title="Refresh the page"
-                    titleStyle={{color: variables.mainThemeColor}}
-                    type="outline"
-                    raised
-                    buttonStyle={mainStyles.outlineBtn}
-                    onPress={this._refreshList.bind(null)}
-                  />
-                </View>
+
                 <View>
                   {this.state.refreshing ? <ActivityIndicator /> : null}
                   {this.state.orderList.length === 0 ? (

@@ -1,9 +1,10 @@
+// * Import required modules/dependencies
 import React from 'react';
 import Icon from 'react-native-vector-icons/FontAwesome';
-
 import {NavigationContainer} from '@react-navigation/native';
 import {createDrawerNavigator} from '@react-navigation/drawer';
 
+// * Import all screens/components
 import HomeStack from './stacks/HomeStack';
 import ProfileStack from './stacks/ProfileStack';
 import FavoriteStack from './stacks/FavoriteStack';
@@ -12,6 +13,10 @@ import HelpStack from './stacks/HelpStack';
 import SettingStack from './stacks/SettingStack';
 
 import variable from '../styles/variables.js';
+
+// * Import all store related stuffs
+// * Import utilites
+// * Import all styling stuffs
 
 const Drawer = createDrawerNavigator();
 

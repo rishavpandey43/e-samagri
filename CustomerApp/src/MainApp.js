@@ -1,13 +1,18 @@
+// * Import required modules/dependencies
 import React, {useEffect} from 'react';
 import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
 import messaging from '@react-native-firebase/messaging';
 
-// * This consist of only two screens, i.e Register & Login
+// * Import all screens/components
 import MainTabNavigation from './routes/MainTabNavigation';
-
-// * Rest screens on successfull authentication
 import MainDrawerNavigation from './routes/MainDrawerNavigation';
+
+// * Import all store related stuffs
+
+// * Import utilites
+
+// * Import all styling stuffs
 
 const MainApp = ({auth}) => {
   useEffect(() => {

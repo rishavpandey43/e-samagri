@@ -1,3 +1,4 @@
+// * Import required modules/dependencies
 import * as actionTypes from '../actions/types/actionTypes';
 
 const initialState = {
@@ -40,6 +41,11 @@ const store = (state = initialState, action) => {
       return {
         ...state,
         updatingCart: false,
+        cart: {
+          storeId: action.storeId,
+          products: action.products,
+          deliveryCharge: action.deliveryCharge,
+        },
       };
     case actionTypes.UPDATE_CART_TO_SERVER_FAILURE:
       return {

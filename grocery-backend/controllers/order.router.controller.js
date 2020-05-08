@@ -114,6 +114,7 @@ exports.placeOrder = (req, res, next) => {
                       res.setHeader("Content-Type", "application/json");
                       res.json({
                         order,
+                        updatedCart: customer.cart,
                         message: "Order placed successfully",
                       });
                     })

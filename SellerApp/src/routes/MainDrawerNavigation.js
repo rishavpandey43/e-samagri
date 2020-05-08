@@ -1,9 +1,10 @@
+// * Import required modules/dependencies
 import React from 'react';
-import Icon from 'react-native-vector-icons/FontAwesome';
-
+import {Icon} from 'react-native-elements';
 import {NavigationContainer} from '@react-navigation/native';
 import {createDrawerNavigator} from '@react-navigation/drawer';
 
+// * Import all screens/components
 import DashBoardStack from './stacks/DashBoardStack';
 import ProfileStack from './stacks/ProfileStack';
 import ProductsStack from './stacks/ProductsStack';
@@ -12,6 +13,11 @@ import OrdersStack from './stacks/OrdersStack';
 import HelpStack from './stacks/HelpStack';
 import SettingStack from './stacks/SettingStack';
 
+// * Import all store related stuffs
+
+// * Import utilites
+
+// * Import all styling stuffs
 import variable from '../styles/variables.js';
 
 const Drawer = createDrawerNavigator();
@@ -25,7 +31,12 @@ const MainDrawerNavigation = () => (
         options={{
           drawerLabel: 'Dashboard',
           drawerIcon: () => (
-            <Icon name="dashboard" size={30} color={variable.mainThemeColor} />
+            <Icon
+              name="dashboard"
+              type="font-awesome"
+              size={30}
+              color={variable.mainThemeColor}
+            />
           ),
         }}
       />
@@ -35,7 +46,12 @@ const MainDrawerNavigation = () => (
         options={{
           drawerLabel: 'Profile',
           drawerIcon: () => (
-            <Icon name="user" size={30} color={variable.mainThemeColor} />
+            <Icon
+              name="user"
+              type="font-awesome"
+              size={30}
+              color={variable.mainThemeColor}
+            />
           ),
         }}
       />
@@ -47,6 +63,7 @@ const MainDrawerNavigation = () => (
           drawerIcon: () => (
             <Icon
               name="product-hunt"
+              type="font-awesome"
               size={30}
               color={variable.mainThemeColor}
             />
@@ -59,7 +76,12 @@ const MainDrawerNavigation = () => (
         options={{
           drawerLabel: 'Add New Product',
           drawerIcon: () => (
-            <Icon name="plus" size={30} color={variable.mainThemeColor} />
+            <Icon
+              name="plus"
+              type="font-awesome"
+              size={30}
+              color={variable.mainThemeColor}
+            />
           ),
         }}
       />
@@ -69,7 +91,12 @@ const MainDrawerNavigation = () => (
         options={{
           drawerLabel: 'Orders',
           drawerIcon: () => (
-            <Icon name="reorder" size={30} color={variable.mainThemeColor} />
+            <Icon
+              name="reorder"
+              type="font-awesome"
+              size={30}
+              color={variable.mainThemeColor}
+            />
           ),
         }}
       />
@@ -79,7 +106,12 @@ const MainDrawerNavigation = () => (
         options={{
           drawerLabel: 'Help',
           drawerIcon: () => (
-            <Icon name="question" size={30} color={variable.mainThemeColor} />
+            <Icon
+              name="question"
+              type="font-awesome"
+              size={30}
+              color={variable.mainThemeColor}
+            />
           ),
         }}
       />
@@ -89,7 +121,12 @@ const MainDrawerNavigation = () => (
         options={{
           drawerLabel: 'Setting',
           drawerIcon: () => (
-            <Icon name="cogs" size={30} color={variable.mainThemeColor} />
+            <Icon
+              name="cogs"
+              type="font-awesome"
+              size={30}
+              color={variable.mainThemeColor}
+            />
           ),
         }}
       />

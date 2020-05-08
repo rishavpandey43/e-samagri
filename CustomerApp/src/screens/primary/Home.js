@@ -57,7 +57,7 @@ class HomeScreen extends Component {
           this.props.navigation.navigate('update-profile-screen');
         }
         this.props.getProfileFetch(this.props.auth.authToken);
-        this.props.getCartDetailFetch(this.props.auth.authToken);
+        this.props.updateCartToServerFetch(this.props.auth.authToken);
         this.props.getSellersFetch(this.props.auth.authToken);
       })
       .catch(err => {
@@ -303,12 +303,12 @@ class HomeScreen extends Component {
 
 const styles = StyleSheet.create({});
 
-const mapStateToProps = state => {
+const mapStateToProps = ({auth, profile, cart, sellers}) => {
   return {
-    auth: state.auth,
-    profile: state.profile,
-    cart: state.cart,
-    sellers: state.sellers,
+    auth,
+    profile,
+    cart,
+    sellers,
   };
 };
 

@@ -22,11 +22,10 @@ import {
   SearchBar,
   Badge,
 } from 'react-native-elements';
-import {Picker} from '@react-native-community/picker';
+import RNPickerSelect from 'react-native-picker-select';
 
 // * Import all store related stuffs
 import * as HomeActions from '../../store/actions/creators/HomeActions';
-import * as StoreActions from '../../store/actions/creators/StoreActions';
 import * as CartActions from '../../store/actions/creators/CartActions';
 
 // * Import all screens/components
@@ -98,11 +97,7 @@ class StoreDetailScreen extends Component {
     };
     // * Check if the cart is empty to add first product
     if (!this.props.cart.cart.storeId) {
-      this.props.updateCartToServerFetch(
-        this.props.auth.authToken,
-        'new',
-        cart,
-      );
+      this.props.updateCartToAsyncStorageFetch('new', cart);
     }
     // * Confirm to user, if he tries to add product from another store to cart
     else if (this.props.cart.cart.storeId !== this.props.store.store._id) {
@@ -120,11 +115,7 @@ class StoreDetailScreen extends Component {
           {
             text: 'OK',
             onPress: () =>
-              this.props.updateCartToServerFetch(
-                this.props.auth.authToken,
-                'new',
-                cart,
-              ),
+              this.props.updateCartToAsyncStorageFetch('new', cart),
           },
         ],
       );
@@ -137,11 +128,7 @@ class StoreDetailScreen extends Component {
         deliveryCharge: this.props.cart.cart.deliveryCharge,
       };
       tempCart.products.push(cart.products[0]);
-      this.props.updateCartToServerFetch(
-        this.props.auth.authToken,
-        'new',
-        tempCart,
-      );
+      this.props.updateCartToAsyncStorageFetch('new', tempCart);
       return;
     }
   };
@@ -180,27 +167,15 @@ class StoreDetailScreen extends Component {
         );
         return;
       } else {
-        this.props.updateCartToServerFetch(
-          this.props.auth.authToken,
-          'increment',
-          tempCart,
-        );
+        this.props.updateCartToAsyncStorageFetch('increment', tempCart);
       }
     } else if (type === 'decrement') {
       tempCart.products[productIndexInCartProducts].quantity--;
       if (tempCart.products[productIndexInCartProducts].quantity === 0) {
         tempCart.products.splice(productIndexInCartProducts, 1);
-        this.props.updateCartToServerFetch(
-          this.props.auth.authToken,
-          'decrement',
-          tempCart,
-        );
+        this.props.updateCartToAsyncStorageFetch('decrement', tempCart);
       } else {
-        this.props.updateCartToServerFetch(
-          this.props.auth.authToken,
-          'decrement',
-          tempCart,
-        );
+        this.props.updateCartToAsyncStorageFetch('decrement', tempCart);
       }
     } else return;
   };
@@ -224,7 +199,37 @@ class StoreDetailScreen extends Component {
           <View>
             <Text style={{fontSize: 20}}>{product.root.name}</Text>
           </View>
-          <Picker
+          <RNPickerSelect
+            value={
+              this.state.productVariantForPicker.filter(
+                variant => variant.productId === product._id,
+              )[0].value
+            }
+            onValueChange={(itemValue, itemIndex) => {
+              let tempProductVariantForPicker = [
+                ...this.state.productVariantForPicker,
+              ];
+              let productIndex = null;
+              this.state.productVariantForPicker.forEach((variant, i) => {
+                if (product._id === variant.productId) {
+                  productIndex = i;
+                }
+              });
+              tempProductVariantForPicker[productIndex].value = itemValue;
+              tempProductVariantForPicker[productIndex].variantId =
+                product.variants[itemIndex]._id;
+              this.setState({
+                productVariantForPicker: [...tempProductVariantForPicker],
+              });
+            }}
+            items={product.variants.map((variant, index) => ({
+              ...variant,
+              label: `${variant.value}/₹ ${variant.price}`,
+              value: variant.value,
+            }))}
+            placeholder={{}}
+          />
+          {/* <Picker
             selectedValue={
               this.state.productVariantForPicker.filter(
                 variant => variant.productId === product._id,
@@ -255,7 +260,7 @@ class StoreDetailScreen extends Component {
                 value={variant.value}
               />
             ))}
-          </Picker>
+          </Picker> */}
         </View>
         <View style={{flex: 1, justifyContent: 'center', marginLeft: 5}}>
           {this.props.cart.cart ? (
@@ -616,10 +621,7 @@ const mapStateToProps = ({auth, sellers, store, cart}) => {
 };
 
 const mapDispatchToProps = dispatch => {
-  return bindActionCreators(
-    {...HomeActions, ...StoreActions, ...CartActions},
-    dispatch,
-  );
+  return bindActionCreators({...HomeActions, ...CartActions}, dispatch);
 };
 
 export default connect(

@@ -1,3 +1,4 @@
+// * Import required modules/dependencies
 import AsyncStorage from '@react-native-community/async-storage';
 
 import {

@@ -1,8 +1,11 @@
+// * Import required modules/dependencies
 import axios from 'axios';
 import {ToastAndroid} from 'react-native';
 
+// * Import all store related stuffs
 import * as actionTypes from '../types/actionTypes';
 
+// * Import utilites
 import {storeDataInAsync, removeDataFromAsync} from '../../../utils/helper';
 import {baseUrl, authTokenName} from '../../../utils/constant';
 
@@ -47,7 +50,11 @@ export const registerFetch = (fcmDeviceToken, data) => dispatch => {
     })
     .catch(err => {
       ToastAndroid.show(
-        err.response.data.errMessage || 'Some error occured, try again.',
+        err.response
+          ? err.response.status != 500
+            ? err.response.data.errMessage
+            : 'Some error occured, try again.'
+          : 'Some error occured, try again.',
         ToastAndroid.LONG,
       );
       dispatch(
@@ -96,7 +103,11 @@ export const loginFetch = (fcmDeviceToken, {phone, otp}) => dispatch => {
     })
     .catch(err => {
       ToastAndroid.show(
-        err.response.data.errMessage || 'Some error occured, try again.',
+        err.response
+          ? err.response.status != 500
+            ? err.response.data.errMessage
+            : 'Some error occured, try again.'
+          : 'Some error occured, try again.',
         ToastAndroid.LONG,
       );
       dispatch(
@@ -152,7 +163,11 @@ export const logoutFetch = token => dispatch => {
     .catch(err => {
       dispatch(logoutFailure());
       ToastAndroid.show(
-        err.response.data.errMessage || 'Some error occured, try again.',
+        err.response
+          ? err.response.status != 500
+            ? err.response.data.errMessage
+            : 'Some error occured, try again.'
+          : 'Some error occured, try again.',
         ToastAndroid.LONG,
       );
     });

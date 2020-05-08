@@ -29,7 +29,7 @@ const OrderCard = ({order, navigation}) => {
                 color: getOrderStatus(order.status).color,
                 fontSize: 18,
               }}>
-              {getOrderStatus(order.status).name}
+              {getOrderStatus(order.status).label}
             </Text>
           </View>
         </View>

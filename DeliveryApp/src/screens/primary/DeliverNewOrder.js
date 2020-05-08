@@ -170,9 +170,33 @@ class DeliverNewOrderScreen extends Component {
               }}
             />
           }>
-          {!this.props.profile.profile.profileVerificationDetail.verified ||
-          !this.props.profile.profile.vehicleDetail.verified ||
-          !this.props.profile.profile.bankDetail.verified ? (
+          {this.props.profile.fetchingProfile ? (
+            <View
+              style={{
+                marginTop: 50,
+                justifyContent: 'center',
+                alignItems: 'center',
+              }}>
+              <ActivityIndicator size="large" />
+            </View>
+          ) : this.props.profile.errMessage || !this.props.profile.profile ? (
+            <Card title="Error Message" containerStyle={{alignItems: 'center'}}>
+              <Text style={{marginBottom: 20, fontSize: 20, color: 'red'}}>
+                {this.props.profile.errMessage || 'Internal Server Error'}
+              </Text>
+              <Button
+                title="Retry"
+                type="outline"
+                titleStyle={{color: variables.mainThemeColor}}
+                buttonStyle={mainStyles.outlineBtn}
+                onPress={() => {
+                  this.props.getProfileFetch();
+                }}
+              />
+            </Card>
+          ) : !this.props.profile.profile.profileVerificationDetail.verified ||
+            !this.props.profile.profile.vehicleDetail.verified ||
+            !this.props.profile.profile.bankDetail.verified ? (
             <View>
               <Text style={{padding: 10, fontSize: 18}}>
                 Your profile verification is still pending. You can enjoy the

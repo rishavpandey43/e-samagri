@@ -1,3 +1,4 @@
+// * Import required modules/dependencies
 import * as actionTypes from '../actions/types/actionTypes';
 
 const initialState = {

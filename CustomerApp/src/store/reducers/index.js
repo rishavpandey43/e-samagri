@@ -1,5 +1,7 @@
+// * Import required modules/dependencies
 import {combineReducers} from 'redux';
 
+// * Import all store related stuffs
 import auth from './auth';
 import profile from './profile';
 import sellers from './sellers';

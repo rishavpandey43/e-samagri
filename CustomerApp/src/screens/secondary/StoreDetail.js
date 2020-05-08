@@ -26,7 +26,6 @@ import RNPickerSelect from 'react-native-picker-select';
 
 // * Import all store related stuffs
 import * as HomeActions from '../../store/actions/creators/HomeActions';
-import * as StoreActions from '../../store/actions/creators/StoreActions';
 import * as CartActions from '../../store/actions/creators/CartActions';
 
 // * Import all screens/components
@@ -622,10 +621,7 @@ const mapStateToProps = ({auth, sellers, store, cart}) => {
 };
 
 const mapDispatchToProps = dispatch => {
-  return bindActionCreators(
-    {...HomeActions, ...StoreActions, ...CartActions},
-    dispatch,
-  );
+  return bindActionCreators({...HomeActions, ...CartActions}, dispatch);
 };
 
 export default connect(

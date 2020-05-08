@@ -1,7 +1,13 @@
 import React, {Component} from 'react';
 import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
-import {ScrollView, StyleSheet, View, ActivityIndicator} from 'react-native';
+import {
+  ScrollView,
+  StyleSheet,
+  View,
+  ActivityIndicator,
+  RefreshControl,
+} from 'react-native';
 import {
   Header,
   Card,
@@ -58,17 +64,6 @@ class OrdersScreen extends Component {
         }
       }
     }
-    // if (
-    //   prevProps.orders.orders &&
-    //   prevProps.orders.orders.length === this.props.orders.orders.length
-    // ) {
-    //   for (let i = 0; i < this.props.orders.orders.length.length; i++) {
-    //     if (prevProps.orders.orders.status != this.props.orders.orders.status) {
-    //       console.log('object');
-    //       this.setState({filteredOrders: this.props.orders.orders});
-    //     }
-    //   }
-    // }
   }
 
   _filterByStatus = status => {
@@ -136,7 +131,16 @@ class OrdersScreen extends Component {
             justifyContent: 'space-around',
           }}
         />
-        <ScrollView>
+        <ScrollView
+          refreshControl={
+            <RefreshControl
+              refreshing={false}
+              colors={[variables.mainThemeColor]}
+              onRefresh={() => {
+                this.props.getOrdersFetch(this.props.auth.authToken);
+              }}
+            />
+          }>
           {this.props.orders.fetchingOrders ? (
             <View
               style={{

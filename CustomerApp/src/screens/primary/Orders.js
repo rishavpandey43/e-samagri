@@ -1,7 +1,13 @@
 import React, {Component} from 'react';
 import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
-import {ScrollView, StyleSheet, View, ActivityIndicator} from 'react-native';
+import {
+  ScrollView,
+  StyleSheet,
+  View,
+  ActivityIndicator,
+  RefreshControl,
+} from 'react-native';
 import {
   Header,
   Card,
@@ -116,7 +122,16 @@ class OrdersScreen extends Component {
             justifyContent: 'space-around',
           }}
         />
-        <ScrollView>
+        <ScrollView
+          refreshControl={
+            <RefreshControl
+              refreshing={false}
+              colors={[variables.mainThemeColor]}
+              onRefresh={() => {
+                this.props.getOrdersFetch(this.props.auth.authToken);
+              }}
+            />
+          }>
           {this.props.orders.fetchingOrders ? (
             <View
               style={{

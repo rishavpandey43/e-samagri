@@ -303,12 +303,12 @@ class HomeScreen extends Component {
 
 const styles = StyleSheet.create({});
 
-const mapStateToProps = state => {
+const mapStateToProps = ({auth, profile, cart, sellers}) => {
   return {
-    auth: state.auth,
-    profile: state.profile,
-    cart: state.cart,
-    sellers: state.sellers,
+    auth,
+    profile,
+    cart,
+    sellers,
   };
 };
 

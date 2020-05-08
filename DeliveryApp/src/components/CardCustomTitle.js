@@ -1,7 +1,15 @@
+// * Import required modules/dependencies
 import React, {useState} from 'react';
 import {View, Text} from 'react-native';
 import {Icon} from 'react-native-elements';
 
+// * Import all screens/components
+
+// * Import all store related stuffs
+
+// * Import utilites
+
+// * Import all styling stuffs
 import mainStyles from '../styles/mainStyle';
 import variables from '../styles/variables';
 

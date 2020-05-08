@@ -116,7 +116,11 @@ class RegisterScreen extends Component {
         })
         .catch(err => {
           ToastAndroid.show(
-            err.response.data.errMessage || 'Some error occured, try again.',
+            err.response
+              ? err.response.status != 500
+                ? err.response.data.errMessage
+                : 'Some error occured, try again.'
+              : 'Some error occured, try again.',
             ToastAndroid.LONG,
           );
           this._resetState();

@@ -8,10 +8,8 @@ import {
   View,
   ActivityIndicator,
   Alert,
-  ToastAndroid,
 } from 'react-native';
 import {Header, Card, Text, Icon, Button} from 'react-native-elements';
-import axios from 'axios';
 
 // * Import all store related stuffs
 import * as OrderActions from '../../store/actions/creators/OrdersActions';

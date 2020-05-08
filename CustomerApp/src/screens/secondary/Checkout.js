@@ -20,6 +20,7 @@ import * as CartActions from '../../store/actions/creators/CartActions';
 
 // * Import utilites
 import {baseUrl} from '../../utils/constant';
+import {storeDataInAsync, removeDataFromAsync} from '../../utils/helper';
 
 // * Import all styling stuffs
 import mainStyles from '../../styles/mainStyle';
@@ -62,6 +63,14 @@ class CheckoutScreen extends Component {
           },
         })
         .then(res => {
+          storeDataInAsync(
+            'eSamagri_customer_cart',
+            JSON.stringify(res.data.updatedCart),
+          )
+            .then(updatedCart => {
+              dispatch(getCartDetailSuccess(JSON.parse(updatedCart)));
+            })
+            .catch(err => {});
           this.props.navigation.navigate('order-confirmation-screen');
         })
         .catch(err => {

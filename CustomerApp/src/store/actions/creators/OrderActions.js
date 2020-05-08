@@ -1,8 +1,10 @@
+// * Import required modules/dependencies
 import axios from 'axios';
-import {ToastAndroid} from 'react-native';
+
+// * Import all store related stuffs
 import * as actionTypes from '../types/actionTypes';
 
-import * as helper from '../../../utils/helper';
+// * Import utilites
 import {baseUrl} from '../../../utils/constant';
 
 export const getOrdersRequest = () => {

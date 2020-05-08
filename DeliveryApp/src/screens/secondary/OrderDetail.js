@@ -191,7 +191,7 @@ class OrderDetailScreen extends Component {
                         fontSize: 18,
                         color: getOrderStatus(this.state.order.status).color,
                       }}>
-                      {getOrderStatus(this.state.order.status).name}
+                      {getOrderStatus(this.state.order.status).label}
                     </Text>
                   </View>
                 </View>

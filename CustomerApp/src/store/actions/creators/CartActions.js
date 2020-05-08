@@ -1,12 +1,12 @@
+// * Import required modules/dependencies
 import axios from 'axios';
 import {ToastAndroid} from 'react-native';
+
+// * Import all store related stuffs
 import * as actionTypes from '../types/actionTypes';
 
-import {
-  storeDataInAsync,
-  getDataFromAsync,
-  removeDataFromAsync,
-} from '../../../utils/helper';
+// * Import utilites
+import {storeDataInAsync, getDataFromAsync} from '../../../utils/helper';
 import {baseUrl} from '../../../utils/constant';
 
 export const addNewProductToCart = ({storeId, products, deliveryCharge}) => {

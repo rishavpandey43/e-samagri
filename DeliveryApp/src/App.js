@@ -6,12 +6,19 @@
  * @flow strict-local
  */
 
+// * Import required modules/dependencies
 import React from 'react';
 import {Provider} from 'react-redux';
 
+// * Import all screens/components
+import MainApp from './MainApp';
+
+// * Import all store related stuffs
 import store from './store/store';
 
-import MainApp from './MainApp';
+// * Import utilites
+
+// * Import all styling stuffs
 
 const App = () => {
   return (

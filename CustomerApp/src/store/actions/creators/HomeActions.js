@@ -1,6 +1,10 @@
+// * Import required modules/dependencies
 import axios from 'axios';
+
+// * Import all store related stuffs
 import * as actionTypes from '../types/actionTypes';
 
+// * Import utilites
 import {baseUrl} from '../../../utils/constant';
 
 export const getSellersRequest = () => {

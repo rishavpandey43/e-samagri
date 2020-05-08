@@ -1,9 +1,16 @@
+// * Import required modules/dependencies
 import React from 'react';
-import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
 
+// * Import all screens/components
 import ProfileScreen from '../../screens/primary/Profile';
 import UpdateProfileScreen from '../../screens/secondary/UpdateProfile';
+
+// * Import all store related stuffs
+
+// * Import utilites
+
+// * Import all styling stuffs
 
 const Stack = createStackNavigator();
 

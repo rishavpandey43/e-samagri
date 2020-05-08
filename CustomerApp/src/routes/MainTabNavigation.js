@@ -1,12 +1,18 @@
+// * Import required modules/dependencies
 import React from 'react';
 import {Icon} from 'react-native-elements';
-
 import {NavigationContainer} from '@react-navigation/native';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 
+// * Import all screens/components
 import RegisterScreen from '../screens/primary/Register';
 import LoginScreen from '../screens/primary/Login';
 
+// * Import all store related stuffs
+
+// * Import utilites
+
+// * Import all styling stuffs
 import variables from '../styles/variables.js';
 
 const Tab = createBottomTabNavigator();

@@ -6,6 +6,7 @@ import {View, TouchableOpacity, ActivityIndicator} from 'react-native';
 import {Text, Image} from 'react-native-elements';
 
 // * Import all store related stuffs
+import * as StoreActions from '../store/actions/creators/StoreActions';
 
 // * Import all screens/components
 
@@ -52,7 +53,7 @@ const mapStateToProps = state => {
 };
 
 const mapDispatchToProps = dispatch => {
-  return bindActionCreators({}, dispatch);
+  return bindActionCreators({...StoreActions}, dispatch);
 };
 
 export default connect(

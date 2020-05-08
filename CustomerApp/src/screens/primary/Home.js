@@ -25,6 +25,7 @@ import messaging from '@react-native-firebase/messaging';
 import * as AuthActions from '../../store/actions/creators/AuthActions';
 import * as HomeActions from '../../store/actions/creators/HomeActions';
 import * as ProfileActions from '../../store/actions/creators/ProfileActions';
+import * as StoreActions from '../../store/actions/creators/StoreActions';
 import * as CartActions from '../../store/actions/creators/CartActions';
 import * as OrderActions from '../../store/actions/creators/OrderActions';
 
@@ -317,6 +318,7 @@ const mapDispatchToProps = dispatch => {
       ...AuthActions,
       ...HomeActions,
       ...ProfileActions,
+      ...StoreActions,
       ...CartActions,
       ...OrderActions,
     },

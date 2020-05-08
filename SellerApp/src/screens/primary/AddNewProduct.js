@@ -19,7 +19,8 @@ import {
   CheckBox,
   Icon,
 } from 'react-native-elements';
-import {Picker} from '@react-native-community/picker';
+import RNPickerSelect from 'react-native-picker-select';
+
 import axios from 'axios';
 
 // * Import all store related stuffs
@@ -48,7 +49,6 @@ class AddNewProductScreen extends Component {
     this.state = {
       product: {
         name: '',
-        desc: '',
         category: '',
         type: 'packet',
         brand: '',
@@ -60,6 +60,7 @@ class AddNewProductScreen extends Component {
           },
         ],
       },
+      loading: false,
     };
   }
 
@@ -86,7 +87,6 @@ class AddNewProductScreen extends Component {
       let data = {
         general: {
           name: tempData.name.toLowerCase(),
-          desc: tempData.desc.toLowerCase(),
           category: tempData.category.toLowerCase(),
           type: tempData.type.toLowerCase(),
           brand: tempData.brand.toLowerCase(),
@@ -99,7 +99,7 @@ class AddNewProductScreen extends Component {
           })),
         },
       };
-
+      this.setState({loading: true});
       axios
         .post(baseUrl + '/seller/add-new-product', data, {
           headers: {
@@ -122,6 +122,7 @@ class AddNewProductScreen extends Component {
                 },
               ],
             },
+            loading: false,
           });
           this.props.getProductsFetch(this.props.auth.authToken);
           ToastAndroid.show(
@@ -130,6 +131,7 @@ class AddNewProductScreen extends Component {
           );
         })
         .catch(err => {
+          this.setState({loading: false});
           ToastAndroid.show(
             err.response.data.errMessage ||
               "Product can't be added, please try again",
@@ -220,7 +222,7 @@ class AddNewProductScreen extends Component {
                 />
               </View>
 
-              <View style={mainStyles.formGroup}>
+              {/* <View style={mainStyles.formGroup}>
                 <Input
                   label="Product Description:"
                   multiline
@@ -236,37 +238,24 @@ class AddNewProductScreen extends Component {
                     });
                   }}
                 />
-              </View>
+              </View> */}
 
               <View style={mainStyles.formGroup}>
                 <Text style={mainStyles.formLabel}>Category:</Text>
                 <View>
-                  <Picker
-                    selectedValue={this.state.product.category}
-                    style={{
-                      height: 50,
-                      width: '100%',
-                    }}
-                    onValueChange={(itemValue, itemIndex) =>
+                  <RNPickerSelect
+                    value={this.state.product.category}
+                    onValueChange={(itemValue, itemIndex) => {
                       this.setState({
                         product: {
                           ...this.state.product,
                           category: itemValue,
                         },
-                      })
-                    }>
-                    <Picker.Item
-                      label="Choose the appropriate category"
-                      value="-"
-                    />
-                    {categoryList.map(category => (
-                      <Picker.Item
-                        key={category.value}
-                        label={category.name}
-                        value={category.value}
-                      />
-                    ))}
-                  </Picker>
+                      });
+                    }}
+                    items={categoryList}
+                    placeholder={{}}
+                  />
                 </View>
               </View>
 
@@ -323,7 +312,7 @@ class AddNewProductScreen extends Component {
               <View style={mainStyles.formGroup}>
                 <Input
                   label="Brand:"
-                  placeholder="Pepsico, Nestle, write - for no brand"
+                  placeholder="Pepsico, Nestle, write - if brand"
                   value={this.state.product.brand}
                   onChangeText={brand => {
                     this.setState({
@@ -496,7 +485,7 @@ class AddNewProductScreen extends Component {
                     titleStyle={{color: variables.mainThemeColor}}
                     buttonStyle={mainStyles.outlineBtn}
                     onPress={this.addProduct.bind(null)}
-                    loading={this.props.profile.profileUpdating}
+                    loading={this.state.loading}
                   />
                 </View>
               </View>

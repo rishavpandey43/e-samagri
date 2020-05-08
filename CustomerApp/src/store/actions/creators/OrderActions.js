@@ -1,8 +1,6 @@
 import axios from 'axios';
-import {ToastAndroid} from 'react-native';
 import * as actionTypes from '../types/actionTypes';
 
-import * as helper from '../../../utils/helper';
 import {baseUrl} from '../../../utils/constant';
 
 export const getOrdersRequest = () => {

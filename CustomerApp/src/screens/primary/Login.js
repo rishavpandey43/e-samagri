@@ -86,7 +86,9 @@ class LoginScreen extends Component {
         .catch(err => {
           ToastAndroid.show(
             err.response
-              ? err.response.data.errMessage || 'Some error occured, try again.'
+              ? err.response.status != 500
+                ? err.response.data.errMessage
+                : 'Some error occured, try again.'
               : 'Some error occured, try again.',
             ToastAndroid.LONG,
           );

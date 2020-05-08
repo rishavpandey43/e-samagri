@@ -2,18 +2,8 @@
 import React, {Component} from 'react';
 import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
-import {View, Alert, ToastAndroid, ScrollView} from 'react-native';
-import {
-  Text,
-  Header,
-  Card,
-  ListItem,
-  Overlay,
-  CheckBox,
-  Input,
-  Button,
-  Icon,
-} from 'react-native-elements';
+import {View, ScrollView} from 'react-native';
+import {Header, Card, ListItem, Icon} from 'react-native-elements';
 import axios from 'axios';
 
 // * Import all store related stuffs

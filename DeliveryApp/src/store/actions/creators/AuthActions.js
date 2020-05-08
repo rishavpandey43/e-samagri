@@ -49,7 +49,9 @@ export const registerFetch = (fcmDeviceToken, data) => dispatch => {
       console.log(err);
       ToastAndroid.show(
         err.response
-          ? err.response.data.errMessage || 'Some error occured, try again.'
+          ? err.response.status != 500
+            ? err.response.data.errMessage
+            : 'Some error occured, try again.'
           : 'Some error occured, try again.',
         ToastAndroid.LONG,
       );
@@ -100,7 +102,9 @@ export const loginFetch = (fcmDeviceToken, {phone, otp}) => dispatch => {
     .catch(err => {
       ToastAndroid.show(
         err.response
-          ? err.response.data.errMessage || 'Some error occured, try again.'
+          ? err.response.status != 500
+            ? err.response.data.errMessage
+            : 'Some error occured, try again.'
           : 'Some error occured, try again.',
         ToastAndroid.LONG,
       );
@@ -158,7 +162,9 @@ export const logoutFetch = token => dispatch => {
       dispatch(logoutFailure());
       ToastAndroid.show(
         err.response
-          ? err.response.data.errMessage || 'Some error occured, try again.'
+          ? err.response.status != 500
+            ? err.response.data.errMessage
+            : 'Some error occured, try again.'
           : 'Some error occured, try again.',
         ToastAndroid.LONG,
       );

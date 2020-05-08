@@ -133,8 +133,11 @@ class AddNewProductScreen extends Component {
         .catch(err => {
           this.setState({loading: false});
           ToastAndroid.show(
-            err.response.data.errMessage ||
-              "Product can't be added, please try again",
+            err.response
+              ? err.response.status != 500
+                ? err.response.data.errMessage
+                : "Product can't be added, please try again."
+              : "Product can't be added, please try again.",
             ToastAndroid.LONG,
           );
         });

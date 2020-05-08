@@ -21,7 +21,7 @@ const OrderCard = ({order, navigation}) => {
         <View style={mainStyles.col6}>
           <View>
             <Text style={styles.title}>Order Date</Text>
-            <Text>{order.createdAt}</Text>
+            <Text>{new Date(order.createdAt).toDateString().toString()}</Text>
           </View>
           <View style={styles.marginTop}>
             <Text

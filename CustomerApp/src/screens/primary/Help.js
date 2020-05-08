@@ -78,7 +78,7 @@ class HelpScreen extends Component {
                 chevron
                 bottomDivider
                 onPress={() => {
-                  Linking.openURL('mailto://somethingemail@gmail.com');
+                  Linking.openURL('mailto:correspond.rishav@gmail.com');
                 }}
               />
               <ListItem

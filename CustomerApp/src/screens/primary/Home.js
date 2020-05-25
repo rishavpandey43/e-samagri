@@ -9,6 +9,7 @@ import {
   ActivityIndicator,
   TouchableOpacity,
   Alert,
+  RefreshControl,
 } from 'react-native';
 import {
   Header,
@@ -214,7 +215,18 @@ class HomeScreen extends Component {
             justifyContent: 'space-around',
           }}
         />
-        <ScrollView>
+        <ScrollView
+          refreshControl={
+            <RefreshControl
+              refreshing={false}
+              colors={[variables.mainThemeColor]}
+              onRefresh={() => {
+                this.props.getProfileFetch(this.props.auth.authToken);
+                this.props.updateCartToServerFetch(this.props.auth.authToken);
+                this.props.getSellersFetch(this.props.auth.authToken);
+              }}
+            />
+          }>
           {this.props.sellers.fetchingSellers ? (
             <View
               style={{

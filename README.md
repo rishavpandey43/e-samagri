@@ -94,7 +94,7 @@ clone the repository
 
   navigate to backend folder
 
-  `cd liquor-backend`
+  `cd e-samagri-backend`
 
   install npm dependencies
 

@@ -329,7 +329,7 @@ class RegisterScreen extends Component {
                   type="outline"
                   buttonStyle={mainStyles.outlineBtn}
                   onPress={this._register.bind(null)}
-                  loading={this.state.registerLoading}
+                  loading={this.props.auth.isLoading}
                 />
               </View>
             </View>

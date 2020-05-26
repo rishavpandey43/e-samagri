@@ -42,7 +42,7 @@ class UpdateProfileScreen extends Component {
     this.state = {
       personalDetailCardDisplay: false,
       profileVerificationDetailCardDisplay: false,
-      storeDetailCardDisplay: true,
+      storeDetailCardDisplay: false,
       bankDetailCardDisplay: false,
       profileVerificationDetail: {
         type: 'aadhar-id',

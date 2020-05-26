@@ -1,5 +1,5 @@
-// export const baseUrl = 'http://192.168.43.240:5555';
-export const baseUrl = 'https://e-samagri-backend.herokuapp.com';
+export const baseUrl = 'http://192.168.43.240:5555';
+// export const baseUrl = 'https://e-samagri-backend.herokuapp.com';
 
 export const authTokenName = 'eSamagri_seller_auth_token';
 
@@ -14,46 +14,103 @@ export const verificationDocumentType = [
   },
 ];
 
-export const categoryList = [
+export const shopType = [
   {
-    label: '-',
-    value: '',
+    label: 'General Store',
+    value: 0,
   },
   {
-    label: 'Kitchen Staples',
-    value: 'ks',
+    label: 'Liquor Shop',
+    value: 1,
+  },
+];
+
+export const productCategoryList = [
+  {
+    shopType: 0,
+    categories: [
+      {
+        label: '-',
+        value: '',
+      },
+      {
+        label: 'Kitchen Staples',
+        value: 0,
+      },
+      {
+        label: 'Coffee, Tea & Beverages',
+        value: 1,
+      },
+      {
+        label: 'Dried Fruits, Nuts & Seeds',
+        value: 2,
+      },
+      {
+        label: 'Packed Foods',
+        value: 3,
+      },
+      {
+        label: 'Snacks & Cookies',
+        value: 4,
+      },
+      {
+        label: 'Dairy Products',
+        value: 5,
+      },
+      {
+        label: 'Bakery & Cakes',
+        value: 6,
+      },
+      {
+        label: 'Personal & Homecare',
+        value: 7,
+      },
+      {
+        label: 'Health & Wellness',
+        value: 8,
+      },
+    ],
   },
   {
-    label: 'Coffee, Tea & Beverages',
-    value: 'bs',
-  },
-  {
-    label: 'Dried Fruits, Nuts & Seeds',
-    value: 'dfns',
-  },
-  {
-    label: 'Packed Foods',
-    value: 'pf',
-  },
-  {
-    label: 'Snacks & Cookies',
-    value: 'sc',
-  },
-  {
-    label: 'Dairy Products',
-    value: 'dp',
-  },
-  {
-    label: 'Bakery & Cakes',
-    value: 'bc',
-  },
-  {
-    label: 'Personal & Homecare',
-    value: 'ph',
-  },
-  {
-    label: 'Health & Wellness',
-    value: 'hw',
+    shopType: 1,
+    categories: [
+      {
+        label: '-',
+        value: '',
+      },
+      {
+        label: 'Beer',
+        value: 0,
+      },
+      {
+        label: 'Vodka',
+        value: 1,
+      },
+      {
+        label: 'Whiskey',
+        value: 2,
+      },
+      {
+        label: 'Rum',
+        value: 3,
+      },
+      {
+        label: 'Brandy',
+        value: 4,
+      },
+      {
+        label: 'Wine',
+        value: 5,
+      },
+      {
+        label: 'Tequila',
+        value: 6,
+      },
+      {
+        label: 'Desi Daru',
+        value: 7,
+      },
+    ],
   },
 ];
 
@@ -102,6 +159,24 @@ export const orderStatus = [
   {
     label: 'Cancelled',
     value: 'can',
+    color: 'red',
+  },
+];
+
+export const verificationStatus = [
+  {
+    label: 'Pending',
+    value: 'pen',
+    color: 'orange',
+  },
+  {
+    label: 'Verified',
+    value: 'ver',
+    color: 'green',
+  },
+  {
+    label: 'Rejected',
+    value: 'rej',
     color: 'red',
   },
 ];

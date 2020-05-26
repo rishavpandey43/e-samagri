@@ -36,12 +36,7 @@ import variables from '../../styles/variables';
 import * as ProfileActions from '../../store/actions/creators/ProfileActions';
 import * as ProductsActions from '../../store/actions/creators/ProductsActions';
 
-import * as helper from '../../utils/helper';
-import {baseUrl, categoryList} from '../../utils/constant';
-
-const sellerId1 = '5e9fb135233b5b03d51de35b';
-const sellerId2 = '5e9fb291df5cf41033ca39e0';
-const sellerId3 = '5e9fb2a3df5cf41033ca39e1';
+import {baseUrl, productCategoryList} from '../../utils/constant';
 
 class AddNewProductScreen extends Component {
   constructor(props) {
@@ -50,6 +45,7 @@ class AddNewProductScreen extends Component {
       product: {
         name: '',
         category: '',
+        shopType: props.profile.profile.storeDetail.type,
         type: 'packet',
         brand: '',
         variants: [
@@ -68,13 +64,17 @@ class AddNewProductScreen extends Component {
     let tempData = this.state.product;
     let isEmpty = false;
     for (const item in tempData) {
-      if (typeof tempData[item] === 'string') {
-        if (tempData[item] == '') {
+      if (typeof tempData[item] !== 'object') {
+        if (tempData[item] === '') {
           isEmpty = true;
         }
-      } else if (typeof tempData[item] === 'object') {
+      } else {
         tempData[item].forEach(element => {
-          if (element.value === '' || element.price === '') {
+          if (
+            element.value === '' ||
+            element.price === '' ||
+            element.stock === ''
+          ) {
             isEmpty = true;
           }
         });
@@ -87,7 +87,8 @@ class AddNewProductScreen extends Component {
       let data = {
         general: {
           name: tempData.name.toLowerCase(),
-          category: tempData.category.toLowerCase(),
+          shopType: tempData.shopType,
+          category: tempData.category,
           type: tempData.type.toLowerCase(),
           brand: tempData.brand.toLowerCase(),
         },
@@ -99,6 +100,7 @@ class AddNewProductScreen extends Component {
           })),
         },
       };
+      console.log(data);
       this.setState({loading: true});
       axios
         .post(baseUrl + '/seller/add-new-product', data, {
@@ -111,6 +113,7 @@ class AddNewProductScreen extends Component {
           this.setState({
             product: {
               name: '',
+              shopType: this.props.profile.profile.storeDetail.type,
               category: '',
               type: 'packet',
               brand: '',
@@ -195,9 +198,13 @@ class AddNewProductScreen extends Component {
                 }}
               />
             </Card>
-          ) : !this.props.profile.profile.profileVerificationDetail.verified ||
-            !this.props.profile.profile.storeDetail.verified ||
-            !this.props.profile.profile.bankDetail.verified ? (
+          ) : !this.props.profile.profile.profileVerificationDetail ||
+            this.props.profile.profile.profileVerificationDetail
+              .verification !== 'ver' ||
+            !this.props.profile.profile.storeDetail ||
+            this.props.profile.profile.storeDetail.verification !== 'ver' ||
+            !this.props.profile.profile.bankDetail ||
+            this.props.profile.profile.bankDetail.verification !== 'ver' ? (
             <View>
               <Text style={{padding: 10, fontSize: 18}}>
                 Your profile verification is still pending. You can enjoy the
@@ -212,7 +219,7 @@ class AddNewProductScreen extends Component {
               <View style={mainStyles.formGroup}>
                 <Input
                   label="Product Name:"
-                  placeholder="Kurkure Masala Munch"
+                  placeholder="name of product"
                   value={this.state.product.name}
                   onChangeText={name => {
                     this.setState({
@@ -256,66 +263,73 @@ class AddNewProductScreen extends Component {
                         },
                       });
                     }}
-                    items={categoryList}
+                    items={
+                      productCategoryList.filter(
+                        category =>
+                          category.shopType ===
+                          this.props.profile.profile.storeDetail.type,
+                      )[0].categories
+                    }
                     placeholder={{}}
                   />
                 </View>
               </View>
-
-              <View style={mainStyles.formGroup}>
-                <Text style={mainStyles.formLabel}>Category:</Text>
-                <View style={{flexDirection: 'row'}}>
-                  <View style={mainStyles.col6}>
-                    <CheckBox
-                      containerStyle={{
-                        backgroundColor: 'transparent',
-                        borderColor: 'transparent',
-                      }}
-                      center
-                      title="Loose"
-                      checkedIcon="dot-circle-o"
-                      uncheckedIcon="circle-o"
-                      checkedColor={variables.mainThemeColor}
-                      checked={this.state.product.type === 'loose'}
-                      onPress={() => {
-                        this.setState({
-                          product: {
-                            ...this.state.product,
-                            type: 'loose',
-                          },
-                        });
-                      }}
-                    />
-                  </View>
-                  <View style={mainStyles.col6}>
-                    <CheckBox
-                      containerStyle={{
-                        backgroundColor: 'transparent',
-                        borderColor: 'transparent',
-                      }}
-                      center
-                      title="Packet"
-                      checkedIcon="dot-circle-o"
-                      uncheckedIcon="circle-o"
-                      checkedColor={variables.mainThemeColor}
-                      checked={this.state.product.type === 'packet'}
-                      onPress={() => {
-                        this.setState({
-                          product: {
-                            ...this.state.product,
-                            type: 'packet',
-                          },
-                        });
-                      }}
-                    />
+              {this.props.profile.profile.storeDetail.type === 0 ? (
+                <View style={mainStyles.formGroup}>
+                  <Text style={mainStyles.formLabel}>Type:</Text>
+                  <View style={{flexDirection: 'row'}}>
+                    <View style={mainStyles.col6}>
+                      <CheckBox
+                        containerStyle={{
+                          backgroundColor: 'transparent',
+                          borderColor: 'transparent',
+                        }}
+                        center
+                        title="Loose"
+                        checkedIcon="dot-circle-o"
+                        uncheckedIcon="circle-o"
+                        checkedColor={variables.mainThemeColor}
+                        checked={this.state.product.type === 'loose'}
+                        onPress={() => {
+                          this.setState({
+                            product: {
+                              ...this.state.product,
+                              type: 'loose',
+                            },
+                          });
+                        }}
+                      />
+                    </View>
+                    <View style={mainStyles.col6}>
+                      <CheckBox
+                        containerStyle={{
+                          backgroundColor: 'transparent',
+                          borderColor: 'transparent',
+                        }}
+                        center
+                        title="Packet"
+                        checkedIcon="dot-circle-o"
+                        uncheckedIcon="circle-o"
+                        checkedColor={variables.mainThemeColor}
+                        checked={this.state.product.type === 'packet'}
+                        onPress={() => {
+                          this.setState({
+                            product: {
+                              ...this.state.product,
+                              type: 'packet',
+                            },
+                          });
+                        }}
+                      />
+                    </View>
                   </View>
                 </View>
-              </View>
+              ) : null}
 
               <View style={mainStyles.formGroup}>
                 <Input
                   label="Brand:"
-                  placeholder="Pepsico, Nestle, write - if brand"
+                  placeholder="product's brand name, write - if no brand"
                   value={this.state.product.brand}
                   onChangeText={brand => {
                     this.setState({

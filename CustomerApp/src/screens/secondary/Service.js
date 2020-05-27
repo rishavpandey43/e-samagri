@@ -23,6 +23,7 @@ import messaging from '@react-native-firebase/messaging';
 
 // * Import all store related stuffs
 import * as AuthActions from '../../store/actions/creators/AuthActions';
+import * as HomeActions from '../../store/actions/creators/HomeActions';
 import * as ProfileActions from '../../store/actions/creators/ProfileActions';
 import * as StoreActions from '../../store/actions/creators/StoreActions';
 import * as CartActions from '../../store/actions/creators/CartActions';
@@ -32,83 +33,27 @@ import * as OrderActions from '../../store/actions/creators/OrderActions';
 import Store from '../../components/Store';
 
 // * Import utilites
-import {getDataFromAsync} from '../../utils/helper';
-import {authTokenName, shopType} from '../../utils/constant';
+import {getShopType} from '../../utils/helper';
 
 // * Import all styling stuffs
 import mainStyles from '../../styles/mainStyle';
 import variables from '../../styles/variables';
 
-class HomeScreen extends Component {
+class ServiceScreen extends Component {
   constructor(props) {
     super(props);
+    this.state = {
+      shopType: this.props.route.params.shopType,
+      storeList: this.props.sellers.sellers,
+      search: '',
+    };
   }
 
   componentDidMount() {
-    getDataFromAsync(authTokenName)
-      .then(token => {
-        this.props.getTokenFromAsync(token);
-        if (this.props.profile.profile && !this.props.profile.profile.address) {
-          this.props.navigation.navigate('update-profile-screen');
-        }
-        this.props.getProfileFetch(this.props.auth.authToken);
-        this.props.getCartDetailFetch(this.props.auth.authToken);
-        // this.props.getSellersFetch(this.props.auth.authToken);
-      })
-      .catch(err => {
-        console.log(err);
-      });
-
-    // * BELOW ARE THE COFIGURATION TO HANDLE RECEIVED NOTIFICATIONS
-    const permissionStatus = messaging().hasPermission();
-    const permissionGranted = messaging().requestPermission();
-
-    const messageListener = () => {
-      messaging().onMessage(message => {
-        this.props.getOrdersFetch(this.props.auth.authToken);
-
-        Alert.alert(
-          message.notification.title,
-          `Hello ${
-            this.props.profile.profile
-              ? this.props.profile.profile.personalDetail.firstName +
-                ' ' +
-                this.props.profile.profile.personalDetail.lastName
-              : ''
-          } ${message.notification.body}`,
-          [
-            {
-              text: 'Ok',
-              onPress: () => {
-                return;
-              },
-            },
-          ],
-        );
-      });
-
-      messaging().onNotificationOpenedApp(notification => {
-        this.props.getOrdersFetch(this.props.auth.authToken);
-        this.props.navigation.navigate('orders-stack');
-      });
-
-      messaging().getInitialNotification(notification => {
-        this.props.getOrdersFetch(this.props.auth.authToken);
-        this.props.navigation.navigate('orders-stack');
-      });
-    };
-
-    permissionStatus
-      .then(res => {
-        messageListener();
-      })
-      .catch(err => {
-        permissionGranted
-          .then(res => {})
-          .catch(err => {
-            console.log('User canceled the permission');
-          });
-      });
+    this.props.getSellersFetch(
+      this.props.route.params.shopType,
+      this.props.auth.authToken,
+    );
   }
 
   componentDidUpdate(prevProps) {
@@ -117,8 +62,27 @@ class HomeScreen extends Component {
       if (!this.props.profile.profile.address) {
         this.props.navigation.navigate('update-profile-screen');
       }
+
+      if (
+        prevProps.sellers.sellers.length != this.props.sellers.sellers.length
+      ) {
+        this.setState({storeList: this.props.sellers.sellers});
+      }
     }
   }
+
+  searchStore = search => {
+    if (this.state.storeList) {
+      this.setState({
+        storeList: this.props.sellers.sellers.filter(
+          seller =>
+            seller.storeDetail.name
+              .toLowerCase()
+              .indexOf(search.toLowerCase()) !== -1,
+        ),
+      });
+    }
+  };
 
   render() {
     return (
@@ -230,27 +194,60 @@ class HomeScreen extends Component {
                 }}
               />
             </Card>
+          ) : (this.state.shopType === 1 &&
+              !this.props.profile.profile.profileVerificationDetail) ||
+            (this.props.profile.profile.profileVerificationDetail &&
+              this.props.profile.profile.profileVerificationDetail
+                .verification != 'ver') ? (
+            <View style={{padding: 10}}>
+              <Text h4 h4Style={{marginTop: 20, textAlign: 'center'}}>
+                Your age must be of Legal Drinking Age to order liquor online.
+              </Text>
+
+              <Button
+                title="Start your verification now"
+                buttonStyle={{marginTop: 20}}
+              />
+            </View>
           ) : (
             <View style={[mainStyles.container, {marginBottom: 100}]}>
-              <Text h4 h4Style={{textAlign: 'center', marginTop: 20}}>
-                Our Services
-              </Text>
-              {shopType.map(shop => (
-                <Card title={shop.label} key={shop.value}>
-                  <Button
-                    title="Explore"
-                    titleStyle={{color: variables.mainThemeColor}}
-                    type="outline"
-                    raised
-                    buttonStyle={mainStyles.outlineBtn}
-                    onPress={this.props.navigation.navigate.bind(
-                      null,
-                      'service-screen',
-                      {shopType: shop.value},
-                    )}
+              <View>
+                <SearchBar
+                  placeholder="Search for shops..."
+                  onChangeText={search => {
+                    this.setState({
+                      search,
+                    });
+                    this.searchStore(search);
+                  }}
+                  value={this.state.search}
+                  lightTheme
+                  round
+                  showLoading={false}
+                  containerStyle={{backgroundColor: 'transparent'}}
+                  inputContainerStyle={{backgroundColor: 'transparent'}}
+                />
+              </View>
+              <View style={{margin: 10}}>
+                <Text h4>
+                  All {`${getShopType(this.state.shopType)}s`} near you
+                </Text>
+                {this.props.sellers.sellers.length === 0 ? (
+                  <View style={{margin: 15, marginTop: 30}}>
+                    <Text style={{fontSize: 18}}>
+                      We're not serving in your area currently, please change
+                      your address and try again later.
+                    </Text>
+                  </View>
+                ) : null}
+                {this.state.storeList.map(store => (
+                  <Store
+                    key={store._id}
+                    currentStore={store}
+                    navigation={this.props.navigation}
                   />
-                </Card>
-              ))}
+                ))}
+              </View>
             </View>
           )}
         </ScrollView>
@@ -274,6 +271,7 @@ const mapDispatchToProps = dispatch => {
   return bindActionCreators(
     {
       ...AuthActions,
+      ...HomeActions,
       ...ProfileActions,
       ...StoreActions,
       ...CartActions,
@@ -286,4 +284,4 @@ const mapDispatchToProps = dispatch => {
 export default connect(
   mapStateToProps,
   mapDispatchToProps,
-)(HomeScreen);
+)(ServiceScreen);

@@ -27,13 +27,16 @@ export const getSellersFailure = response => {
   };
 };
 
-export const getSellersFetch = token => dispatch => {
+export const getSellersFetch = (shopType, token) => dispatch => {
   dispatch(getSellersRequest());
   axios
     .get(baseUrl + '/customer/get-all-sellers', {
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${token}`,
+      },
+      params: {
+        shopType,
       },
     })
     .then(res => {

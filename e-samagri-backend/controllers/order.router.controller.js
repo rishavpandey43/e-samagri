@@ -1,36 +1,36 @@
-const dotenv = require("dotenv");
-const admin = require("firebase-admin");
+const dotenv = require('dotenv');
+const admin = require('firebase-admin');
 
 // * configure dotenv to access environment variables
 dotenv.config();
 
-const Order = require("../models/order.model");
-const Customer = require("../models/customer.model");
-const Seller = require("../models/seller.model");
-const DeliveryAgent = require("../models/deliveryAgent.model");
+const Order = require('../models/order.model');
+const Customer = require('../models/customer.model');
+const Seller = require('../models/seller.model');
+const DeliveryAgent = require('../models/deliveryAgent.model');
 
-const helpers = require("../util/helpers");
-const constants = require("../util/constant");
+const helpers = require('../util/helpers');
+const constants = require('../util/constant');
 
 exports.getAllOrdersCustomer = (req, res, next) => {
   Order.find({ orderedBy: req.userId })
     .sort({ createdAt: -1 })
     .populate([
-      { path: "orderedFrom", model: Seller },
-      { path: "deliveryAgent", model: DeliveryAgent },
+      { path: 'orderedFrom', model: Seller },
+      { path: 'deliveryAgent', model: DeliveryAgent },
     ])
     .then((orders) => {
       if (orders) {
         res.statusCode = 200;
-        res.statusText = "OK";
-        res.setHeader("Content-Type", "application/json");
+        res.statusText = 'OK';
+        res.setHeader('Content-Type', 'application/json');
         res.json({
           orders,
         });
       } else {
         let err = new Error(`Internal Server Error`);
         err.status = 500;
-        err.statusText = "Internal Server Error";
+        err.statusText = 'Internal Server Error';
         next(err);
       }
     })
@@ -48,10 +48,10 @@ exports.placeOrder = (req, res, next) => {
         orderedBy: req.userId,
       },
       {
-        status: { $ne: "del" },
+        status: { $ne: 'del' },
       },
       {
-        status: { $ne: "can" },
+        status: { $ne: 'can' },
       },
     ],
   }).then((orders) => {
@@ -61,15 +61,15 @@ exports.placeOrder = (req, res, next) => {
         `This order can't be placed right now, since you've already 2 undelivered orders. Please try again`
       );
       err.status = 400;
-      err.statusText = "Bad Request";
+      err.statusText = 'Bad Request';
       next(err);
     } else {
       Order.create(newOrder).then((order) => {
         Order.findById(order._id)
           .populate([
-            { path: "orderedBy", model: Customer },
-            { path: "orderedFrom", model: Seller },
-            { path: "deliveryAgent", model: DeliveryAgent },
+            { path: 'orderedBy', model: Customer },
+            { path: 'orderedFrom', model: Seller },
+            { path: 'deliveryAgent', model: DeliveryAgent },
           ])
           .then((order) => {
             if (order) {
@@ -94,11 +94,11 @@ exports.placeOrder = (req, res, next) => {
                           notification: {
                             title: helpers.getNotificationFromValue(
                               constants.alertNotificationForSeller,
-                              "nwo"
+                              'nwo'
                             ).title,
                             body: helpers.getNotificationFromValue(
                               constants.alertNotificationForSeller,
-                              "nwo"
+                              'nwo'
                             ).body,
                           },
                         },
@@ -106,16 +106,16 @@ exports.placeOrder = (req, res, next) => {
                           // Required for background/quit data-only messages on iOS
                           contentAvailable: true,
                           // Required for background/quit data-only messages on Android
-                          priority: "high",
+                          priority: 'high',
                         }
                       );
                       res.statusCode = 200;
-                      res.statusText = "OK";
-                      res.setHeader("Content-Type", "application/json");
+                      res.statusText = 'OK';
+                      res.setHeader('Content-Type', 'application/json');
                       res.json({
                         order,
                         updatedCart: customer.cart,
-                        message: "Order placed successfully",
+                        message: 'Order placed successfully',
                       });
                     })
                     .catch((err) => next(err));
@@ -124,7 +124,7 @@ exports.placeOrder = (req, res, next) => {
             } else {
               let err = new Error(`Internal Server Error`);
               err.status = 500;
-              err.statusText = "Internal Server Error";
+              err.statusText = 'Internal Server Error';
               next(err);
             }
           });
@@ -137,21 +137,21 @@ exports.getAllOrdersSeller = (req, res, next) => {
   Order.find({ orderedFrom: req.userId })
     .sort({ createdAt: -1 })
     .populate([
-      { path: "orderedBy", model: Customer },
-      { path: "deliveryAgent", model: DeliveryAgent },
+      { path: 'orderedBy', model: Customer },
+      { path: 'deliveryAgent', model: DeliveryAgent },
     ])
     .then((orders) => {
       if (orders) {
         res.statusCode = 200;
-        res.statusText = "OK";
-        res.setHeader("Content-Type", "application/json");
+        res.statusText = 'OK';
+        res.setHeader('Content-Type', 'application/json');
         res.json({
           orders,
         });
       } else {
         let err = new Error(`Internal Server Error`);
         err.status = 500;
-        err.statusText = "Internal Server Error";
+        err.statusText = 'Internal Server Error';
         next(err);
       }
     })
@@ -161,14 +161,14 @@ exports.getAllOrdersSeller = (req, res, next) => {
 exports.processOrderSeller = (req, res, next) => {
   Order.findById(req.body.orderId)
     .populate([
-      { path: "orderedBy", model: Customer },
-      { path: "orderedFrom", model: Seller },
-      { path: "deliveryAgent", model: DeliveryAgent },
+      { path: 'orderedBy', model: Customer },
+      { path: 'orderedFrom', model: Seller },
+      { path: 'deliveryAgent', model: DeliveryAgent },
     ])
     .then((order) => {
       // * handle when first time seller is processing the order.
-      if (order.status === "pen") {
-        if (req.body.processType === "can") {
+      if (order.status === 'pen') {
+        if (req.body.processType === 'can') {
           // * seller rejects to process the order, then update the order status and alert to customer.
           order.status = req.body.processType;
           order
@@ -195,15 +195,15 @@ exports.processOrderSeller = (req, res, next) => {
                   // Required for background/quit data-only messages on iOS
                   contentAvailable: true,
                   // Required for background/quit data-only messages on Android
-                  priority: "high",
+                  priority: 'high',
                 }
               );
               res.statusCode = 200;
-              res.statusText = "OK";
-              res.setHeader("Content-Type", "application/json");
+              res.statusText = 'OK';
+              res.setHeader('Content-Type', 'application/json');
               res.json({
                 order,
-                message: "Order updated by seller",
+                message: 'Order updated by seller',
               });
             })
             .catch((err) => next(err));
@@ -224,18 +224,17 @@ exports.processOrderSeller = (req, res, next) => {
                     preferredPinCode: order.orderedBy.address.pincode,
                   },
                   {
-                    "profileVerificationDetail.verified": true,
+                    'profileVerificationDetail.verification': 'ver',
                   },
                   {
-                    "vehicleDetail.verified": true,
+                    'vehicleDetail.verification': 'ver',
                   },
                   {
-                    "bankDetail.verified": true,
+                    'bankDetail.verification': 'ver',
                   },
                 ],
               })
                 .then((deliveryAgents) => {
-                  console.log(deliveryAgents);
                   let allDeliveryAgentsFCMToken = deliveryAgents.map(
                     (deliveryAgent) => deliveryAgent.fcm.token
                   );
@@ -261,7 +260,7 @@ exports.processOrderSeller = (req, res, next) => {
                       // Required for background/quit data-only messages on iOS
                       contentAvailable: true,
                       // Required for background/quit data-only messages on Android
-                      priority: "high",
+                      priority: 'high',
                     }
                   );
 
@@ -287,15 +286,15 @@ exports.processOrderSeller = (req, res, next) => {
                       // Required for background/quit data-only messages on iOS
                       contentAvailable: true,
                       // Required for background/quit data-only messages on Android
-                      priority: "high",
+                      priority: 'high',
                     }
                   );
                   res.statusCode = 200;
-                  res.statusText = "OK";
-                  res.setHeader("Content-Type", "application/json");
+                  res.statusText = 'OK';
+                  res.setHeader('Content-Type', 'application/json');
                   res.json({
                     order,
-                    message: "Order updated by seller",
+                    message: 'Order updated by seller',
                   });
                 })
                 .catch((err) => next(err));
@@ -330,7 +329,7 @@ exports.processOrderSeller = (req, res, next) => {
                   // Required for background/quit data-only messages on iOS
                   contentAvailable: true,
                   // Required for background/quit data-only messages on Android
-                  priority: "high",
+                  priority: 'high',
                 }
               );
             }
@@ -355,15 +354,15 @@ exports.processOrderSeller = (req, res, next) => {
                 // Required for background/quit data-only messages on iOS
                 contentAvailable: true,
                 // Required for background/quit data-only messages on Android
-                priority: "high",
+                priority: 'high',
               }
             );
             res.statusCode = 200;
-            res.statusText = "OK";
-            res.setHeader("Content-Type", "application/json");
+            res.statusText = 'OK';
+            res.setHeader('Content-Type', 'application/json');
             res.json({
               order,
-              message: "Order updated by seller",
+              message: 'Order updated by seller',
             });
           })
           .catch((err) => next(err));
@@ -376,21 +375,21 @@ exports.getAllOrdersDeliveryAgent = (req, res, next) => {
   Order.find({ deliveryAgent: req.userId })
     .sort({ createdAt: -1 })
     .populate([
-      { path: "orderedBy", model: Customer },
-      { path: "orderedFrom", model: Seller },
+      { path: 'orderedBy', model: Customer },
+      { path: 'orderedFrom', model: Seller },
     ])
     .then((orders) => {
       if (orders) {
         res.statusCode = 200;
-        res.statusText = "OK";
-        res.setHeader("Content-Type", "application/json");
+        res.statusText = 'OK';
+        res.setHeader('Content-Type', 'application/json');
         res.json({
           orders,
         });
       } else {
         let err = new Error(`Internal Server Error`);
         err.status = 500;
-        err.statusText = "Internal Server Error";
+        err.statusText = 'Internal Server Error';
         next(err);
       }
     })
@@ -403,10 +402,10 @@ exports.getDeliveryNotAssignedOrders = (req, res, next) => {
       {
         $or: [
           {
-            status: "prc",
+            status: 'prc',
           },
           {
-            status: "prcd",
+            status: 'prcd',
           },
         ],
       },
@@ -417,13 +416,13 @@ exports.getDeliveryNotAssignedOrders = (req, res, next) => {
   })
     .sort({ createdAt: -1 })
     .populate([
-      { path: "orderedBy", model: Customer },
-      { path: "orderedFrom", model: Seller },
+      { path: 'orderedBy', model: Customer },
+      { path: 'orderedFrom', model: Seller },
     ])
     .then((orders) => {
       res.statusCode = 200;
-      res.statusText = "OK";
-      res.setHeader("Content-Type", "application/json");
+      res.statusText = 'OK';
+      res.setHeader('Content-Type', 'application/json');
       res.json({
         orders,
       });
@@ -434,34 +433,34 @@ exports.getDeliveryNotAssignedOrders = (req, res, next) => {
 exports.processOrderDeliveryAgent = (req, res, next) => {
   Order.findById(req.body.orderId)
     .populate([
-      { path: "orderedBy", model: Customer },
-      { path: "orderedFrom", model: Seller },
+      { path: 'orderedBy', model: Customer },
+      { path: 'orderedFrom', model: Seller },
     ])
     .then((order) => {
       if (!order.deliveryAgent) {
         // * handle when first time delivery agent is processing the order.
-        if (req.body.processType === "no") {
+        if (req.body.processType === 'no') {
           // * here, delivery agent has rejected to deliver current order
           res.statusCode = 200;
-          res.statusText = "OK";
-          res.setHeader("Content-Type", "application/json");
+          res.statusText = 'OK';
+          res.setHeader('Content-Type', 'application/json');
           res.json({
             message: "You've successfully rejected to deliver this order.",
           });
-        } else if (req.body.processType === "yes") {
+        } else if (req.body.processType === 'yes') {
           // * we'll check if already more than 2 orders are pending with particular delivery agent
           Order.find({
             $and: [
               {
                 $or: [
                   {
-                    status: "prc",
+                    status: 'prc',
                   },
                   {
-                    status: "prcd",
+                    status: 'prcd',
                   },
                   {
-                    status: "ofd",
+                    status: 'ofd',
                   },
                 ],
               },
@@ -472,7 +471,7 @@ exports.processOrderDeliveryAgent = (req, res, next) => {
           })
             .then((orders) => {
               let totalUndeliveredOrders = orders.filter(
-                (order) => order.status !== "del"
+                (order) => order.status !== 'del'
               );
               if (totalUndeliveredOrders.length >= 2) {
                 // * here, rejects the request of delivery agent to deliver the order
@@ -480,7 +479,7 @@ exports.processOrderDeliveryAgent = (req, res, next) => {
                   `You cannot accept more orders to deliver for now. You already have 2 pending orders for delivery`
                 );
                 err.status = 400;
-                err.statusText = "Bad Request";
+                err.statusText = 'Bad Request';
                 next(err);
               } else {
                 // * here, delivery agent has accepted to deliver current order
@@ -496,16 +495,16 @@ exports.processOrderDeliveryAgent = (req, res, next) => {
                           orderId: JSON.stringify(order._id),
                         },
                         notification: {
-                          title: "Order Update",
+                          title: 'Order Update',
                           body:
-                            "Delivery agent has been successfully assigned to the order.",
+                            'Delivery agent has been successfully assigned to the order.',
                         },
                       },
                       {
                         // Required for background/quit data-only messages on iOS
                         contentAvailable: true,
                         // Required for background/quit data-only messages on Android
-                        priority: "high",
+                        priority: 'high',
                       }
                     );
                     // * NOW ALERT TO SELLER
@@ -516,25 +515,25 @@ exports.processOrderDeliveryAgent = (req, res, next) => {
                           orderId: JSON.stringify(order._id),
                         },
                         notification: {
-                          title: "Order Update",
+                          title: 'Order Update',
                           body:
-                            "Delivery agent has been successfully assigned to the order.",
+                            'Delivery agent has been successfully assigned to the order.',
                         },
                       },
                       {
                         // Required for background/quit data-only messages on iOS
                         contentAvailable: true,
                         // Required for background/quit data-only messages on Android
-                        priority: "high",
+                        priority: 'high',
                       }
                     );
                     res.statusCode = 200;
-                    res.statusText = "OK";
-                    res.setHeader("Content-Type", "application/json");
+                    res.statusText = 'OK';
+                    res.setHeader('Content-Type', 'application/json');
                     res.json({
                       order,
                       message:
-                        "Current order has been successfully assigned to you for delivery",
+                        'Current order has been successfully assigned to you for delivery',
                     });
                   })
                   .catch((err) => next(err));
@@ -569,7 +568,7 @@ exports.processOrderDeliveryAgent = (req, res, next) => {
                 // Required for background/quit data-only messages on iOS
                 contentAvailable: true,
                 // Required for background/quit data-only messages on Android
-                priority: "high",
+                priority: 'high',
               }
             );
             // * NOW ALERT TO SELLER
@@ -594,15 +593,15 @@ exports.processOrderDeliveryAgent = (req, res, next) => {
                 // Required for background/quit data-only messages on iOS
                 contentAvailable: true,
                 // Required for background/quit data-only messages on Android
-                priority: "high",
+                priority: 'high',
               }
             );
             res.statusCode = 200;
-            res.statusText = "OK";
-            res.setHeader("Content-Type", "application/json");
+            res.statusText = 'OK';
+            res.setHeader('Content-Type', 'application/json');
             res.json({
               order,
-              message: "Order updated by seller",
+              message: 'Order updated by seller',
             });
           })
           .catch((err) => next(err));

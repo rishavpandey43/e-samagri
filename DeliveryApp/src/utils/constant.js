@@ -53,3 +53,21 @@ export const orderStatus = [
     color: 'green',
   },
 ];
+
+export const verificationStatus = [
+  {
+    label: 'Pending',
+    value: 'pen',
+    color: 'orange',
+  },
+  {
+    label: 'Verified',
+    value: 'ver',
+    color: 'green',
+  },
+  {
+    label: 'Rejected',
+    value: 'rej',
+    color: 'red',
+  },
+];

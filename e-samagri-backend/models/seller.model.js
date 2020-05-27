@@ -1,4 +1,4 @@
-const mongoose = require("mongoose");
+const mongoose = require('mongoose');
 
 const Schema = mongoose.Schema;
 
@@ -17,10 +17,12 @@ const sellerSchema = new Schema(
     profileVerificationDetail: {
       type: { type: String, require: false },
       number: { type: Number, require: false },
-      verified: { type: Boolean, required: false },
+      verification: { type: String, required: false },
+      documentId: { type: mongoose.Schema.Types.ObjectId, ref: 'Document' },
     },
     storeDetail: {
       name: { type: String, required: false },
+      type: { type: Number, required: false },
       address: {
         street: { type: String, required: false },
         landmark: { type: String, required: false },
@@ -34,7 +36,8 @@ const sellerSchema = new Schema(
       panCard: { type: String, required: false },
       gstNumber: { type: String, required: false },
       document: { type: Buffer, required: false },
-      verified: { type: Boolean, required: false },
+      documentId: { type: mongoose.Schema.Types.ObjectId, ref: 'Document' },
+      verification: { type: String, required: false },
       rating: { type: Number, required: false },
     },
     bankDetail: {
@@ -42,13 +45,14 @@ const sellerSchema = new Schema(
       accountNumber: { type: Number, required: false },
       ifscCode: { type: String, required: false },
       branchName: { type: String, required: false },
-      verified: { type: Boolean, required: false },
+      documentId: { type: mongoose.Schema.Types.ObjectId, ref: 'Document' },
+      verification: { type: String, required: false },
     },
     products: [
       {
         root: {
           type: mongoose.Schema.Types.ObjectId,
-          ref: "Product",
+          ref: 'Product',
         },
         variants: [
           {
@@ -65,8 +69,8 @@ const sellerSchema = new Schema(
   }
 );
 
-const groceryDB = mongoose.connection.useDb("grocery_db");
+const groceryDB = mongoose.connection.useDb('e_samagri_db');
 
-const Seller = groceryDB.model("Seller", sellerSchema);
+const Seller = groceryDB.model('Seller', sellerSchema);
 
 module.exports = Seller;

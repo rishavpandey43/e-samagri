@@ -1,11 +1,12 @@
-const mongoose = require("mongoose");
+const mongoose = require('mongoose');
 
 const Schema = mongoose.Schema;
 
 const productSchema = new Schema(
   {
     name: { type: String, required: true },
-    category: { type: String, required: true },
+    shopType: { type: Number, required: true },
+    category: { type: Number, required: true },
     type: { type: String, required: true },
     brand: { type: String, required: true },
   },
@@ -14,8 +15,8 @@ const productSchema = new Schema(
   }
 );
 
-const groceryDB = mongoose.connection.useDb("grocery_db");
+const groceryDB = mongoose.connection.useDb('e_samagri_db');
 
-const Product = groceryDB.model("product", productSchema);
+const Product = groceryDB.model('product', productSchema);
 
 module.exports = Product;

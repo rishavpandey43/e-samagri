@@ -1,4 +1,4 @@
-const mongoose = require("mongoose");
+const mongoose = require('mongoose');
 
 const Schema = mongoose.Schema;
 
@@ -6,11 +6,11 @@ const orderSchema = new Schema(
   {
     orderedBy: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "Customer",
+      ref: 'Customer',
     },
     orderedFrom: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "Seller",
+      ref: 'Seller',
     },
     items: [
       {
@@ -36,7 +36,7 @@ const orderSchema = new Schema(
     },
     deliveryAgent: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "DeliveryAgent",
+      ref: 'DeliveryAgent',
     },
   },
   {
@@ -44,8 +44,8 @@ const orderSchema = new Schema(
   }
 );
 
-const groceryDB = mongoose.connection.useDb("grocery_db");
+const groceryDB = mongoose.connection.useDb('e_samagri_db');
 
-const Order = groceryDB.model("order", orderSchema);
+const Order = groceryDB.model('order', orderSchema);
 
 module.exports = Order;

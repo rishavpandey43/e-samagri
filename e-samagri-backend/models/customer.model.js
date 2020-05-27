@@ -1,4 +1,4 @@
-const mongoose = require("mongoose");
+const mongoose = require('mongoose');
 
 const Schema = mongoose.Schema;
 
@@ -13,6 +13,13 @@ const customerSchema = new Schema(
       lastName: { type: String, required: true },
       phone: { type: String, required: true },
       authyId: { type: String, required: false },
+    },
+    profileVerificationDetail: {
+      dob: { type: Date, require: false },
+      type: { type: String, require: false },
+      number: { type: Number, require: false },
+      verification: { type: String, required: false },
+      documentId: { type: mongoose.Schema.Types.ObjectId, ref: 'Document' },
     },
     cart: {
       storeId: { type: mongoose.Schema.Types.ObjectId },
@@ -31,7 +38,7 @@ const customerSchema = new Schema(
     favorite: [
       {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "Seller",
+        ref: 'Seller',
       },
     ],
     address: {
@@ -47,8 +54,8 @@ const customerSchema = new Schema(
   }
 );
 
-const groceryDB = mongoose.connection.useDb("grocery_db");
+const groceryDB = mongoose.connection.useDb('e_samagri_db');
 
-const Customer = groceryDB.model("Customer", customerSchema);
+const Customer = groceryDB.model('Customer', customerSchema);
 
 module.exports = Customer;

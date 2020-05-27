@@ -12,6 +12,7 @@ const sellers = (state = initialState, action) => {
     case actionTypes.GET_SELLERS_REQUEST:
       return {
         ...state,
+        sellers: [],
         fetchingSellers: true,
       };
     case actionTypes.GET_SELLERS_SUCCESS:

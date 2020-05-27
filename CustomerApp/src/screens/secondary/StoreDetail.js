@@ -41,7 +41,7 @@ class StoreDetailScreen extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      selectedCategory: {name: 'All', value: 'all'},
+      selectedCategory: {label: 'All', value: 'all'},
       filteredProduct: this.props.store.store
         ? this.props.store.store.products
         : [],
@@ -102,8 +102,8 @@ class StoreDetailScreen extends Component {
     // * Confirm to user, if he tries to add product from another store to cart
     else if (this.props.cart.cart.storeId !== this.props.store.store._id) {
       Alert.alert(
-        'Store change',
-        "You're about to change the store. You can't select products from multiple store in single order.",
+        'Shop change',
+        "You're about to change the shop. You can't select products from multiple shops in single order.",
         [
           {
             text: 'Cancel',
@@ -364,7 +364,6 @@ class StoreDetailScreen extends Component {
         </View>
       </View>
     );
-
     return (
       <View>
         <Header
@@ -487,25 +486,26 @@ class StoreDetailScreen extends Component {
                 }}>
                 <Text style={{fontSize: 18}}>Sort by categories</Text>
                 <View style={mainStyles.row}>
-                  {getStoreCategory(this.props.store.store.products).map(
-                    (category, index) => (
-                      <TouchableOpacity
-                        key={index}
-                        onPress={() => {
-                          this._filterByCategory(category);
-                        }}>
-                        <Text
-                          style={[
-                            styles.categoryTag,
-                            this.state.selectedCategory.value === category.value
-                              ? styles.selected
-                              : '',
-                          ]}>
-                          {category.name}
-                        </Text>
-                      </TouchableOpacity>
-                    ),
-                  )}
+                  {getStoreCategory(
+                    this.props.store.store.storeDetail.type,
+                    this.props.store.store.products,
+                  ).map((category, index) => (
+                    <TouchableOpacity
+                      key={index}
+                      onPress={() => {
+                        this._filterByCategory(category);
+                      }}>
+                      <Text
+                        style={[
+                          styles.categoryTag,
+                          this.state.selectedCategory.value === category.value
+                            ? styles.selected
+                            : '',
+                        ]}>
+                        {category.label}
+                      </Text>
+                    </TouchableOpacity>
+                  ))}
                 </View>
               </View>
               <View
@@ -516,7 +516,9 @@ class StoreDetailScreen extends Component {
                   paddingBottom: 20,
                 }}>
                 <SearchBar
-                  placeholder="Search in Seller 1 Store..."
+                  placeholder={`Search in ${
+                    this.props.store.store.storeDetail.name
+                  }`}
                   onChangeText={search => {
                     this.setState({
                       search,
@@ -535,7 +537,7 @@ class StoreDetailScreen extends Component {
                 <View>
                   <View>
                     <Text style={{fontSize: 18, fontWeight: 'bold'}}>
-                      {this.state.selectedCategory.name}:
+                      {this.state.selectedCategory.label}:
                     </Text>
                   </View>
                   {this.state.filteredProduct.length === 0 ? (
@@ -604,7 +606,7 @@ const styles = StyleSheet.create({
   },
 });
 
-const mapStateToProps = ({auth, sellers, store, cart}) => {
+const mapStateToProps = ({auth, sellers, store, cart, profile}) => {
   return {
     auth,
     sellers,
@@ -617,6 +619,7 @@ const mapStateToProps = ({auth, sellers, store, cart}) => {
         deliveryCharge: cart.cart.deliveryCharge,
       },
     },
+    profile,
   };
 };
 

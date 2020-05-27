@@ -4,6 +4,7 @@ import {createStackNavigator} from '@react-navigation/stack';
 
 // * Import all screens/components
 import HomeScreen from '../../screens/primary/Home';
+import ServiceScreen from '../../screens/secondary/Service';
 import UpdateProfileScreen from '../../screens/secondary/UpdateProfile';
 import StoreDetailScreen from '../../screens/secondary/StoreDetail';
 import CartScreen from '../../screens/secondary/Cart';
@@ -28,6 +29,13 @@ const HomeStack = () => (
       component={HomeScreen}
       options={{
         title: 'Home',
+      }}
+    />
+    <Stack.Screen
+      name="service-screen"
+      component={ServiceScreen}
+      options={{
+        title: 'Service',
       }}
     />
     <Stack.Screen

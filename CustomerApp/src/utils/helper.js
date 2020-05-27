@@ -2,7 +2,15 @@
 import AsyncStorage from '@react-native-community/async-storage';
 
 // * Import utilites
-import {addressType, categoryList, orderStatus, paymentMode} from './constant';
+import {
+  addressType,
+  productCategoryList,
+  orderStatus,
+  paymentMode,
+  verificationDocumentType,
+  verificationStatus,
+  shopType,
+} from './constant';
 
 export const storeDataInAsync = async (key, value) => {
   try {
@@ -45,6 +53,24 @@ export const filterOrderBySeller = (sellerId, orders) => {
   return orders;
 };
 
+export const getVerificationDocumentName = documentValue => {
+  return (
+    verificationDocumentType.filter(
+      document => document.value === documentValue,
+    )[0].name || '-'
+  );
+};
+
+export const getVerificationStatus = type => {
+  return verificationStatus.filter(
+    verification => verification.value === type,
+  )[0];
+};
+
+export const getShopType = type => {
+  return shopType.filter(shopType => shopType.value === type)[0].label;
+};
+
 export const obtainItemsInString = (items, i) => {
   let orderName = ''.concat(
     items.map(item => {
@@ -54,11 +80,23 @@ export const obtainItemsInString = (items, i) => {
   return orderName;
 };
 
-export const getCategoryName = categoryValue => {
-  let category = categoryList.filter(
-    category => category.value === categoryValue,
-  )[0];
+export const getCategoryName = (shopType, categoryValue) => {
+  let category = productCategoryList
+    .filter(shopCategory => shopCategory.shopType === shopType)[0]
+    .categories.filter(
+      productCategory => productCategory.value === categoryValue,
+    )[0];
   return category;
+};
+
+export const getStoreCategory = (shopType, products) => {
+  let categoryList = ['all']; // add all by default
+  products.map(product => {
+    if (categoryList.indexOf(product.root.category) === -1) {
+      categoryList.push(product.root.category);
+    }
+  });
+  return categoryList.map(category => getCategoryName(shopType, category));
 };
 
 export const getAddress = type => {
@@ -74,17 +112,6 @@ export const obtainAddressInString = address => {
     }
   }
   return addressString;
-};
-
-export const getStoreCategory = products => {
-  let categoryList = ['all']; // add all by default
-  products.map(product => {
-    if (categoryList.indexOf(product.root.category) === -1) {
-      categoryList.push(product.root.category);
-    }
-  });
-
-  return categoryList.map(category => getCategoryName(category));
 };
 
 export const getOrderStatus = type => {

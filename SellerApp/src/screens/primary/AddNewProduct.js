@@ -45,7 +45,9 @@ class AddNewProductScreen extends Component {
       product: {
         name: '',
         category: '',
-        shopType: props.profile.profile.storeDetail.type,
+        shopType: props.profile.profile.storeDetail
+          ? props.profile.profile.storeDetail.type
+          : null,
         type: 'packet',
         brand: '',
         variants: [

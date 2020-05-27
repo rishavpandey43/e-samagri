@@ -3,6 +3,17 @@ export const baseUrl = 'https://e-samagri-backend.herokuapp.com';
 
 export const authTokenName = 'eSamagri_customer_auth_token';
 
+export const verificationDocumentType = [
+  {
+    name: 'Aadhar Card',
+    value: 'aadhar-id',
+  },
+  {
+    name: 'Voter ID Card',
+    value: 'voter-id',
+  },
+];
+
 export const addressType = [
   {
     name: 'Home',
@@ -21,46 +32,103 @@ export const addressType = [
   },
 ];
 
-export const categoryList = [
+export const shopType = [
   {
-    name: 'All',
-    value: 'all',
+    label: 'General Store',
+    value: 0,
   },
   {
-    name: 'Kitchen Staples',
-    value: 'ks',
+    label: 'Liquor Shop',
+    value: 1,
+  },
+];
+
+export const productCategoryList = [
+  {
+    shopType: 0,
+    categories: [
+      {
+        label: 'All',
+        value: 'all',
+      },
+      {
+        label: 'Kitchen Staples',
+        value: 0,
+      },
+      {
+        label: 'Coffee, Tea & Beverages',
+        value: 1,
+      },
+      {
+        label: 'Dried Fruits, Nuts & Seeds',
+        value: 2,
+      },
+      {
+        label: 'Packed Foods',
+        value: 3,
+      },
+      {
+        label: 'Snacks & Cookies',
+        value: 4,
+      },
+      {
+        label: 'Dairy Products',
+        value: 5,
+      },
+      {
+        label: 'Bakery & Cakes',
+        value: 6,
+      },
+      {
+        label: 'Personal & Homecare',
+        value: 7,
+      },
+      {
+        label: 'Health & Wellness',
+        value: 8,
+      },
+    ],
   },
   {
-    name: 'Coffee, Tea & Beverages',
-    value: 'bs',
-  },
-  {
-    name: 'Dried Fruits, Nuts & Seeds',
-    value: 'dfns',
-  },
-  {
-    name: 'Packed Foods',
-    value: 'pf',
-  },
-  {
-    name: 'Snacks & Cookies',
-    value: 'sc',
-  },
-  {
-    name: 'Dairy Products',
-    value: 'dp',
-  },
-  {
-    name: 'Bakery & Cakes',
-    value: 'bc',
-  },
-  {
-    name: 'Personal & Homecare',
-    value: 'ph',
-  },
-  {
-    name: 'Health & Wellness',
-    value: 'hw',
+    shopType: 1,
+    categories: [
+      {
+        label: 'All',
+        value: 'all',
+      },
+      {
+        label: 'Beer',
+        value: 0,
+      },
+      {
+        label: 'Vodka',
+        value: 1,
+      },
+      {
+        label: 'Whiskey',
+        value: 2,
+      },
+      {
+        label: 'Rum',
+        value: 3,
+      },
+      {
+        label: 'Brandy',
+        value: 4,
+      },
+      {
+        label: 'Wine',
+        value: 5,
+      },
+      {
+        label: 'Tequila',
+        value: 6,
+      },
+      {
+        label: 'Desi Daru',
+        value: 7,
+      },
+    ],
   },
 ];
 

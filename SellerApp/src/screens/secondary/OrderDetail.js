@@ -53,10 +53,10 @@ class OrderDetailScreen extends Component {
     if (
       prevProps.orders.orders.filter(
         order => order._id === this.props.route.params.orderId,
-      )[0].status !==
+      )[0].updatedAt !==
       this.props.orders.orders.filter(
         order => order._id === this.props.route.params.orderId,
-      )[0].status
+      )[0].updatedAt
     ) {
       this.setState({
         order: this.props.orders.orders.filter(
@@ -196,7 +196,7 @@ class OrderDetailScreen extends Component {
                         fontSize: 18,
                         color: getOrderStatus(this.state.order.status).color,
                       }}>
-                      {getOrderStatus(this.state.order.status).name}
+                      {getOrderStatus(this.state.order.status).label}
                     </Text>
                   </View>
                 </View>

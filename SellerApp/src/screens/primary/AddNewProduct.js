@@ -45,9 +45,10 @@ class AddNewProductScreen extends Component {
       product: {
         name: '',
         category: '',
-        shopType: props.profile.profile.storeDetail
-          ? props.profile.profile.storeDetail.type
-          : null,
+        shopType:
+          props.profile.profile && props.profile.profile.storeDetail
+            ? props.profile.profile.storeDetail.type
+            : null,
         type: 'packet',
         brand: '',
         variants: [
@@ -102,7 +103,6 @@ class AddNewProductScreen extends Component {
           })),
         },
       };
-      console.log(data);
       this.setState({loading: true});
       axios
         .post(baseUrl + '/seller/add-new-product', data, {

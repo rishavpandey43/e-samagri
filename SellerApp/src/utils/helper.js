@@ -1,7 +1,7 @@
 import AsyncStorage from '@react-native-community/async-storage';
 
 import {
-  categoryList,
+  productCategoryList,
   orderStatus,
   paymentMode,
   verificationDocumentType,
@@ -82,11 +82,15 @@ export const getVerificationStatus = type => {
   )[0];
 };
 
-export const getCategoryName = categoryValue => {
-  return (
-    categoryList.filter(category => category.value === categoryValue)[0]
-      .label || '-'
-  );
+export const getCategoryName = (shopType, categoryValue) => {
+  return productCategoryList.filter(
+    shopCategory => shopCategory.shopType === shopType,
+  )[0]
+    ? productCategoryList
+        .filter(shopCategory => shopCategory.shopType === shopType)[0]
+        .categories.filter(category => category.value === categoryValue)[0]
+        .label || '-'
+    : '-';
 };
 
 export const getOrderStatus = type => {

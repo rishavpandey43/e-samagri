@@ -33,7 +33,6 @@ class ProductDetailScreen extends Component {
 
   componentDidMount() {
     if (this.props.route.params.productId) {
-      console.log(this.props.route.params.productId);
       this.setState({
         product: this.props.products.products.filter(
           product => product._id === this.props.route.params.productId,
@@ -127,12 +126,25 @@ class ProductDetailScreen extends Component {
                   </View>
                   <View>
                     <Text style={mainStyles.value}>
-                      {getCategoryName(this.state.product.root.category)}
+                      {getCategoryName(
+                        this.props.profile.profile.storeDetail.type,
+                        this.state.product.root.category,
+                      )}
                     </Text>
                   </View>
                 </View>
 
-                <View style={mainStyles.infoGroup}>
+                <View
+                  style={
+                    (mainStyles.infoGroup,
+                    {
+                      display: `${
+                        this.props.profile.profile.storeDetail.type === 1
+                          ? 'none'
+                          : 'flex'
+                      }`,
+                    })
+                  }>
                   <View style={mainStyles.labelGroup}>
                     <Text style={mainStyles.labelText}>Type:</Text>
                   </View>
@@ -209,9 +221,10 @@ class ProductDetailScreen extends Component {
 
 const styles = StyleSheet.create({});
 
-const mapStateToProps = state => {
+const mapStateToProps = ({products, profile}) => {
   return {
-    products: state.products,
+    products,
+    profile,
   };
 };
 

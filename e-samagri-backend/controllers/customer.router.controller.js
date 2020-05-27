@@ -252,6 +252,9 @@ exports.getAllSellersController = (req, res, next) => {
       Seller.find({
         $and: [
           {
+            'storeDetail.type': req.query.shopType,
+          },
+          {
             'storeDetail.address.pincode': customer.address.pincode,
           },
           {
